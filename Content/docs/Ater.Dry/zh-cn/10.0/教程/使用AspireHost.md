@@ -56,8 +56,15 @@ _ = aspireSetting.CacheType?.ToLowerInvariant() switch
 如果你已经有现成的数据库或缓存服务，如共用的开发环境，而不是本地环境，你可以直接进行配置，如：
 
 ```csharp
-var dbConnectionString = builder.Configuration.GetConnectionString(AppConst.Default);
-var database = builder.AddConnectionString(AppConst.Default, dbConnectionString);
+var database = builder.AddConnectionString("Default");
 ```
 
-数据库连接字符串可以通过`appsettings.json`或环境变量进行配置。
+其中`Default`是你在`appsettings.json`中配置的连接字符串名称，如
+
+```json
+{
+  "ConnectionStrings": {
+    "Default": "Server=your_server;Database=your_database;User Id=your_user;Password=your_password;"
+  }
+}
+```
