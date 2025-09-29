@@ -1,0 +1,45 @@
+# Manager 业务处理
+
+Manager 层是专门处理业务逻辑的地方，它被Controller 层或其他服务调用。
+
+## Manager的作用
+
+在简单CURD应用中，Manager主要是通过`DbContext`,`CacheService`等对象来实现数据库和缓存的操作。
+
+典型的Manager，提供两个泛型参数，它提供了一些常用的CURD方法。
+
+```csharp
+public class CustomerInfoManager(
+    DefaultDbContext dbContext,
+    ILogger<CustomerInfoManager> logger)
+    : ManagerBase<DefaultDbContext, CustomerInfo>(dbContext, logger){}
+```
+
+当你不需要特定实体时，可以使用其他的Manager基类，如：
+
+```csharp
+public abstract class ManagerBase(ILogger logger)
+{
+    protected ILogger _logger = logger;
+}
+
+public abstract class ManagerBase<TDbContext>(TDbContext dbContext, ILogger logger)
+    : ManagerBase(logger)
+    where TDbContext : DbContext
+{
+    protected readonly TDbContext _dbContext = dbContext;
+}
+```
+
+> [!CAUTION]
+> 继承`ManagerBase`的类，会被自动注入到应用(通过代码生成器)。
+> 
+> 如果不继承，需要自己手动注入。
+
+## Manager的编写
+
+
+
+## Manager的使用
+
+❌ Manager之间不要互相引用，这样会导致循环引用。
