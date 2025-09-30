@@ -36,10 +36,13 @@ public abstract class ManagerBase<TDbContext>(TDbContext dbContext, ILogger logg
 > 
 > 如果不继承，需要自己手动注入。
 
-## Manager的编写
+## Manager的编写与使用
+
+Manager是承载业务逻辑的主要载体，你可以根据实际需求，继承不同的基类。
+
+在编写Manager时，需要遵循以下原则：
+
+- 不要直接返回
+- ❌ Manager之间不要互相引用，这样会导致循环引用。
 
 
-
-## Manager的使用
-
-❌ Manager之间不要互相引用，这样会导致循环引用。
