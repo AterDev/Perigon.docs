@@ -24,10 +24,18 @@ MinimalAPI默认不启用一些功能，而MVC API默认启用，如：
 
 当你为MinimalAPI添加更多功能时，而为MVC API去掉一些默认功能时，也许就是另一种结果。
 
-总结，其实在这个层面上，MinimalAPI和MVC API的性能差异几乎可以忽略，更多的是由你想要实现的功能决定的。
+总结，在功能相近的情况下，MinimalAPI和MVC API的性能差异几乎可以忽略，但你需要在代码层面上做更多工作。
 
 ## AOT支持
 
 核心问题是MinimalAPI支持AOT编译，而MVC API不支持。
 
 目前，也没有确切的信息表示微软会不会，以及何时会为WebAPI(MVC)支持AOT编译。
+
+## 结合使用
+
+MinimalAPI和MVC API可以结合使用，它们不是互斥的。
+
+主要的业务流程可以使用MVC API来实现，以保持层级结构清晰，开发和维护的规范。
+
+对于一些临时的测试接口，或特定功能的接口，可以使用MinimalAPI来实现。
