@@ -1,4 +1,4 @@
-# 使用AspireHost
+# 使用AppHost
 
 AspireHost基于.NET Aspire，提供了强大且简便的本地开发环境，它不仅仅针对微服务开发提供支持，还能满足传统单体应用的需求。
 
