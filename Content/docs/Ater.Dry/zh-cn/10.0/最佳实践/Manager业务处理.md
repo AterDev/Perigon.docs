@@ -49,3 +49,23 @@ Manager是承载业务逻辑的主要载体，你可以根据实际需求，继�
 - ✅ 可以使用`DbContext`，`CacheService`等对象来实现数据的操作。
 
 Manager不应该关心和处理请求上下文相关的逻辑，它应该专注于业务逻辑的实现。
+
+
+### 使用ManagerBase基类方法
+
+在ManagerBase抽象类中，提供了对实体操作的方法，如果你是继承自`ManagerBase<TDbContext,TEntity>`，可以直接使用这些方法。
+
+
+| 方法              | 返回说明       | 场景                              |
+| ----------------- | -------------- | --------------------------------- |
+| FindAsync         | 返回第一条数据 | 根据主键查询，返回实体，会被跟踪  |
+| FindAsync<TDto>   | 返回第一条数据 | 根据条件查询，不会被跟踪          |
+| Exist             | bool           | 主键id                            |
+| ExistAsync        | bool           | where表达式                       |
+| ToListAsync<TDto> |                |                                   |
+| ToPageAsync       | 分页列表       |                                   |
+| UpsertAsync       |                | 添加或更新实体                    |
+| BulkUpsertAsync   |                | 批量添加或更新实体                |
+| DeleteAsync       |                | 根据主键删除，支持软删除,批量删除 |
+
+
