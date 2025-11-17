@@ -69,3 +69,7 @@ Manager不应该关心和处理请求上下文相关的逻辑，它应该专注�
 | DeleteAsync       |                | 根据主键删除，支持软删除,批量删除 |
 
 
+### 生成Manager
+
+当我们定义好实体后，可以通过代码生成器，自动生成Manager类，它继承自`ManagerBase<TDbContext,TEntity>`，包含了常用的CURD方法。
+
