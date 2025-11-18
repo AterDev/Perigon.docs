@@ -36,7 +36,7 @@ public abstract class ManagerBase<TDbContext>(TDbContext dbContext, ILogger logg
 > 
 > 如果不继承，需要自己手动注入。
 
-## Manager的编写与使用
+## Manager规范
 
 Manager是承载业务逻辑的主要载体，你可以根据实际需求，继承不同的基类。
 
@@ -51,7 +51,7 @@ Manager是承载业务逻辑的主要载体，你可以根据实际需求，继�
 Manager不应该关心和处理请求上下文相关的逻辑，它应该专注于业务逻辑的实现。
 
 
-### 使用ManagerBase基类方法
+## 使用ManagerBase基类方法
 
 在ManagerBase抽象类中，提供了对实体操作的方法，如果你是继承自`ManagerBase<TDbContext,TEntity>`，可以直接使用这些方法。
 
@@ -69,7 +69,17 @@ Manager不应该关心和处理请求上下文相关的逻辑，它应该专注�
 | DeleteAsync       |                | 根据主键删除，支持软删除,批量删除 |
 
 
-### 生成Manager
+## 生成Manager
 
 当我们定义好实体后，可以通过代码生成器，自动生成Manager类，它继承自`ManagerBase<TDbContext,TEntity>`，包含了常用的CURD方法。
+
+
+### AddAsync
+
+
+
+### UpdateAsync
+### AddAsync
+### AddAsync
+### AddAsync
 
