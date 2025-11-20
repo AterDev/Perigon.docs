@@ -56,39 +56,28 @@ Manager不应该关心和处理请求上下文相关的逻辑，它应该专注�
 在ManagerBase抽象类中，提供了对实体操作的方法，如果你是继承自`ManagerBase<TDbContext,TEntity>`，可以直接使用这些方法。
 
 
-| 方法                         | 返回说明       | 场景                              |
-| ---------------------------- | -------------- | --------------------------------- |
-| FindAsync                    | 返回第一条数据 | 根据主键查询，返回实体，会被跟踪  |
-| FindAsync<TDto>              | 返回第一条数据 | 根据条件查询，不会被跟踪          |
-| Exist                        | bool           | 主键id                            |
-| ExistAsync                   | bool           | where表达式                       |
-| ToListAsync<TDto>            |                |                                   |
-| ToPageAsync                  | 分页列表       |                                   |
-| InsertAsync                  |                | 添加或更新实体                    |
-| BulkUpsertAsync              |                | 批量添加或更新实体                |
-| DeleteAsync                  |                | 根据主键删除，支持软删除,批量删除 |
-| ExecuteInTransactionAsync<T> | T              | 事务操作                          |
+| 方法                          | 返回说明       | 场景                              |
+| ----------------------------- | -------------- | --------------------------------- |
+| FindAsync                     | 返回第一条数据 | 根据主键查询，返回实体，会被跟踪  |
+| FindAsync<TDto>               | 返回第一条数据 | 根据条件查询，不会被跟踪          |
+| ExistAsync                    | bool           | 主键id                            |
+| ListAsync<TDto>               | 列表查询       |                                   |
+| PageListAsync<TFilter, TItem> | 列表查询分页   | 筛选，分页                        |
+| InsertAsync                   |                | 添加实体                          |
+| UpdateAsync                   |                | 更新实体                          |
+| BulkInsertAsync               |                | 批量添加或更新实体                |
+| DeleteAsync                   |                | 根据主键删除，支持软删除,批量删除 |
+| ExecuteInTransactionAsync<T>  | T              | 事务操作                          |
+| ExecuteInTransactionAsync<T>  | T              | 事务操作                          |
+
+
+以上方法是是结合性能和易用性设计的，你可以直接使用它们来实现大部分的业务逻辑，代码生成的Manager会依赖这些方法。
+
+当这些方法不符合你的需求时，可在Manager中自行实现业务逻辑。
 
 > [!NOTE]
 > 基类中添加/修改/删除方法，会直接执行数据库操作，不需要`SaveChangesAsync`,因为不走EF Core的ChangeTracker机制。
 
-### UpsertAsync
-
-**UpsertAsync** 方法用于添加或更新实体，根据主键判断是插入还是更新。
-
-它会自动处理TenantId和UpdatedTime属性。
-
-```csharp
-public async Task UpsertAsync(TEntity entity)
-{
-    entity.TenantId = _userContext.TenantId;
-    entity.UpdatedTime = DateTimeOffset.UtcNow;
-    await _dbContext.BulkInsertOrUpdateAsync([entity]);
-}
-```
-
-> [!IMPORTANT]
-> 如果不使用`UpsertAsync`方法，请确保手动设置`TenantId`和`UpdatedTime`属性。
 
 ## 生成Manager
 
@@ -101,13 +90,13 @@ public async Task UpsertAsync(TEntity entity)
 - 行为：直接调用UpsertAsync，无需先查询实体，通过唯一约束抛出冲突异常。
 - 用户实现：实体完整性，如UserId等其他信息
 
-### UpdateAsync
+### EditAsync
 
 - 参数: AddDto
 - 返回：添加后的实体模型
 - 行为：直接调用UpsertAsync，无需先查询实体，通过唯一约束抛出冲突异常。
 
-### AddAsync
-### AddAsync
-### AddAsync
+### DeleteAsync
+### FilterAsync
+### GetAsync
 
