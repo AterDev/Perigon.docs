@@ -2,8 +2,6 @@
 
 **AppHost**是`Aspire`的宿主项目，它提供给开发者通过代码来定义基础设施和服务的能力，它不仅仅针对微服务开发提供支持，还能满足传统单体应用的需求。
 
-
-
 ## 配置文件
 
 AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.json`文件来进行配置。
@@ -78,5 +76,31 @@ var cache = builder.AddConnectionString("Cache");
 - `FrameworkExtensions`，提供扩展方法，用来配置框架依赖的选项、用户上下文、DbContext和缓存等基础设施。
 - `WebExtensions`，用于配置Web相关的选项，如CORS、认证授权、本地化、Swagger、速率限制等中间件。
 
-你可以根据需要，修改这些默认配置，以满足你的项目需求。
+在服务中，可以通过调用这些扩展方法来应用默认配置：
 
+```csharp
+// Program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+// 共享基础服务:health check, service discovery, opentelemetry, http retry etc.
+builder.AddServiceDefaults();
+// 框架依赖服务:options, cache, dbContext
+builder.AddFrameworkServices();
+// Web中间件服务:route, openapi, jwt, default cors, auth, rateLimiter etc.
+builder.AddMiddlewareServices();
+// app services
+
+// add Managers, auto generate by source generator
+builder.Services.AddManagers();
+// add modules, auto generate by source generator
+builder.AddModules();
+
+WebApplication app = builder.Build();
+app.MapDefaultEndpoints();
+app.UseMiddlewareServices();
+
+app.Run();
+```
+
+请根据实际需求，修改这些默认配置，以满足你的项目需求。请注意，`ServiceDefaults`中的配置通常应用到所有服务。
+如果是服务间不同的配置，请在各自服务中进行单独配置覆盖。
