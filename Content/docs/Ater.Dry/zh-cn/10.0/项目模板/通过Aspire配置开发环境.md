@@ -34,6 +34,20 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
 - `Database`选项包括：`SqlServer`或`PostgreSQL`
 - `IsMultiTenant`用于启用多租户功能
 
+### 多租户配置
+
+框架默认是兼容多租户模式的，你只需要在配置文件中将`IsMultiTenant`设置为`true`即可启用多租户功能。
+
+如果你确定现在和未来都不需要多租户功能，可以修改`EntityBase`继承的接口，从`ITenantEntityBase`改为`IEntityBase`，这样不会包含`TenantId`字段。
+
+> [!IMPORTANT]
+> 当启用多租户时，务必继承`ITenantEntityBase`接口，以确保实体类包含`TenantId`字段，从而支持多租户数据隔离。
+
+### 基础设施配置
+
+你可以通过代码的方式在 `AppHost.cs`中定义各种基础设施，默认的密码和端口在`AppSettingsHelper.cs`中进行了定义，你可以根据你的需要进行修改。
+
+
 ## 自定义数据库连接字符串
 
 模板默认在本地启动容器，以支持开发环境。有些情况，你可能需要使用自定义的数据库连接字符串，可以在`appsettings.json`中进行配置：
@@ -104,3 +118,4 @@ app.Run();
 
 请根据实际需求，修改这些默认配置，以满足你的项目需求。请注意，`ServiceDefaults`中的配置通常应用到所有服务。
 如果是服务间不同的配置，请在各自服务中进行单独配置覆盖。
+
