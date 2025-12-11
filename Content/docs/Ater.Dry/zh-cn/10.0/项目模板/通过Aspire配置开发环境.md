@@ -43,6 +43,18 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
 > [!IMPORTANT]
 > 当启用多租户时，务必继承`ITenantEntityBase`接口，以确保实体类包含`TenantId`字段，从而支持多租户数据隔离。
 
+### 集成前端
+
+Aspire支持将其他各种项目集成到AppHost中，例如前端项目、Python项目等。如以下添加一个前端项目：
+```csharp
+var webApp = builder.AddNpmApp("frontend", "../ClientApp/WebApp")
+    .WithUrl("http://localhost:4200")
+    .WaitFor(adminService)
+    .WithParentRelationship(serviceGroup);
+```
+
+> 注意：AddNpmApp会执行 `npm run start`命令来启动前端项目，在此之前，你可能需要手动运行`pnpm install`来安装依赖包。
+
 ### 基础设施配置
 
 你可以通过代码的方式在 `AppHost.cs`中定义各种基础设施，默认的密码和端口在`AppSettingsHelper.cs`中进行了定义，你可以根据你的需要进行修改。
