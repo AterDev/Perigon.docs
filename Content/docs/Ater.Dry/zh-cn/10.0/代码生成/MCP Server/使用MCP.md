@@ -1,25 +1,41 @@
 # MCP Server
 
-10.0 版本提供了MCP Server，这意味着你可以在IDE中，添加我们的MCP Server，然后通过它来生成代码。
+10.0 版本内置了MCP Server，这意味着你可以在IDE中，通过自然语言描述来生成符合项目规范的代码。
 
 ## 启动MCP Server
 
-首先，通过`ater studio`命令启用MCP Server。
+首先，通过`perigon studio`命令启动`studio`，`MCP Server`将自动启动，你会看到:
+
+![mcp start](../../_images/mcp_start.png)
 
 ## 添加MCP Server到IDE
 
-你可以在支持MCP的IDE中添加我们的MCP Server，内容示例:
+在解决方案根目录下，已经有`.mcp.json`配置文件，内容如下：
 
 ```json
 {
   "servers": {
-    "ater.copilot": {
+    "perigon": {
       "url": "http://localhost:19016/mcp",
       "type": "http"
     }
   }
 }
 ```
+
+它将自动被`Visual Studio`读取并使用。
+
+如果你使用`VS Code`，可将该配置文件复制到`.vscode/mcp.json`中。
+
+
+然后你将在`copilot chat`中看到`perigon`工具，请启用它。
+
+![mcp enable](../../_images/mcp_enable.png)
+
+
+
+> [!TIP]
+> 如果你看不到mcp工具，请确保先运行了`perigon studio`，然后再打开IDE。
 
 ## 使用MCP Server
 
