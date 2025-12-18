@@ -2,6 +2,8 @@
 
 提供对符合框架设计的 API Controller 的生成支持。
 
+**支持方式：`Studio`和`MCP`**
+
 ## 前提
 
 - 根据特定实体进行生成
@@ -9,19 +11,19 @@
 
 ## 生成行为
 
-由于Controller 本身依赖于 Manager和Dto，所以在生成Controller时，会同时生成所需要的Dto与Manager。
+- Controller 本身依赖于 Manager和DTO，所以在生成Controller时，会先生成所需要的DTO与Manager。
+- 生成的控制器继承`RestControllerBase`.
+- 会根据实体所属模块，添加控制器子目录.
 
-### 仅选择一个服务时
+### 默认生成方法
 
-会应用控制器生成选项：
+内置工具会生成以下常见的CURD方法：
 
-- 用户端：仅生成用户端的控制器
-- 管理端：仅生成管理端的控制器
-- 用户羰和管理端：生成用户端和管理端的控制器
 
-> [!Tip]
-> 管理端控制器的生成目录是`AdminControllers`，用户端控制器的生成目录是`Controllers`。
-
-### 选择多个服务时
-
-会忽略控制器生成选项，仅在选择的服务中生成普通的控制器。
+| 方法名      | 说明         |
+| ----------- | ------------ |
+| ListAsync   | 带分页的筛选 |
+| AddAsync    | 添加实体     |
+| UpdateAsync | 编辑实体     |
+| DetailAsync | 获取实体详情 |
+| DeleteAsync | 删除实体     |
