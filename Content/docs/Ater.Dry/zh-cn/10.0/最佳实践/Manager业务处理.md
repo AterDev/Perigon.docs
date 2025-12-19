@@ -1,21 +1,23 @@
 # Manager 业务处理
 
-Manager 层是专门处理业务逻辑的地方，它被Controller 层或其他服务调用。
+Manager是专门处理业务逻辑的地方，它通常被服务层在Controller中调用。
 
 ## Manager的作用
 
-在简单CURD应用中，Manager主要是通过`DbContext`,`CacheService`等对象来实现数据库和缓存的操作。
+在常规的应用中，Manager主要是通过`DbContext`,`CacheService`等对象来实现数据库和缓存的操作。
 
 典型的Manager，提供两个泛型参数，它提供了一些常用的CURD方法。
 
 ```csharp
 public class CustomerInfoManager(
-    DefaultDbContext dbContext,
-    ILogger<CustomerInfoManager> logger)
-    : ManagerBase<DefaultDbContext, CustomerInfo>(dbContext, logger){}
+    TenantDbFactory dbContextFactory, 
+    ILogger<CustomerInfoManager> logger,
+    IUserContext userContext
+)
+    : ManagerBase<DefaultDbContext, CustomerInfo>(dbContextFactory, userContext, logger){}
 ```
 
-当你不需要特定实体时，可以使用其他的Manager基类，如：
+当你不需要特定实体时，可继承不带泛型参数的ManagerBase，如：
 
 ```csharp
 public abstract class ManagerBase(ILogger logger)
@@ -38,18 +40,15 @@ public abstract class ManagerBase<TDbContext>(TDbContext dbContext, ILogger logg
 
 ## Manager规范
 
-Manager是承载业务逻辑的主要载体，你可以根据实际需求，继承不同的基类。
-
-在编写Manager时，需要遵循以下原则：
+Manager是承载业务逻辑的主要载体，在编写Manager时，需要遵循以下原则：
 
 - ❌ 不要直接返回`ActionResult`相关类型，应该返回具体的实体或DTO。
 - ❌ Manager之间不要互相引用，这样会导致循环引用。
 - ❌ 不要直接使用`HttpContext`，应该通过参数传递需要的信息。
-- ❌ 不要直接使用`IUserContext`，应该通过参数传递需要的信息。
-- ✅ 可以使用`DbContext`，`CacheService`等对象来实现数据的操作。
+- ❌ 不要直接编写算法/数据结构等通用逻辑，而是直接调用封装好的方法。
+- ✅ 使用`DbContext`，`CacheService`等对象来实现数据的操作。
 
 Manager不应该关心和处理请求上下文相关的逻辑，它应该专注于业务逻辑的实现。
-
 
 ## 使用ManagerBase基类方法
 
@@ -81,22 +80,29 @@ Manager不应该关心和处理请求上下文相关的逻辑，它应该专注�
 
 ## 生成Manager
 
-当我们定义好实体后，可以通过代码生成器，自动生成业务Manager类，它继承自`ManagerBase<TDbContext,TEntity>`，包含了常用的CURD方法。
+当我们定义好实体后，可以通过代码生成器，自动生成业务Manager类，它继承自`ManagerBase<TDbContext,TEntity>`，包含了常用的CURD方法，你可以在此基础上，添加特定的业务逻辑。
 
-### AddAsync
+## 避免Manager过度膨胀
 
-- 参数: AddDto
-- 返回：添加后的实体模型
-- 行为：直接调用UpsertAsync，无需先查询实体，通过唯一约束抛出冲突异常。
-- 用户实现：实体完整性，如UserId等其他信息
+通常一个Manager是对一个实体或领域模型进行操作的，它应该专注于业务逻辑的实现，以下是最佳实践：
 
-### EditAsync
+- 将第三方调用或中间件调用封装到独立的服务类中，通常放到`Share/Services`目录下，以便在其他Manager中复用。
+- 将数据转换，数据格式处理等放到模型类中，或者提供静态的辅助类。
+- 将算法或计算逻辑封装到独立的类中，以便测试和复用。
 
-- 参数: AddDto
-- 返回：添加后的实体模型
-- 行为：直接调用UpsertAsync，无需先查询实体，通过唯一约束抛出冲突异常。
+Manager更像是执行业务流的地方，调用各种工具或服务获取相关内容，最终返回结果。
 
-### DeleteAsync
-### FilterAsync
-### GetAsync
+## Manager业务异常处理
 
+有时候，我们需要在Manager中抛出业务异常，以便在Controller中捕获并返回给客户端。
+
+模板提供了`BusinessException`类，你可以在Manager中抛出该异常，如：
+
+```csharp
+if (user == null)
+{
+    throw new BusinessException(Localizer.UserNotFound);
+}
+```
+
+`GlobalExceptionMiddleware`会捕获该异常，并将多语言内容返回给客户端。
