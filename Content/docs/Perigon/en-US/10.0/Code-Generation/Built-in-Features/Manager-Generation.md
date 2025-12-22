@@ -1,6 +1,6 @@
 # Manager Generation
 
-Manager is the main implementation part of the business logic layer. Built-in tools can generate common CRUD code here. This article will explain the details of Manager generation.
+Manager is the main implementation component of the business logic layer. Built-in tools can generate common CRUD code here. This document explains the details of Manager generation.
 
 **Support Methods: `Studio` and `MCP`**
 
@@ -10,9 +10,9 @@ Manager is the main implementation part of the business logic layer. Built-in to
 
 ## Generation Behavior
 
-During generation, the module will be identified based on the directory structure where the entity is located. Before generation, it's best to add the corresponding module first.
+During generation, the module is identified based on the directory structure of the entity. Before generation, it is recommended to add the corresponding module first.
 
-Manager needs to use Dto, so when generating Manager, the required DTOs will be generated first.
+Manager requires DTOs, so when generating Manager, the required DTOs will be generated first.
 
 ### ManagerBase
 

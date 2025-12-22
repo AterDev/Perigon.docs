@@ -1,8 +1,8 @@
 # Prompts
 
-Version V10 added MCP support. We hope to provide users with more customization capabilities and better leverage LLM's ability to generate more reliable code.
+Version 10.0 added MCP support. We aim to provide users with greater customization capabilities and better leverage LLM's ability to generate reliable code.
 
-When customizing tools, we need to use prompts to guide the LLM to generate code.
+When customizing tools, prompts are used to guide the LLM in generating code.
 
 ## Viewing Prompts
 
@@ -15,11 +15,11 @@ You can also view prompt files in the `.github/prompts` directory in the project
 
 ## Prompt Management
 
-Like templates, you can create prompt categories (corresponding to directory names), then add prompt files in that category.
+Like templates, you can create prompt categories (corresponding to directory names), then add prompt files within those categories.
 
-You can add through the `UI` page or directly add directories or files in the `.github/prompts` directory.
+You can add prompts through the `UI` page or directly add directories or files in the `.github/prompts` directory.
 
-> Note: Prompt files need to have a `prompt.md` suffix. When adding using Studio, the suffix will be added automatically.
+> Note: Prompt files require a `prompt.md` suffix. When adding via Studio, the suffix is added automatically.
 
 ## Prompt Examples
 

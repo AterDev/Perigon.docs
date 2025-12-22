@@ -1,57 +1,52 @@
 # Creating Solutions
 
-We provide two methods to quickly create solutions:
+We provide two ways to create a solution quickly:
 
-- Command Line: Use `perigon new <name>`.
-- Graphical Interface: Use `perigon studio` to launch the panel.
+- Command line: `perigon new <name>`.
+- Graphical UI: launch the panel with `perigon studio`.
 
-Both methods provide interactive operations to help users create solutions better. This document mainly explains the configuration and options during creation.
+Both options are interactive. This guide explains the key configuration choices.
 
-## Select Database
+## Choose a Database
 
-When creating a solution, you can choose `SqlServer` or `PostgreSQL`, which are the recommended databases.
+Recommended options: `SqlServer` or `PostgreSql`.
 
 ## Using Other Databases
 
-The template uses `EntityFramework Core` as the ORM framework, which means you can use any database that provides an EF Core Provider, but you need to perform some additional operations:
+The template uses Entity Framework Core as the ORM. You can use any database with a supported EF Core provider, with a few changes:
 
-- Modify the `AddDbContext` method in `ServiceDefaults/FrameworkExtensions.cs` to support the database type you need.
+- Update `ServiceDefaults/FrameworkExtensions.cs` → `AddDbContext` to use your provider.
+- Update `Definition/EntityFramework` → `ContextBase` or `TenantDbFactory` to support your provider.
 
-- Modify `ContextBase` or `TenantDbFactory` in `Definition/EntityFramework` to support the database type you need.
+## Connection Strings
 
-## Database Connection String
+When using Aspire, you don’t need to configure connection strings manually—Aspire generates and injects them automatically. If you need to connect to an existing database, define the resource in `AppHost`.
 
-When using `Aspire` to configure the development environment, there is no need to manually configure connection strings. `Aspire` will automatically generate and inject connection strings.
+See: [Configuring Dev Environment with Aspire](./Project-Templates/Configuring-Dev-Environment-with-Aspire.md).
 
-If you need to connect to an existing database, you can also define related resources in `AppHost`.
+## Caching
 
-For detailed information, please refer to [Configuring Development Environment with Aspire](./Project-Templates/Configuring-Environment-with-Aspire.md).
+Options:
 
-## Select Caching
+- Memory: in-memory only via `IMemoryCache`.
+- Redis: distributed cache via `IDistributedCache`.
+- Hybrid: combines both.
 
-There are three caching options:
+Caching is unified by `Microsoft.Extensions.Caching.Hybrid`, which dispatches to memory or distributed caches by policy. The framework provides a `CacheService` to simplify usage; prefer it for consistency.
 
-- Memory: Use only memory caching, available through the `IMemoryCache` interface.
-- Redis: Use Redis caching, available through the `IDistributedCache` interface.
-- Hybrid: Support both memory caching and Redis caching.
-
-Caching operations are uniformly implemented using Microsoft's `Microsoft.Extensions.Caching.Hybrid` library, which internally calls either the `IMemoryCache` or `IDistributedCache` interface based on policy.
-
-The framework encapsulates the `CacheService` service to simplify caching operations, and it is recommended to use this service uniformly.
-
-For more caching-related configurations, after creating the solution, you can configure them in `appsettings.json`.
+Additional cache settings can be configured in `appsettings.json` after creation.
 
 > [!TIP]
-> For information about HybridCache, please refer to the [Microsoft official documentation](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid?view=aspnetcore-9.0).
+> For HybridCache details, see the Microsoft docs: https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid?view=aspnetcore-9.0
 
 ## Message Queue
 
-Not currently supported during creation.
+Not supported during creation.
 
-## Select Authentication Method
+## Authentication
 
-The default is `JWT` authentication. Other methods need to be manually integrated.
+Default: JWT. Other methods require manual integration.
 
-## Select Frontend Framework
+## Frontend Framework
 
-Currently supports the `Angular` project template.
+Currently supports an Angular template.

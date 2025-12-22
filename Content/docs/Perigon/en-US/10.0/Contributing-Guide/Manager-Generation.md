@@ -1,58 +1,20 @@
 # Manager Generation
 
-This document explains the implementation details of the Manager generation feature in the code generator.
+Manager is a core component for implementing business logic. This document explains how to generate Manager classes and the implementation details of Manager generation.
 
-## Generation Process
+## ManagerBase
 
-The Manager generator creates business logic classes that inherit from `ManagerBase<TDbContext, TEntity>`.
+All Managers must inherit from `ManagerBase`. Those that do not inherit will not be injected by the source code generator. The template provides the following ManagerBase types:
 
-## Generated Methods
+- `ManagerBase<TDbContext, TEntity>(TenantDbFactory dbContextFactory, IUserContext userContext, ILogger logger)`: Specifies database context and entity. The code generator uses this by default.
+- `ManagerBase<TDbContext>(TDbContext dbContext, ILogger logger)`: Specifies database context only.
+- `ManagerBase(ILogger logger)`: Does not specify database context or entity. Free to register required services.
 
-The generator creates the following standard CRUD methods:
+## Generation Logic
 
-### FilterAsync
-- Implements pagination and filtering
-- Uses FilterDto for search criteria
-- Returns paged results of ItemDto
+- Parse the specified entity class `Entity` through `DbContextParseHelper` to get the `EntityInfo` object.
+- Generate the Manager class:
+  - Use the entity's DbContext implementation class as the generic parameter `TDbContext`
+  - Use the entity's module attribute to determine the module directory for Manager generation
 
-### AddAsync
-- Creates new entity instances
-- Validates input using AddDto
-- Returns created entity details
-
-### EditAsync
-- Updates existing entities
-- Uses UpdateDto for partial updates
-- Handles null values by ignoring unchanged fields
-
-### GetAsync
-- Retrieves single entity by ID
-- Returns DetailDto
-- Includes permission checks
-
-### DeleteAsync
-- Soft delete or hard delete based on configuration
-- Supports batch deletion
-- Returns success status
-
-### HasPermissionAsync
-- Checks if current user has access to entity
-- Used by other methods for authorization
-
-### GetOwnedIdsAsync
-- Returns IDs of entities owned by current user
-- Used for data filtering based on ownership
-
-## Dependencies
-
-Generated Managers automatically inject:
-- DbContext through TenantDbFactory
-- ILogger for logging
-- IUserContext for user information
-
-## Customization
-
-Developers can extend generated Managers by:
-- Adding custom business methods
-- Overriding base class methods
-- Implementing additional validation logic
+See the `ManagerGenerate` class for specific implementation details and `TplContent.cs` for template content.

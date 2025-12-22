@@ -1,33 +1,24 @@
 # Logging
 
-Logging is an indispensable part of development. It can help us track the application's running status, debug problems, and record important events.
+Logging tracks application state, aids debugging, and records key events.
 
 ## Application Logs
 
-ASP.NET Core provides built-in logging functionality that supports multiple logging providers. `Aspire` builds on this by exporting log information to log collectors through the `OpenTelemetry` standard. You can set the log collector address through the `OTEL_EXPORTER_OTLP_ENDPOINT` environment variable.
+ASP.NET Core includes built-in logging with multiple providers. Aspire exports logs via OpenTelemetry to collectors. Configure via the `OTEL_EXPORTER_OTLP_ENDPOINT` environment variable.
 
 ## Business Logs
 
-Business logs are recorded based on actual business needs when operating on specific objects.
+Business logs record operations on specific objects—distinct from request logs and not easily centralized.
 
-This is different from request log recording and cannot be uniformly intercepted and processed.
+Example: "User Alice deleted blog 'Code Quality'" requires filtering by user, action, module, and object.
 
-Such as the following requirement scenario:
-User Zhang San deleted a blog "The Quality of Programmers", which needs to be recorded in the log: Zhang San deleted the blog: The Quality of Programmers.
+The pattern below supports this:
 
-And can filter logs according to user (Zhang San), operation (delete), module (blog), object (The Quality of Programmers).
+## Background Queues for Log Writing
 
-To implement this kind of business requirement, we provide an implementation method.
+Write business logs to the database but use background queues to avoid blocking business code.
 
-## Using Background Queue to Execute Log Recording
-
-Usually we will write business logs to the database for subsequent filtering and querying.
-
-We will execute log writing operations through background queues to avoid blocking the execution of normal business code.
-
-The `SystemLogTaskHostedService.cs` in the `Worker` directory of the `SystemMod` module provides an implementation example.
-
-If you use it, add this service to dependency injection, such as:
+`SystemMod` includes `SystemLogTaskHostedService.cs` in the `Worker` directory as a reference. To use it:
 
 ```csharp
 services.AddSingleton(typeof(EntityTaskQueue<SystemLogs>));
@@ -35,11 +26,11 @@ services.AddSingleton(typeof(SystemLogService));
 services.AddHostedService<SystemLogTaskHostedService>();
 ```
 
-Next, we can add log objects to the queue through `EntityTaskQueue` in other business code.
+Then enqueue log objects via `EntityTaskQueue` in business code.
 
-## Recording Logs on Demand
+## Log Factory Method
 
-We can add a static method to the `SystemLogs.cs` entity, such as:
+Add a factory method to `SystemLogs.cs`:
 
 ```csharp
 public static SystemLogs NewLog(string userName, Guid userId, string targetName, ActionType actionType, string? route = null, string? description = null)
@@ -56,9 +47,9 @@ public static SystemLogs NewLog(string userName, Guid userId, string targetName,
 }
 ```
 
-### Adding Log Recording Method in Manager
+## Manager Logging Helper
 
-We can encapsulate the log recording method in `Manager` for calling in the controller, such as recording login logs:
+Encapsulate log creation in a Manager method for controller use:
 
 ```csharp
 public async Task SaveLoginLogAsync(SystemUser user, string description)
@@ -68,9 +59,9 @@ public async Task SaveLoginLogAsync(SystemUser user, string description)
 }
 ```
 
-### Encapsulating Business Log Service
+## Business Log Service
 
-We can encapsulate business logs into a service for use elsewhere. You can view `SystemLogService` in SystemMod.
+Wrap into a reusable service. See `SystemLogService` in SystemMod:
 
 ```csharp
 using Ater.Web.Extension;

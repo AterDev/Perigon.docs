@@ -1,39 +1,37 @@
 # Authorization and Authentication
 
-In our applications, we typically use the following methods for authentication:
+Common approaches:
 
-- JWT: Suitable for front-end and back-end separated applications, where the front-end verifies identity by carrying JWT tokens.
-- IdentityServer: Suitable for applications that require more complex authorization and authentication, providing support for OAuth2 and OpenID Connect protocols.
-- Cookie: Suitable for traditional Web applications, using cookies to store user login status.
-- Third-party Login: Integrate third-party login services through protocols such as OAuth2, such as logging in with Google and Microsoft accounts.
-- Passwordless Login: Authenticate through methods such as sending verification codes or device confirmation, without passwords.
-
-Let's briefly analyze the differences between different methods in terms of user systems and program implementation.
+- JWT: for frontend-backend separation; clients carry a JWT.
+- IdentityServer: for complex auth needs (OAuth2, OpenID Connect).
+- Cookies: for traditional web apps; session state in cookies.
+- Third-party login: OAuth2-based (Google, Microsoft, etc.).
+- Passwordless: WebAuthn/PassKey device or biometric-based.
 
 ## JWT
 
-The core of JWT implementation is generating and verifying tokens. Usually, when a user logs in, the server generates a JWT token and returns it to the client. The client carries the token in subsequent requests, and the server confirms the user's identity by verifying the token.
+Server issues a token during login; clients include it in subsequent requests; server validates the token to authenticate.
 
 ## IdentityServer
 
-IdentityServer is a complete identity authentication and authorization framework that supports protocols such as OAuth2 and OpenID Connect. It provides rich features such as multi-tenant support, client credentials, resource servers, etc.
+A full-featured auth framework supporting OAuth2 and OpenID Connect. Includes capabilities like multi-tenancy, client credentials, and resource servers.
 
 ## Passwordless Login
 
-In .NET 10, we can use PassKey to implement passwordless login. PassKey is a WebAuthn-based authentication method that allows users to log in using biometrics or device authentication without entering a password.
+In .NET 10, use PassKey (WebAuthn) for biometric or device-backed login without passwords.
 
 ## Third-party Login
 
-That is, logging in through third-party platform accounts, such as Google and Microsoft accounts. Usually, you need to register an application on the third-party platform, obtain a client ID and secret, and then configure this information in the application.
+Register your app with the provider to obtain client ID/secret, then configure in your app.
 
 ## Template Support
 
-In the `Authentication` node in the configuration file, you can configure different authentication methods. The template provides support for the following authentication methods by default:
+Configure under the `Authentication` section. Built-in support:
 
-- JWT: Authenticate through `JwtBearer`.
-- Microsoft: Support third-party login, such as Microsoft account login.
-- Google: Support third-party login, such as Google account login.
+- JWT via `JwtBearer`.
+- Microsoft account login.
+- Google account login.
 
-When your configuration contains these authentication methods and has valid configuration, the template will automatically add the corresponding services and configuration for you.
+With valid settings present, services and middleware are added automatically.
 
-You can view the specific implementation of the `AddJwtAuthentication` and `AddThirdAuthentication` methods in `WebExtensions.cs`.
+See `WebExtensions.cs` for `AddJwtAuthentication` and `AddThirdAuthentication`.

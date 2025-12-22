@@ -1,25 +1,25 @@
 # Code Templates
 
-Code generation templates are text template files written using `razor` syntax, with a `.razor` suffix. They are used to generate specific code content or provide references for MCP tools.
+Code generation templates are text template files written in `razor` syntax with a `.razor` suffix. They are used to generate specific code content or provide references for MCP tools.
 
 ## Viewing Template Files
 
-You can view your template files through the `Basic Data/Templates` page in **Studio**.
+You can view template files through the `Basic Data/Templates` page in **Studio**.
 
-You can also view template files in the `templates` directory in the project root directory. The page will read and display templates from this directory.
+Alternatively, you can view template files in the `templates` directory at the project root. The page will read and display templates from this directory.
 
 ## Template Management
 
-First, you need to add a template category (corresponding to the directory name), then add template files in that category.
+First, add a template category (corresponding to a directory name), then add template files within that category.
 
-You can add through the `UI` page or directly add in the `templates` directory.
+You can add templates through the `UI` page or directly in the `templates` directory.
 
 > [!TIP]
 > When adding templates through UI, it will preliminarily verify whether your content conforms to the `razor` syntax specification.
 
 ## Template Context and Variables
 
-Template context and variables are data and variables that can be used when writing templates. When creating a generation task, you can select the context type and custom variable list.
+Template context and variables are data elements that can be used when writing templates. When creating a generation task, you can select the context type and custom variable list.
 
 ### Context Structure
 
@@ -101,4 +101,4 @@ The template itself follows the `razor` syntax specification. You can create a `
 
 
 > [!TIP]
-> Writing templates is not easy. You need to understand what variables and data structures you can use. You can use [MCP tools to generate](../MCP-Server/Built-in-Tool-Examples.md#generate-razor-template) and modify on that basis.
+> Writing templates is not straightforward. You need to understand what variables and data structures you can use. You can use [MCP tools to generate](../MCP-Server/Built-in-Tool-Examples.md#generate-razor-template) a template as a starting point and modify it accordingly.

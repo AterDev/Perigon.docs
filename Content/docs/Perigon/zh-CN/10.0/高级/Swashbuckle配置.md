@@ -1,12 +1,12 @@
 # Swashbuckle.AspNetCore配置
 
-本文档介绍如何在项目中配置`Swashbuckle.AspNetCore`，以生成符合需求的`OpenApi`文档。
+本文将介绍如何在项目中配置`Swashbuckle.AspNetCore`，以生成符合需求的`OpenApi`文档。
 
-这里介绍是`10.0`及之后的版本，由于`10.0`后使用了`Microsoft.OpenApi2.0`，部分配置与旧版略有不同。
+这里介绍的是`10.0`及之后的版本，由于`10.0`后使用了`Microsoft.OpenApi2.0`，部分配置与旧版有所不同。
 
 ## Schema Filter
 
-这里对枚举类型，以及required字段进行处理。
+这里对枚举类型，以required字段进行处理。
 
 ```csharp
 public class EnumSchemaFilter : ISchemaFilter
@@ -108,6 +108,4 @@ public class EnumSchemaFilter : ISchemaFilter
         }
     }
 }
-
-
 ```

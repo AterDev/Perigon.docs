@@ -1,13 +1,13 @@
 # OpenApi自定义转换器
 
-微软官方的`OpenApi`一言难尽，如果你想使用它，本文档介绍如何自定义`OpenApi`转换器来解决一些常见问题。
+微软官方的`OpenApi`一言难尽，如果你想使用它，本文将介绍如何自定义`OpenApi`转换器来解决一些常见问题。
 
 > [!WARNING]
 > 在现有阶段，仍然建议使用`Swashbuckle.AspNetCore`，微软官方的`OpenApi`目前仍然不够成熟，很多功能都不完善。
 
-## 处理枚举类型
+## 枚举类型处理
 
-默认情况下，`OpenApi`会将枚举类型转换为整数，其字段和描述信息会丢失，我们将使用Extension来添加这些信息。
+默认情况下，`OpenApi`会将枚举类型转换为整型，其字段和描述信息会丢失，我们将使用Extension来添加这些信息。
 
 ```csharp
 /// <summary>
@@ -67,7 +67,7 @@ public sealed class OpenApiSchemaTransformer : IOpenApiSchemaTransformer
     private sealed record EnumItem(string Name, int Value, string? Description);
 
     /// <summary>
-    /// 自定义扩展写出器
+    /// 自定义扩展输出器
     /// </summary>
     private sealed class EnumDataExtension(IReadOnlyList<EnumItem> items) : IOpenApiExtension
     {
