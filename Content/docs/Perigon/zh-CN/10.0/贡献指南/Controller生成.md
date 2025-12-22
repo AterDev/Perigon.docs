@@ -2,7 +2,7 @@
 
 ## 概述
 
-选择实体然后生成Controller，由于Controller依赖`Dto`和`Manager`，所以会先生成`Dto`和`Manager`。
+选择实体然后生成Controller，由于Controller依赖`DTO`和`Manager`，所以会先生成`DTO`和`Manager`。
 
 生成的Controller默认继承`RestControllerBase<TManager>`，
 
@@ -43,88 +43,4 @@ controller的生成需要先获取以下信息
 - 获取详情
 - 删除
 
-## 分页查询
-
-```csharp
-/// <summary>
-/// 分页数据 🛑
-/// </summary>
-/// <param name="filter"></param>
-/// <returns></returns>
-[HttpPost("filter")]
-public async Task<ActionResult<PageList<BlogItemDto>>> FilterAsync(BlogFilterDto filter)
-{
-
-    filter.UserId = _user.UserId;
-    return await _manager.ToPageAsync(filter);
-}
-
-/// <summary>
-/// 新增 🛑
-/// </summary>
-/// <param name="dto"></param>
-/// <returns></returns>
-[HttpPost]
-public async Task<ActionResult<Guid?>> AddAsync(BlogAddDto dto)
-{
-    if (!await _manager.IsValidateCatalogAsync(dto.CatalogId, _user.UserId))
-    {
-        return NotFound(Localizer.NotFoundResource);
-    }
-    dto.UserId = _user.UserId;
-    var id = await _manager.AddAsync(dto);
-    return id == null ? Problem(Localizer.AddFailed) : id;
-}
-
-/// <summary>
-/// 更新数据 🛑
-/// </summary>
-/// <param name="id"></param>
-/// <param name="dto"></param>
-/// <returns></returns>
-[HttpPatch("{id}")]
-public async Task<ActionResult<bool>> UpdateAsync([FromRoute] Guid id, BlogUpdateDto dto)
-{
-    var entity = await _manager.GetOwnedAsync(id, _user.UserId);
-    if (entity == null)
-    {
-        return NotFound(Localizer.NotFoundResource);
-    }
-
-    return await _manager.UpdateAsync(entity, dto);
-}
-
-/// <summary>
-/// 获取详情 🛑
-/// </summary>
-/// <param name="id"></param>
-/// <returns></returns>
-[HttpGet("{id}")]
-public async Task<ActionResult<BlogDetailDto?>> GetDetailAsync([FromRoute] Guid id)
-{
-    if (!await _manager.IsOwnedAsync(id, _user.UserId))
-    {
-        return NotFound(Localizer.NotFoundResource);
-    }
-    var res = await _manager.GetDetailAsync(id);
-    return res == null ? NotFound() : res;
-}
-
-/// <summary>
-/// 删除 🛑
-/// </summary>
-/// <param name="id"></param>
-/// <returns></returns>
-[HttpDelete("{id}")]
-public async Task<ActionResult<bool>> DeleteAsync([FromRoute] Guid id)
-{
-    // 注意删除权限
-    if (!await _manager.IsOwnedAsync(id, _user.UserId))
-    {
-        return NotFound(Localizer.NotFoundResource);
-    }
-    // return Forbid();
-    return await _manager.DeleteAsync([id], true);
-}
-
-```
+请查看`RestApiGenerate`类，了解具体的实现细节，`TplContent.cs`查看模板内容。
