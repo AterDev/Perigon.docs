@@ -1,30 +1,13 @@
 #:sdk Microsoft.NET.Sdk.Web
+// 解析参数：根目录和端口
+var baseDir = Directory.GetCurrentDirectory();
+var root = args.Length > 0 && !string.IsNullOrWhiteSpace(args[0])
+    ? Path.GetFullPath(args[0])
+    : Path.Combine(baseDir, "WebSite");
 
-using Microsoft.Extensions.FileProviders;
-var argsList = args ?? Array.Empty<string>();
+var port = args.Length > 1 && int.TryParse(args[1], out var p) ? p : 5200;
 
-// 1. 解析根目录参数
-string rootArg = argsList.Length > 0 && !string.IsNullOrWhiteSpace(argsList[0])
-    ? argsList[0]
-    : string.Empty;
-
-string baseDir = Directory.GetCurrentDirectory();
-string defaultWebRoot = Path.Combine(baseDir, "WebSite");
-
-string root = !string.IsNullOrEmpty(rootArg)
-    ? rootArg
-    : (Directory.Exists(defaultWebRoot) ? defaultWebRoot : baseDir);
-
-if (!Path.IsPathRooted(root))
-{
-    root = Path.GetFullPath(Path.Combine(baseDir, root));
-}
-
-int port = 5200;
-if (argsList.Length > 1 && int.TryParse(argsList[1], out var p) && p > 0 && p <= 65535)
-{
-    port = p;
-}
+// 创建并配置应用
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
     Args = args,
@@ -32,16 +15,10 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     WebRootPath = root
 });
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenLocalhost(port);
-});
+builder.WebHost.UseUrls($"http://localhost:{port}");
+
 var app = builder.Build();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(root),
-    RequestPath = "",
-});
+app.UseStaticFiles();
 app.MapFallbackToFile("index.html");
 
 await app.RunAsync();
