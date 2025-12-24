@@ -11,14 +11,13 @@ Provides generation support for API Controllers that conform to the framework de
 
 ## Generation Behavior
 
-- Controller itself depends on Manager and DTO, so when generating Controller, the required DTOs and Managers will be generated first.
+- Controller depends on Manager and DTO, so when generating Controller, the required DTOs and Managers will be generated first.
 - The generated controller inherits from `RestControllerBase`.
 - Controller subdirectories will be added according to the module the entity belongs to.
 
 ### Default Generated Methods
 
 Built-in tools will generate the following common CRUD methods:
-
 
 | Method Name | Description              |
 | ----------- | ------------------------ |

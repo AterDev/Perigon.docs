@@ -1,13 +1,13 @@
 # OpenAPI Custom Converter
 
-Microsoft's official `OpenApi` is hard to describe. If you want to use it, this document introduces how to customize `OpenApi` converters to solve some common problems.
+Microsoft’s `OpenApi` implementation is still evolving. If you choose to use it, here’s how to customize transformers to address common gaps.
 
 > [!WARNING]
-> At the current stage, it is still recommended to use `Swashbuckle.AspNetCore`. Microsoft's official `OpenApi` is still not mature enough, and many features are not complete.
+> Prefer `Swashbuckle.AspNetCore` for now. The official `OpenApi` stack is not yet as complete, and several features remain limited.
 
-## Handling Enum Types
+## Enum Handling
 
-By default, `OpenApi` converts enum types to integers, and their field and description information will be lost. We will use Extension to add this information.
+By default, enums are emitted as integers and their names/descriptions are lost. Add a custom extension with the enum metadata so clients can render useful labels.
 
 ```csharp
 /// <summary>
@@ -102,7 +102,7 @@ public sealed class OpenApiSchemaTransformer : IOpenApiSchemaTransformer
 
 ## Custom OperationId
 
-OperationId is very important. It provides a unique identifier for the API and can be used when generating client code.
+`OperationId` is important for client generation and tooling because it uniquely identifies an endpoint.
 
 ```csharp
 /// <summary>
@@ -135,4 +135,4 @@ public class OpenApiOperationTransformer : IOpenApiOperationTransformer
 ```
 
 > [!TIP]
-> The above example uses controller and action names to generate OperationId. From a coding perspective, you can define multiple methods with the same action name, but this is not recommended. For APIs, it is recommended that each API has a unique action name.
+> The sample derives `OperationId` from controller and action names. While you technically can repeat action names, avoid it—prefer globally unique operation names per endpoint.

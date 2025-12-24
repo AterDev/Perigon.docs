@@ -1,34 +1,33 @@
 # Custom MCP Tools
 
-Perigon has some built-in MCP tools, mainly used to generate Asp.Net Core code structure.
+Perigon includes several built-in MCP tools, primarily for generating ASP.NET Core code structures.
 
-In actual development, we may need more tools, so we meet the needs through custom MCP tools.
+In real-world development, you may need additional tools. Custom MCP tools allow you to extend functionality and meet specific requirements.
 
 ## Adding Custom Tools
 
-Before adding custom tools, we need to first add [templates](../Data-Management/Code-Templates.md) and [prompts](../Data-Management/Prompts.md). Then add custom tools in the `MCP` page.
+Before adding custom tools, first create [templates](../Data-Management/Code-Templates.md) and [prompts](../Data-Management/Prompts.md). Then add custom tools in the `MCP` page.
 
-A tool can only select one prompt, but can select multiple templates.
+Each tool can use only one prompt but can select multiple templates.
 
-- Prompt: Used to tell the tool how to generate code.
-- Template: Used to provide code structure or reference.
+- **Prompt**: Guides the tool in generating code.
+- **Template**: Provides code structure or reference.
 
 Custom tools generate final code based on prompts and templates.
 
-When adding a custom MCP tool, we will see:
+When adding a custom MCP tool, you will see:
 
 ![add mcp](../../_images/add_mcp.png)
 
-- Name: Name that conforms to mcp specifications, i.e., lowercase with underscores, such as `create_service`.
-- Description: Very important, used to describe the function of the tool. Describe accurately so that it can be called correctly.
+- **Name**: Must conform to MCP specifications (lowercase with underscores), such as `create_service`.
+- **Description**: Critical for describing the tool's functionality. Be precise to ensure correct invocation.
 
 ## Using Custom Tools
 
-After adding custom tools, we need to retrieve the tool list again in the client to see the newly added tools. Please open the `mcp.json` file and click `Restart`.
-
+After adding custom tools, retrieve the tool list again in the client to see the newly added tools. Open the `mcp.json` file and click `Restart`.
 
 ![restart_mcp](../../_images/restart_mcp.png)
 
-View the tool list, custom tools will appear in the list. Now you can use the tool in the IDE.
+View the tool list. Custom tools will now appear in the list and be available for use in your IDE.
 
 

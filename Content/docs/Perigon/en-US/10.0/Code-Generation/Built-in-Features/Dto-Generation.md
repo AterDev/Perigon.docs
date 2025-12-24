@@ -1,16 +1,8 @@
-# Code Generation
+# DTO Generation
 
-Code generation is one of the core features provided by this tool. It can help developers quickly generate efficient and concise templated code, reduce repetitive work, and improve development efficiency.
+DTO generation creates DTO classes based on **entity classes**, usually including:
 
-For the most common scenario of performing data operations on an entity, the code generator can automatically generate corresponding template code for create, read, update, and delete operations. The following will specifically introduce the generated content and rules.
-
-**Support Methods: `Studio` and `MCP`**
-
-## DTO Generation
-
-Generate DTO classes based on **entity classes**, usually including:
-
-| Dto       | Purpose                      |
+| DTO       | Purpose                      |
 | --------- | ---------------------------- |
 | ItemDto   | List element                 |
 | DetailDto | Details of an entity         |
@@ -18,16 +10,18 @@ Generate DTO classes based on **entity classes**, usually including:
 | AddDto    | Model for adding             |
 | UpdateDto | Model for updating           |
 
-DTOs will be generated in the corresponding module
+DTOs will be generated in the corresponding module directory.
+
+**Support Methods: `Studio` and `MCP`**
 
 ## DTO Generation Rules
 
 DTOs globally ignore the following properties:
 
-- When the property has the [JsonIgnore] attribute
-- When the property type is `JsonDocument` or `byte[]`
+- Properties with the `[JsonIgnore]` attribute
+- Properties of type `JsonDocument` or `byte[]`
 
-For each type of DTO, properties are filtered and processed according to specific usage scenarios. The specific rules are as follows:
+For each type of DTO, properties are filtered and processed according to specific usage scenarios. The detailed rules are as follows:
 
 ### ItemDto
 

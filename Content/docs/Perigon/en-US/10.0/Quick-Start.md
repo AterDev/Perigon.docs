@@ -116,7 +116,7 @@ Find the `AdminService.http` file under `AdminService`. There are two APIs for g
 
 By default, Aspire will start the Angular frontend project. In the Dashboard, you can directly click the link to enter the frontend page and log in using the following information:
 - Email: `admin@default.com`
-- Password: `Perigon..2026`
+- Password: `Perigon.2026`
 
 ### Run Test Project
 

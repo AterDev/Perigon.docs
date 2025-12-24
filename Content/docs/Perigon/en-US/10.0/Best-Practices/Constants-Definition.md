@@ -1,20 +1,20 @@
 # Constants Definition
 
-In projects, we often define some constants or static variables to store immutable data. To improve code readability and maintainability, it is recommended to centrally manage these constants.
+In projects, we often define constants or static variables to store immutable data. To improve code readability and maintainability, it's recommended to centrally manage these constants.
 
 ## Shared Constants
 
-In the `Constants` directory of the `Share` assembly, it is specifically used to define shared constants or static variables, which may be referenced by other modules or services.
+In the `Constants` directory of the `Share` assembly, define shared constants or static variables that may be referenced by other modules or services.
 
-## Dedicated Constants
+## Module-Specific Constants
 
-If some constants are only used in specific modules or services, they should be defined in the corresponding modules or services, not in the shared constants directory.
+If constants are only used in specific modules or services, define them in the corresponding module or service, not in the shared constants directory.
 
 ## Extension Methods
 
-In the base class library `Perigon.AspNetCore`, constants are defined using `AppConst`. If you still want to use `AppConst`, you can implement it through extension methods.
+In the base class library `Perigon.AspNetCore`, constants are defined using `AppConst`. If you want to extend `AppConst`, use extension methods.
 
-In C# 14, we can create a new static class in the `Share/Constants` directory, such as `AppExtensions`, specifically used to extend application-level variables and methods, such as:
+In C# 14, you can create a new static class in the `Share/Constants` directory, such as `AppExtensions`, to extend application-level variables and methods:
 
 ```csharp
 public static class AppExtensions
@@ -26,7 +26,7 @@ public static class AppExtensions
 }
 ```
 
-Then we can directly use `AppConst.AIAgent` to access this variable in the code.
+Then you can directly use `AppConst.AIAgent` in your code.
 
 > [!TIP]
-> If you are prompted that the defined variable or extension method cannot be found when using it, try manually adding the namespace reference.
+> If you can't find a defined variable or extension method, try manually adding the namespace reference.

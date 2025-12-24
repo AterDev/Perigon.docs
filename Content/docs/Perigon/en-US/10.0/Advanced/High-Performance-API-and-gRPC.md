@@ -1,30 +1,28 @@
 # gRPC
 
-ASP.NET Core has good support for gRPC services and can be used to build high-performance distributed systems and microservice architectures.
+ASP.NET Core offers first-class gRPC support, making it a strong option for high-performance distributed systems and microservices.
 
-## Performance Description
+## Why gRPC Performs Well
 
-The high performance of gRPC is mainly because it uses HTTP/2 protocol and Protocol Buffers serialization format. HTTP/2 supports features such as multiplexing, header compression, and server push, reducing network latency and bandwidth consumption. Protocol Buffers is an efficient binary serialization format that is smaller and faster than JSON or XML.
+gRPC’s throughput largely comes from HTTP/2 plus Protocol Buffers. HTTP/2 brings multiplexing, header compression, and server push, reducing latency and bandwidth. Protocol Buffers is a compact binary format that’s smaller and faster than JSON or XML.
 
-There are two core points:
+The two key ingredients are:
 
 - HTTP/2
 - Protocol Buffers
 
-So if our APIs use HTTP/2 and Protocol Buffers, will the performance also be improved?
+This raises a practical question: if a REST API also uses HTTP/2 and a compact serializer, can it close the gap?
 
 ## Custom Formatters
 
-In ASP.NET Core, we can support both Json and Protocol Buffers formats at the same time to meet the needs of different clients.
+In ASP.NET Core, you can support both JSON and Protocol Buffers (and others) simultaneously to suit different clients.
 
-From the [official documentation](https://learn.microsoft.com/en-us/aspnet/core/web-api/advanced/custom-formatters?view=aspnetcore-10.0), we can learn how to customize formatters.
+See the docs on [custom formatters](https://learn.microsoft.com/en-us/aspnet/core/web-api/advanced/custom-formatters?view=aspnetcore-10.0). This lets you add formats like XML, Protocol Buffers, and MessagePack without invasive changes.
 
-This way we can handle multiple serialization formats such as `XML`, `Protocol Buffers`, `MessagePack`, etc. at the same time without making destructive changes to existing project code.
-
-Similarly, according to the [official documentation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-10.0#configure-http-protocols), we can configure the Kestrel server to support specific HTTP protocol versions.
+You can also configure Kestrel to select specific HTTP protocol versions. See [Configure HTTP protocols](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-10.0#configure-http-protocols).
 
 ## Summary
 
-If considering performance reasons, gRPC is not the only choice. It is just an implementation using a specific technology stack and requires a certain learning cost and usage experience.
+If performance is the only goal, gRPC isn’t the only answer—it’s one implementation choice with its own learning curve and trade-offs. A REST API using HTTP/2 and an efficient serializer can also perform very well.
 
-The convenience of gRPC is mainly reflected in the fact that it provides client support in different languages, simplifying the complexity of cross-language calls.
+gRPC’s biggest convenience is robust client support across languages, which simplifies cross-language calls.

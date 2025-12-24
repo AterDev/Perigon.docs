@@ -1,65 +1,49 @@
 # Controller Generation
 
-This document explains the implementation details of the Controller generation feature in the code generator.
+This document explains the implementation details of Controller generation.
 
-## Generation Process
+## Overview
 
-The Controller generator creates API controllers that inherit from `RestControllerBase` and follow RESTful conventions.
+When selecting an entity to generate a Controller, since Controller depends on `DTO` and `Manager`, both `DTO` and `Manager` are generated first.
 
-## Generated Endpoints
+Generated Controllers inherit from `RestControllerBase<TManager>`:
 
-The generator creates the following standard API endpoints:
+```csharp
+[ApiExplorerSettings(GroupName = "v1")]
+[Authorize(Policy = WebConst.User)]
+public class RestControllerBase<TManager>(
+    Localizer localizer,
+    TManager manager,
+    IUserContext user,
+    ILogger logger
+) : RestControllerBase(localizer)
+    where TManager : class
+{
+    protected readonly TManager _manager = manager;
+    protected readonly ILogger _logger = logger;
+    protected readonly IUserContext _user = user;
+}
+```
 
-### GET - List/Filter
-- Route: `GET /api/[controller]`
-- Uses FilterDto for query parameters
-- Returns paginated list of ItemDto
-- Implements sorting and filtering
+> [!TIP]
+> Controllers have one Manager generic parameter. When multiple `Manager` instances are needed, you can inject additional managers directly and use them in the Controller.
 
-### POST - Create
-- Route: `POST /api/[controller]`
-- Accepts AddDto in request body
-- Returns 201 Created with DetailDto
-- Includes Location header
+## Generation Logic
 
-### PUT - Update
-- Route: `PUT /api/[controller]/{id}`
-- Accepts UpdateDto in request body
-- Returns 200 OK with updated DetailDto
-- Validates entity exists
+Controller generation requires the following information:
 
-### GET - Detail
-- Route: `GET /api/[controller]/{id}`
-- Returns DetailDto for specified ID
-- Returns 404 if not found
+- Parse the specified entity class `Entity` through `DbContextParseHelper` to get the `EntityInfo` object.
+- The service project selected by the user to determine the generation location.
+- Check if `SystemMod` is referenced (configurable) to determine management permissions.
+- DTO information from the previous generation step, obtained through cache.
+- Solution configuration information.
 
-### DELETE - Remove
-- Route: `DELETE /api/[controller]/{id}`
-- Supports batch deletion with multiple IDs
-- Returns 204 No Content on success
-- Implements soft delete by default
+Interface generation primarily calls related methods of `Manager` according to REST API specifications. Generated interface methods include:
 
-## Features
+- Pagination and filtering
+- Create
+- Update
+- Get details
+- Delete
 
-Generated controllers include:
-- Automatic dependency injection of Manager
-- API versioning support
-- Swagger/OpenAPI documentation
-- Model validation
-- Exception handling through middleware
-- Authorization attributes where applicable
-
-## Organization
-
-Controllers are organized by:
-- Module subdirectories
-- RESTful naming conventions
-- Consistent route patterns
-
-## Customization
-
-Developers can customize generated controllers by:
-- Adding custom endpoints
-- Modifying route patterns
-- Implementing additional authorization
-- Adding custom validation logic
+See the `RestApiGenerate` class for specific implementation details and `TplContent.cs` for template content.

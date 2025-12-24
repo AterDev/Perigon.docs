@@ -1,12 +1,12 @@
 # Swashbuckle.AspNetCore Configuration
 
-This document introduces how to configure `Swashbuckle.AspNetCore` in a project to generate `OpenApi` documents that meet requirements.
+This guide shows how to configure `Swashbuckle.AspNetCore` to generate OpenAPI that better fits your needs.
 
-The introduction here is for version `10.0` and later. Since `10.0` uses `Microsoft.OpenApi 2.0`, some configurations are slightly different from the old version.
+Applies to version `10.0+`. Since `10.0` adopts `Microsoft.OpenApi 2.0`, some configuration differs from prior releases.
 
 ## Schema Filter
 
-This handles enum types and required fields.
+Handle enum metadata and required properties.
 
 ```csharp
 public class EnumSchemaFilter : ISchemaFilter

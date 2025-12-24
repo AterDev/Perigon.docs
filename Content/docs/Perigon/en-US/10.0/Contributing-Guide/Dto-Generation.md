@@ -1,54 +1,78 @@
 # DTO Generation
 
-This document explains the implementation details of the DTO generation feature in the code generator.
+DTO is used to define the input and output data structure of interfaces. When interacting with databases, type conversion is required. We use `Mapster` for conversion between entity classes and DTOs. DTO content is generated based on entity classes, which is a prerequisite.
 
-## Generation Process
+This document explains how to generate DTO classes and DTO generation rules.
 
-The DTO generator analyzes entity classes and generates the following DTO types:
+## Generated DTO Types
 
-### ItemDto
-Used for list views, contains:
-- Basic properties excluding complex types
-- Excludes navigation properties
-- Limits string lengths for performance
+Based on **entity classes**, the following DTO types are generated:
 
-### DetailDto  
-Used for detailed views, contains:
-- Most entity properties
-- Excludes collections and complex navigation properties
-- Includes timestamps and metadata
+| DTO       | Purpose              |
+| --------- | -------------------- |
+| ItemDto   | List elements        |
+| DetailDto | Entity details       |
+| FilterDto | Filter condition model|
+| AddDto    | Add model            |
+| UpdateDto | Update model         |
 
-### FilterDto
-Used for filtering and search operations, contains:
-- Properties suitable for filtering
-- Excludes collections and binary data
-- Includes enum properties for filtering
+When generating DTOs, DTO information is cached. After generation completes, the cache is cleared.
 
-### AddDto
-Used for creation operations, contains:
-- Required properties for creating new entities
-- Excludes auto-generated fields (Id, timestamps)
-- Includes foreign key IDs instead of navigation properties
+See the `DtoCodeGenerate` class for specific implementation details.
 
-### UpdateDto
-Used for update operations, contains:
-- Similar to AddDto but all properties are nullable
-- Allows partial updates
-- Null values are ignored during updates
+## DTO Generation Rules
 
-## Property Filtering Rules
+DTOs globally ignore the following properties (temporary limitation):
 
-The generator applies specific rules for each DTO type to determine which properties to include based on:
-- Property type
-- Attributes (Required, MaxLength, etc.)
-- Navigation property status
-- String length constraints
-- JsonIgnore attributes
+- Properties with the `[JsonIgnore]` attribute
+- Properties of type `JsonDocument` or `byte[]`
 
-## Code Generation
+Future updates will handle these properties.
 
-Generated DTOs include:
-- Proper namespaces
-- XML documentation comments
-- Data annotations for validation
-- Mapster mapping hints
+> [!TIP]
+> Since `EntityFrameworkCore.Design` is used to obtain entity information, properties not recognized as database-mapped properties will not be included in Add/Update DTO generation.
+
+For each DTO type, properties are filtered and processed based on the specific usage scenario.
+
+## AddDto
+
+Add model generation content:
+
+- Ignore basic properties like "Id", "CreatedTime", "UpdatedTime", "IsDeleted"
+- Must be assignable properties with a `set` method.
+- Do not retain original `required` keyword restrictions for better instance creation.
+- For navigation properties:
+  - Ignore Collection and SkipNavigation properties
+
+## ItemDto
+
+List elements do not include the following properties:
+
+- IsDeleted and UpdatedTime fields, but include CreatedTime
+- Arrays or lists
+- Strings longer than 200 characters
+- Navigation properties and corresponding IDs
+
+## DetailDto
+
+Detail DTO does not include the following properties:
+
+- IsDeleted
+- Lists and navigation properties
+- Properties of type `JsonDocument` and `byte[]`
+
+## FilterDto
+
+FilterDto generation content:
+
+- Ignore basic properties like "Id", "CreatedTime", "UpdatedTime", "IsDeleted"
+- Ignore lists and navigation properties
+- Ignore string properties with maximum length over 1000
+- Keep required properties (but not navigation properties)
+- Include enum properties
+
+## UpdateDto
+
+Update model generation is the same as add model, but all properties are nullable by default.
+
+Nullable properties mean that if a field is null, the update ignores that field, implementing partial updates.
