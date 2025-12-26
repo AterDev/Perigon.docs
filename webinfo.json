@@ -10,6 +10,8 @@
   "DocInfos": [
     {
       "Name": "Perigon",
+      "Logo": "perigon.png",
+      "Description": "Fast Web Development Toolkit, based on Aspire, Asp.Net Core and Entity Framework Core.",
       "Languages": [
         "zh-CN",
         "en-US"
