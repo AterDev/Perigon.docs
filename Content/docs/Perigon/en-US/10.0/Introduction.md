@@ -6,7 +6,9 @@ This guide introduces Perigon.CLI, its capabilities, value, and technology choic
 
 ## What is Perigon.CLI?
 
-DRY stands for "Don't Repeat Yourself," and Copilot implies a co-pilot that reduces repetitive work and boosts efficiency. Perigon.CLI is a .NET-based tool distributed through NuGet. It offers four core capabilities:
+`Perigon` is a streamlined form of "peregrine," referring to the peregrine falcon—a remarkably swift bird of prey that symbolizes efficiency and agility. Additionally, the word "Perigon" itself carries the meaning of "panorama," reflecting the tool's commitment to delivering comprehensive development support and empowering developers to build applications efficiently.
+
+Perigon.CLI is a .NET-based tool distributed through NuGet. It offers four core capabilities:
 
 - **Solution templates**: well-designed, clearly layered, widely applicable Web API templates built on:
   - ASP.NET Core
