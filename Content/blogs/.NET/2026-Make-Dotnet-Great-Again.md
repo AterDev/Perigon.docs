@@ -17,9 +17,9 @@ Practical application scenarios enabled by single-file execution:
 
 **Core Value:** One .cs file = a complete, type-safe, high-performance .NET program. In many scenarios, you no longer need complex toolchains, CI/CD, or Docker—just a single .cs file.
 
-## 🔍 The Crux of the Problem: Missing Piece of the Puzzle
+## 🔍 The Barrier to Overcome
 
-The only factor hindering the popularity of .NET single-file execution: **dependency on .NET SDK installation**.
+Single-file execution is excellent and powerful, but it has one prerequisite: the need to install **.NET 10 SDK**, the final wall that needs to be broken down.
 
 **Current Challenge:** Users must install .NET SDK first to run .cs files, and this prerequisite immediately raises the barrier to entry.
 
@@ -29,14 +29,17 @@ The only factor hindering the popularity of .NET single-file execution: **depend
 
 When Windows or mainstream Linux distributions come with .NET SDK pre-installed, the perception of new developers and users will gradually change.
 
-**Cognitive Value of System-Level Integration:**
+With integrated .NET SDK, Windows will possess a **unified, fully-featured development toolchain** and a **.NET runtime environment**. With this advantage, it will become the most convenient operating system for getting started with programming and the preferred platform for running .NET applications.
 
-- Windows will possess a **unified, fully-featured development toolchain**
-- **Strong cross-platform development capabilities and exceptional development experience** become inherent attributes of Windows
-- Windows becomes the first choice for learning and developing with .NET
-- Demonstrates Microsoft's commitment to Windows and .NET ecosystems, creating a virtuous cycle of mutual success
+Looking back, many Linux distributions pre-installed Python and PHP environments years ago, which greatly promoted the popularity of these languages. Developers on these systems could directly start writing and running scripts without additional installation, and they were considered developer-friendly operating systems.
 
-## ⚡ Strategic Value Two: Ultimate Development Experience
+Unlike the outdated and closed `.NET Framework`, modern .NET is now widely recognized by developers. Bringing .NET SDK directly to the operating system won't cause resentment; instead, it will be seen as a developer-friendly move. Its single-file execution capability is more powerful and offers greater possibilities.
+
+## ⚡ Strategic Value Two: Unified Toolchain Standard
+
+In the development industry, toolchains are an unavoidable topic. .NET is exemplary in this regard. When an operating system comes with a standard toolchain, both developers and users benefit greatly. It will also encourage other ecosystems to reflect on and improve themselves.
+
+Let's look at the two hottest ecosystems:
 
 ### Comparison: Tool Chain Fragmentation in Mainstream Ecosystems
 
@@ -55,8 +58,6 @@ Python developers need to learn and maintain **7-8 different tools**, with varyi
 Package Management: npm → yarn → pnpm (incompatible lock files)
 Build Tools: webpack → Rollup → Parcel → Vite → Turbopack
 Test Frameworks: Jest → Mocha → Vitest → Playwright
-Runtime Environments: node → deno → bun
-```
 Node.js developers face **dependency hell and frequent tool replacements**.
 
 ### .NET's Unified Advantage: One Command Solves Everything
@@ -79,20 +80,18 @@ dotnet ef           # Database migrations
 **Key Advantage:** No need for version management tools; multiple versions can be installed simultaneously without interference.
 
 > [!IMPORTANT]
-> While other ecosystems tout the performance gains of rewriting toolchains in Rust, .NET solved all these problems with a single `dotnet` command from its first version.
-
-### Impact of Windows Pre-Installing .NET SDK
+> While other ecosystems tout the performance gains of rewriting toolchains in Rust, .NET solved all these problems with a single `dotnet` command from its first version. Oh, and by the way, .NET doesn't need version management tools—multiple versions can be installed simultaneously without interference
 
 - **Lower Barrier to Entry** - All .NET ecosystem documentation can eliminate the "install SDK first" prerequisite
 - **Developer Priority** - Developers and publishers prioritize environments natively supported by the system
 - **AI Tool Rise** - AI CLI tools will prioritize .NET because users don't need to install additional runtimes
 - **System Tool Upgrade** - Windows non-core tools can be developed in .NET, with built-in cross-platform capabilities, eliminating WebView2
+, becoming more user-friendly
+- **Developer Priority** - Whether developers or publishers, they will prioritize environments natively supported by the system itself, without needing users to install and configure additional runtimes
+- **AI Tool Rise** - Various CLI tools will start considering .NET as the preferred development language because users don't need to install additional runtime environments
+- **System Tool Upgrade** - Windows non-core tools can be developed in .NET, with built-in cross-platform capabilities, eliminating WebView2
 
-**Result:** A double enhancement of developer and user experience.
-
-## 🌐 Strategic Value Three: Ecosystem Transformation
-
-### The Paradigm Shift in Software Distribution
+Whether for developers or users, this rImpactgnificant transformation in both developmenton
 
 **Pain Points of Current Approaches:**
 - **Traditional Applications** - Installation packages, registry pollution, uninstall remnants
@@ -110,14 +109,14 @@ When properly implemented, this ecosystem will form:
 - **C#** → The preferred language for learning and work
 - **GitHub** → The largest source code hosting platform
 - **NuGet** → The largest tool distribution platform
-- **Windows** → The largest runtime platform
+- **Windows** → The largest application and service platform
 
 > [!IMPORTANT]
 > Any application that can be written in C# should ultimately be written in C#. Any program that can run on .NET should ultimately run on .NET.
 
 ## 🤖 Strategic Value Four: Core Competitiveness in the AI Era
 
-Current AI development ecosystems heavily depend on Python, with user-facing tools often choosing Node.js, and enterprise solutions gradually shifting to Java. However, **.NET actually possesses underestimated natural advantages in AI workflows**.
+Current AI development ecosystems heavily depend on Python, with user-facing tools often choosing Node.js, and enterprise development gradually shifting to Java due to significant inertia. However, **.NET possesses underestimated competitive advantages in AI development**.
 
 ### .NET's Competitive Advantages in AI
 
@@ -130,7 +129,7 @@ Current AI development ecosystems heavily depend on Python, with user-facing too
 | **Single-File Execution** | Can be embedded in workflows, such as running .cs scripts directly in skills scenarios |
 | **First-Party Support** | Microsoft services provide official .NET SDK support |
 
-When .NET SDK becomes an operating system component, these advantages will be maximized, positioning .NET as a premier AI development platform.
+When .NET SDK becomes an operating system component, these advantages will be more easily discovered and utilized by developers, promoting .NET's adoption in AI development.
 
 ## 💰 Low Cost, High Return
 
@@ -162,7 +161,7 @@ If you believe in the vision of "Making .NET Great Again," participate through t
 - Generate greater impact and drive decision-making
 
 > [!IMPORTANT]
-> The decision not to pre-install .NET Core is one of the biggest mistakes Microsoft has made in recent years. It's as baffling as Windows not pre-installing Edge browser or Android not pre-installing Chrome browser.
+> Not pre-installing .NET on Windows is like Windows not pre-installing Edge browser or Android not pre-installing Chrome browser—utterly baffling, essentially hamstringing itself!
 
 ### Excuses for Inaction
 
