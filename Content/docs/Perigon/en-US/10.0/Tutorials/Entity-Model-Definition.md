@@ -20,7 +20,7 @@ Recommended (not enforced) conventions:
 
 - Group entities by module folder and matching namespace.
 - Every property has comments; every enum has a `[Description]` attribute.
-- Entities inherit `EntityBase` by default (`Id`, `CreatedAt`, `UpdatedAt`, `IsDeleted`).
+- Entities inherit `EntityBase` by default (`Id`, `CreatedTime`, `UpdatedTime`, `IsDeleted`).
 - Default `Id` is `Guid` (client-generated Guid V7).
 - Strings have max length unless truly unbounded.
 - Decimal precision/scale is explicit:
