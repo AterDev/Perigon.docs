@@ -35,7 +35,6 @@ The definition layer defines business models, determines the data model and beha
 - **Share**: Some shareable model content, such as DTO, Options, etc.
 - **ServiceDefaults**: Definition of common service injection, such as health checks, retry mechanisms, logs, etc.
 
-
 ### Modules
 
 Module is the carrier of the implementation layer, mainly implementing business logic, implemented by breaking it down into different Modules.
@@ -48,6 +47,12 @@ Typical structure is as follows:
 - CustomerModule: Customer module, containing customer-related business logic.
 - OrderModule: Order module, containing order-related business logic.
 
+for each module, it usually includes the following contents:
+
+- Models
+- Managers
+- Services
+- ModuleExtensions.cs
 
 ### Services
 
@@ -61,9 +66,9 @@ For API services, we need to focus on:
 
 At this level, the template provides the following services by default:
 
-- Http.API: Provides API services using `Restful API`.
-- IdentityServer: Provides identity authentication services using `IdentityServer`.
-- MigrationService: Provides database migration services using `EF Core`.
+- AdminService: Provides API services for the admin backend.
+- ApiService: Provides API services for frontend applications.
+- MigrationService: Provides database migration services using EF Core.
 
 ---
 

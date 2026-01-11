@@ -16,4 +16,4 @@ CommonMod is a `reserved` module that typically provides common basic functional
 
 ## SystemMod
 
-SystemMod is another reserved module that provides system-level functionality.
+SystemMod is the default module that provides system-related functionalities such as administrator user roles, including common system features like user login.
