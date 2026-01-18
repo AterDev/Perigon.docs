@@ -59,6 +59,7 @@ Package Management: npm → yarn → pnpm (incompatible lock files)
 Build Tools: webpack → Rollup → Parcel → Vite → Turbopack
 Test Frameworks: Jest → Mocha → Vitest → Playwright
 Node.js developers face **dependency hell and frequent tool replacements**.
+```
 
 ### .NET's Unified Advantage: One Command Solves Everything
 
