@@ -1,20 +1,20 @@
 # The Feature of AI: AIAgent and AICloud
 
-### Introduction
+## Introduction
 
 The trajectory of AI development is moving from monolithic, single-modality systems toward **distributed, multimodal, and lifelong-learning ecosystems**. Two archetypes will coexist and mutually enable each other. The first is the **personal AI agent**, a compact but capable model that stores experience, adapts to its owner, and interacts through natural channels such as speech and gesture. The second is the **large language model cloud**, a massively scaled, data-rich service that supplies deep knowledge, scientific insight, and large-scale optimization. This essay articulates how these two layers should be designed, how they interact, and what research is required to make them practical, efficient, and trustworthy.
 
 ---
 
-### Current frontiers and research context
+## Current frontiers and research context
 
 **Multimodal foundation models and unified architectures** are now capable of processing text, images, audio, and video in shared latent spaces. Research is exploring unified encoders, cross-modal attention mechanisms, and modular adapters that permit transfer across modalities. **Continual and lifelong learning** methods are emerging to mitigate catastrophic forgetting and enable persistent memory. **Parameter-efficient fine-tuning** techniques allow large models to be specialized with limited data and compute. **Privacy-preserving learning** such as federated learning and differential privacy are being integrated into production systems. Hardware advances include energy-efficient accelerators and edge inference chips that make on-device deployment increasingly feasible. These developments collectively point toward a split-compute future where local agents and cloud services each play distinct roles.
 
 ---
 
-### Vision: Personalized, embodied general models (local agents)
+## Vision: Personalized, embodied general models (local agents)
 
-#### Core properties
+### Core properties
 
 - **Persistent memory and lifelong learning**  
   Local agents maintain *episodic* and *semantic* memory stores that grow with use. Memory is indexed for retrieval and consolidated using continual learning algorithms so that the agent improves from interaction without catastrophic forgetting.
@@ -31,7 +31,7 @@ The trajectory of AI development is moving from monolithic, single-modality syst
 - **Local storage and privacy by design**  
   All sensitive memories and personalization artifacts are stored locally or encrypted under user control. When cloud assistance is required, minimal, privacy-preserving summaries are transmitted.
 
-#### Architectural principles
+### Architectural principles
 
 - **Modularity and composability**  
   Small, specialized modules handle perception, memory indexing, planning, and language. Modules are dynamically composed to form task-specific pipelines.
@@ -45,15 +45,15 @@ The trajectory of AI development is moving from monolithic, single-modality syst
 - **On-device learning primitives**  
   Lightweight meta-learning and continual adaptation algorithms enable learning from few examples and from interaction without cloud round trips.
 
-#### Practical implications
+### Practical implications
 
 Local agents should run on commodity devices with modest compute and memory budgets, similar to modern smartphones and laptops. This enables **private, always-available intelligence** that grows with the user and does not require constant cloud connectivity.
 
 ---
 
-### Vision: Large language models as AI cloud (knowledge and scale)
+## Vision: Large language models as AI cloud (knowledge and scale)
 
-#### Role and capabilities
+### Role and capabilities
 
 - **Scale and data integration**  
   The cloud hosts models trained on massive, heterogeneous corpora and structured scientific datasets. It provides broad world knowledge, up-to-date facts, and large-scale pattern discovery.
@@ -67,7 +67,7 @@ Local agents should run on commodity devices with modest compute and memory budg
 - **Service-oriented knowledge APIs**  
   Expose capabilities as composable services: retrieval, simulation, theorem-proving, and model synthesis. Local agents call these services selectively.
 
-#### Practical implications
+### Practical implications
 
 The cloud functions like modern data centers and scientific instruments. It is the **collective memory and laboratory** for AI, enabling breakthroughs that local agents cannot achieve alone.
 
@@ -98,6 +98,6 @@ This separation clarifies responsibilities and enables scalable, privacy-aware d
 
 ---
 
-### Conclusion
+## Conclusion
 
 A practical and ethical future for AI will be **distributed, multimodal, and privacy-first**. Compact, personalized agents will learn and grow like companions, while large language model clouds will supply the deep knowledge and heavy computation necessary for scientific and societal scale tasks. Realizing this future requires advances in lifelong learning, multimodal grounding, efficient architectures, and privacy-preserving protocols. Research that treats agents and clouds as complementary components rather than competing endpoints will produce systems that are both powerful and aligned with human values.
