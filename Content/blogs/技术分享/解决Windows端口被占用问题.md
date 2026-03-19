@@ -65,5 +65,5 @@ net start winnat # 启动 WinNAT 服务
 可以通过以下命令来配置保留端口范围：
 
 ```pwsh
-netsh int ipv4 add excludedportrange protocol=tcp startport=起始端口 numberofports=端口数量
+netsh int ipv4 add excludedportrange protocol=tcp startport=起始端口 numberofports=端口数量 store=persistent
 ```
