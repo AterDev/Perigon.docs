@@ -4,6 +4,8 @@
 
 下面结合官方文档，整理一下这次更新中最值得关注的几个点。
 
+> [官方更新总结](https://github.com/microsoft/aspire/discussions/15662)
+
 ## 命令行的全面升级
 
 早期的 Aspire CLI 功能比较有限，最常见的入口就是 `aspire run`。在那种使用场景下，它的存在感并不强，因为很多时候直接用 `dotnet run` 也能完成同样的事情。
