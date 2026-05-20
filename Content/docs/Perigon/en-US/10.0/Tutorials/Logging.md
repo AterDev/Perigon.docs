@@ -64,7 +64,7 @@ public async Task SaveLoginLogAsync(SystemUser user, string description)
 Wrap into a reusable service. See `SystemLogService` in SystemMod:
 
 ```csharp
-using Ater.Web.Extension;
+using Perigon.AspNetCore.Abstraction;
 
 namespace SystemMod;
 /// <summary>

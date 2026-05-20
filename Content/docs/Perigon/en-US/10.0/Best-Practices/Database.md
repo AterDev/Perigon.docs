@@ -57,7 +57,7 @@ To minimize time spent on design choices, here are recommended field types:
 
 As you iterate development, database structure changes. Use `Code First` to centrally manage the database schema and avoid manual operation inconsistencies.
 
-The `MigrationsService` project handles database structure updates. When you start the application through `AppHost`, it automatically applies the latest migrations before other services start.
+The `MigrationService` project handles database structure updates. When you start the application through `AppHost`, it automatically applies the latest migrations before other services start.
 
 The `scripts` directory provides `EFMigrations.ps1` for generating migrations. Use it directly or modify it as needed. Migration files are generated in `EntityFramework/Migrations` by default.
 

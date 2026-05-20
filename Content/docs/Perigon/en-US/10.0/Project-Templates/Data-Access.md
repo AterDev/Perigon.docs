@@ -10,7 +10,7 @@ It is recommended to use the `Code First` approach to define data models, and th
 
 The template uses `DefaultDbContext` as the data access context by default, which inherits from `ContextBase.cs`.
 
-You can define your own `DbContext` and inherit from `ContextBase`. Database contexts are centralized in the `Definition/EntityFrameworkCore/AppDbContext` directory.
+You can define your own `DbContext` and inherit from `ContextBase`. Database contexts are centralized in the `Definition/EntityFramework/AppDbContext` directory.
 
 To be compatible with multi-tenant scenarios, `TenantDbFactory` will be used by default to create database context instances. If your application does not need multi-tenant support, you can directly inject `DefaultDbContext`.
 
@@ -59,7 +59,7 @@ public class TestManager(MyDbContext context, MyService service, ILogger<TestMan
 
 ## Tenant Mode
 
-The template will use `TenantDbFactory` by default to create database context instances to support multi-tenant scenarios. It will obtain current tenant information through `ITenantContext`, and then create the corresponding database context.
+The template uses `TenantDbFactory` by default to create database context instances for multi-tenant scenarios. The current tenant id comes from `IUserContext.TenantId`; the Manager base class passes it to `TenantDbFactory`, and the factory selects the default connection string or the tenant-specific connection string.
 
 > [!TIP]
 > You can modify the logic of creating database context in `TenantDbFactory` according to actual needs.

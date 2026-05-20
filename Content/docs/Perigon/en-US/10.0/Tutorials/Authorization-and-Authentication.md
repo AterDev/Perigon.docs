@@ -34,4 +34,4 @@ Configure under the `Authentication` section. Built-in support:
 
 With valid settings present, services and middleware are added automatically.
 
-See `WebExtensions.cs` for `AddJwtAuthentication` and `AddThirdAuthentication`.
+See `WebExtensions.cs` for `AddAuthentication` and `AddThirdAuthentication`.

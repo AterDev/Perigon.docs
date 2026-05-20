@@ -1,6 +1,6 @@
 # Integration Testing
 
-The template includes an integration test project by default, which uses the `Tunit` testing framework. It is located in the `test/ApiTest` directory.
+The template includes an integration test project by default, which uses the `TUnit` testing framework. It is located in the `tests/ApiTest` directory.
 
 The `ApiTest` project is primarily used to test API requests and integrated service calls.
 

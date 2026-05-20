@@ -92,7 +92,7 @@ Included by default in the template:
 
 ### Optional Components
 
-Runtime components integrated via Aspire Tooling; not included in the template by default:
+Runtime components integrated through Aspire. The template references `Perigon.AspNetCore.Toolkit` to provide helper capabilities such as email, object storage, Excel, and image processing. Whether a capability is enabled depends on configuration and application code:
 
 - NATS: lightweight, high-performance messaging client supporting pub/sub and request/response.
 - Redis: high-performance distributed cache client with rich data structures.

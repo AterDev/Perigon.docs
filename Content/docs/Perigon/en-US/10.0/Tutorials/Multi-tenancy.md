@@ -23,13 +23,15 @@ In `AppHost/appsettings.Development.json`, set:
 
 ## Implementation
 
-The framework supports multi-tenancy out of the box. Keep writing code as usual and focus on `TenantContext` and `TenantDbFactory`.
+The framework is multi-tenant compatible by default. In most business code, keep writing code as usual. The important runtime pieces are `IUserContext`, `TenantResolutionMiddleware`, and `TenantDbFactory`.
 
-`TenantDbFactory` injects `ITenantContext` to obtain tenant info and per-tenant connection strings.
+- `UserContext` reads `tenant_id` and `tenant_type` from the current token claims and fills `IUserContext.TenantId` and `IUserContext.TenantType`.
+- When multi-tenancy is enabled, `TenantResolutionMiddleware` runs after authentication, queries the `Tenant` by `IUserContext.TenantId`, and caches it in memory.
+- `TenantDbFactory` receives the tenant id when creating a DbContext. It reads tenant-specific connection strings from the cached `Tenant`; if multi-tenancy is disabled, the tenant id is empty, or no tenant is cached, it falls back to the default connection string.
 
-`Tenant.cs` defines core tenant data; extend as needed.
+`Tenant.cs` defines core tenant data; extend it as needed.
 
-Clients include `TenantId` in tokens; servers derive tenant identity from `TenantId` on subsequent requests.
+Clients should include `TenantId` in tokens. Subsequent requests use the token claim `tenant_id` to resolve the tenant on the server.
 
 ### Handle TenantId at Login
 
@@ -42,19 +44,22 @@ public async Task<AccessTokenDto> LoginAsync(SystemLoginDto dto)
     var tenant = await _dbContext.Tenants.Where(t => t.Domain == domain).FirstOrDefaultAsync()
         ?? throw new BusinessException(Localizer.TenantNotExist);
 
-    tenantContext.TenantId = tenant.Id;
-    tenantContext.TenantType = tenant.Type.ToString();
-
     var user = await _dbSet
         .Where(u => u.Email == dto.Email)
         .Include(u => u.SystemRoles)
         .FirstOrDefaultAsync() ?? throw new BusinessException(Localizer.UserNotExists);
 
+  jwtService.Claims =
+  [
+    new Claim(CustomClaimTypes.TenantId, tenant.Id.ToString()),
+    new Claim(CustomClaimTypes.TenantType, tenant.Type.ToString())
+  ];
+
     // Return Token
 }
 ```
 
-Since there’s no token pre-login, set `TenantId` on the injected `ITenantContext` so downstream logic recognizes the correct tenant.
+Since there is no token before login, identify the tenant from login information first, then write `tenant_id` and `tenant_type` into the returned token. Subsequent requests are resolved by `UserContext` and `TenantResolutionMiddleware`.
 
 ### TenantId Indexes
 
