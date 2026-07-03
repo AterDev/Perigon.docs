@@ -35,7 +35,9 @@ Click the `Create Solution` button to enter the solution creation interface.
 
 ![create-solution](./_images/create_solution.jpg)
 
-After entering the relevant information, click the `Create Solution` button and wait for the creation to complete.
+After entering the relevant information, click the `Create Solution` button and wait for creation to complete.
+
+If you want built-in capabilities such as system management or content management, you can select official modules during creation. The tool installs the selected modules automatically after generating the solution.
 
 ## View the Solution
 
@@ -43,12 +45,12 @@ Open the solution, and in the src directory, you can see the code structure.
 
 Find the `AppHost` project, which will be mainly used to run the project going forward.
 
-The template includes the `SystemMod` module by default, which provides basic user/role/permission management functionality, serving as a reference and code example.
+The latest templates no longer include example modules such as `SystemMod` by default. If you skipped official modules during creation and later need them, install them with `perigon install Perigon.SystemMod <ServiceName>`.
 
 For detailed information about the directory structure, please refer to [Directory Structure](./Project-Templates/Directory-Structure.md).
 
 > [!NOTE]
-> If you don't need the default module, it's recommended to delete it through Studio, which will help you correctly remove the module and its related dependencies.
+> After installing an official module, remove it through Studio when possible so the related references and dependencies are cleaned up correctly.
 
 ## Run the Project
 
@@ -63,7 +65,6 @@ In the `scripts` directory at the root, call the `EFMigrations.ps1` script to ex
 ```
 
 This script uses the `dotnet ef` command to execute database migrations. The generated migration content will be in the `Definition/EntityFramework/Migrations` directory.
-
 
 > [!NOTE]
 > Please use `PowerShell 7` or higher, which is cross-platform. On Windows, you need to enable the execution policy by running the command `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`.
@@ -82,7 +83,6 @@ For information about the features and usage of the `Dashboard`, please refer to
 
 > [!TIP]
 > If you encounter HTTPS or certificate issues during startup, try running the command `dotnet dev-certs https -t` to trust the development certificate.
-
 > [!TIP]
 > If you encounter garbled text issues in the .NET Aspire Console, go to the Control Panel regional settings and enable UTF-8 support for global language.
 
@@ -92,7 +92,7 @@ Through the `Dashboard`, we can intuitively see the dependent infrastructure and
 
 - MigrationService: A service for executing database migrations and initializing data, mainly used during development, which automatically exits after completion.
 - ApiService: Provides client-facing API interface services.
-- AdminService: Provides interface services needed for backend management, depending on `SystemMod` by default, and initializes admin account and password on first run.
+- AdminService: Provides interface services needed for backend management. If you install `Perigon.SystemMod`, the first run initializes the admin account and password.
 - frontend: Angular frontend project providing a simple backend example.
 
 You can develop your own business logic based on these services, or delete them and create new service projects.
@@ -105,16 +105,17 @@ You can develop your own business logic based on these services, or delete them 
 After the program is running, we can check for any exceptions through the panel and view specific error information through the console. If everything is normal, we can test the API.
 
 ### View Swagger Content
+
 If `AdminService` is in the `Running` state, it means it's running normally. Let's first check if `Swagger` is working properly by clicking on the service URL to enter the Swagger page.
 
 ### Request API
 
 Find the `AdminService.http` file under `AdminService`. There are two APIs for getting Token and getting user information. Please click them in order and view the returned content.
 
-
 ### Login from Frontend Project
 
 By default, Aspire will start the Angular frontend project. In the Dashboard, you can directly click the link to enter the frontend page and log in using the following information:
+
 - Email: `admin@default.com`
 - Password: `Perigon.2026`
 
@@ -123,7 +124,6 @@ By default, Aspire will start the Angular frontend project. In the Dashboard, yo
 You can also test the API by running the test project. **Please stop the current Aspire service first**, then find the `ApiTest` project and run it by pressing F5 in VS or executing `dotnet test` in the command line.
 
 The default test project is an integration test project, not a unit test project. When running, it will start an `Aspire` instance, run all services to simulate the actual running environment, and then execute test cases.
-
 
 You can verify that our services are running normally using any of the above methods.
 

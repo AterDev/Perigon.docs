@@ -74,9 +74,16 @@ After you run the command, the CLI guides you through solution initialization, f
 
 1. Select a database type, such as `SqlServer` or `PostgreSQL`
 2. Select a cache type
-3. Select a frontend integration option
-4. Specify the output directory, which defaults to the current directory
-5. Confirm the configuration and start generation
+3. Select official modules such as `Perigon.SystemMod` or `Perigon.CMSMod`
+4. Select a frontend integration option
+5. Specify the output directory, which defaults to the current directory
+6. Confirm the configuration and start generation
+
+Notes:
+
+- The official module list comes from `Perigon.Modules/modules.json`.
+- Selected official modules are installed automatically after the solution is generated.
+- If loading the official module list fails, the command shows a warning but still lets you continue creating the solution.
 
 ## add
 
@@ -415,7 +422,7 @@ Parameter notes:
 
 ## install
 
-The `install` command installs a module package into a project.
+The `install` command installs a module package into a project. It also supports installing a module directly by official package name.
 
 ```pwsh
 perigon install <PackagePath> <ServiceName>
@@ -425,6 +432,12 @@ Example:
 
 ```pwsh
 perigon install ./package_modules/FileManagerMod.zip AdminService
+```
+
+Or install an official module directly:
+
+```pwsh
+perigon install Perigon.SystemMod AdminService
 ```
 
 Help output:
@@ -440,7 +453,7 @@ EXAMPLES:
     perigon install ./package_modules/FileManagerMod.zip AdminService
 
 ARGUMENTS:
-    <PackagePath>    Path to the module package zip file
+    <PackagePath>    Path to the module package zip file, or official package name like Perigon.SystemMod
     <ServiceName>    Service name in Services directory
 
 OPTIONS:
@@ -449,7 +462,7 @@ OPTIONS:
 
 Parameter notes:
 
-- `PackagePath`: Path to the module zip package
+- `PackagePath`: Path to the module zip package, or an official module package name such as `Perigon.SystemMod`
 - `ServiceName`: Target service name, corresponding to an API service directory under `Services`
 
 ## Notes

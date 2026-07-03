@@ -4,7 +4,7 @@ Module design is intended to better organize and manage different functions in t
 
 Modules are relatively independent. They typically contain the business implementation `Manager` of the module and Dto models. Entity models are still uniformly defined in `Definition/Entity`.
 
-When creating a solution, the template adds example modules by default. You can use them directly, or modify or delete them as needed.
+The latest templates no longer add example modules by default. You can select official modules during solution creation or install them later only when needed.
 
 ## Naming Convention
 
@@ -16,4 +16,4 @@ CommonMod is a `reserved` module that typically provides common basic functional
 
 ## SystemMod
 
-SystemMod is the default module that provides system-related functionalities such as administrator user roles, including common system features like user login.
+SystemMod is an official module that provides system-related capabilities such as administrator users, roles, permissions, and common login features. Select it during solution creation or install it later when needed.

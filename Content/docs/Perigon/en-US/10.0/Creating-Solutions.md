@@ -5,7 +5,7 @@ We provide two ways to create a solution quickly:
 - Command line: `perigon new <name>`.
 - Graphical UI: launch the panel with `perigon studio`.
 
-Both options are interactive. This guide explains the key configuration choices.
+Both options are interactive and guide you through solution initialization. This guide explains the key configuration choices.
 
 ## Choose a Database
 
@@ -37,7 +37,21 @@ Caching is unified by `Microsoft.Extensions.Caching.Hybrid`, which dispatches to
 Additional cache settings can be configured in `appsettings.json` after creation.
 
 > [!TIP]
-> For HybridCache details, see the Microsoft docs: https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid?view=aspnetcore-9.0
+> For HybridCache details, see the [Microsoft docs](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/hybrid?view=aspnetcore-9.0).
+
+## Select Official Modules
+
+During solution creation, you can select official modules directly. The tool reads the official module list from the `Perigon.Modules` repository, then automatically installs the selected modules into the target service after the solution is created.
+
+The current metadata comes from `Perigon.Modules/modules.json`, for example:
+
+- `Perigon.SystemMod`: base capabilities for system roles, users, and permissions.
+- `Perigon.CMSMod`: content management capabilities.
+
+If the current network environment cannot access the official module list, solution creation can still continue, but you will not be able to select official modules during that run.
+
+> [!TIP]
+> Official modules are still regular module packages underneath. If you skip them during creation, you can install them later with commands such as `perigon install Perigon.SystemMod <ServiceName>`.
 
 ## Message Queue
 
@@ -50,3 +64,7 @@ Default: JWT. Other methods require manual integration.
 ## Frontend Framework
 
 Currently supports an Angular template.
+
+## Default Module Behavior
+
+The latest templates no longer include example modules such as `SystemMod` by default. If you need them, select the official modules during creation or install them later after the solution is created.
