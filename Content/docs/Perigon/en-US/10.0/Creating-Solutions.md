@@ -7,6 +7,12 @@ We provide two ways to create a solution quickly:
 
 Both options are interactive and guide you through solution initialization. This guide explains the key configuration choices.
 
+## Select project type
+
+There are currently two types of projects available:
+-Standard: Complete MVC API+EF Core+Aspire support, suitable for the vast majority of scenarios.
+-Light (AOT): In cases where AOT support is required, use MinimalAPI+Peripheral. Postgres+Aspire
+
 ## Choose a Database
 
 Recommended options: `SqlServer` or `PostgreSql`.
