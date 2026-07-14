@@ -53,11 +53,14 @@ The current metadata comes from `Perigon.Modules/modules.json`, for example:
 
 - `Perigon.SystemMod`: base capabilities for system roles, users, and permissions.
 - `Perigon.CMSMod`: content management capabilities.
+- `Perigon.ResourceMod`: general resource management by environment, category, resource definition, and role permission.
+
+See [Official Modules](./Project-Templates/Module-Example.md) for module boundaries and installation guidance.
 
 If the current network environment cannot access the official module list, solution creation can still continue, but you will not be able to select official modules during that run.
 
 > [!TIP]
-> Official modules are still regular module packages underneath. If you skip them during creation, you can install them later with commands such as `perigon install Perigon.SystemMod <ServiceName>`.
+> Official modules are still regular module packages underneath. If you skip them during creation, you can install them later with commands such as `perigon module install Perigon.SystemMod <ServiceName>`.
 
 ## Message Queue
 

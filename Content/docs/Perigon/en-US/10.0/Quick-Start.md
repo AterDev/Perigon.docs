@@ -45,7 +45,7 @@ Open the solution, and in the src directory, you can see the code structure.
 
 Find the `AppHost` project, which will be mainly used to run the project going forward.
 
-The latest templates no longer include example modules such as `SystemMod` by default. If you skipped official modules during creation and later need them, install them with `perigon install Perigon.SystemMod <ServiceName>`.
+The latest templates no longer include example modules such as `SystemMod` by default. If you skipped official modules during creation and later need them, install them with `perigon module install Perigon.SystemMod <ServiceName>`. See [Official Modules](./Project-Templates/Module-Example.md) for module descriptions.
 
 For detailed information about the directory structure, please refer to [Directory Structure](./Project-Templates/Directory-Structure.md).
 

@@ -58,17 +58,12 @@ public static class ModuleExtensions
         return builder;
     }
 
-    public static WebApplication UseXXXModServices(this WebApplication app)
-    {
-        return app;
-    }
 }
 ```
 
 - `[DisplayName]`: author and package display name, separated with `::`, for example `Perigon::File Management`.
 - `[Description]`: describes the module.
 - `AddXXXMod`: registers module services.
-- `UseXXXModServices`: registers module middleware. Call it manually from the service when needed.
 
 > [!NOTE]
 > In most cases, `AddXXXMod` should only contain services specific to the module.
@@ -78,17 +73,17 @@ The module to be packed should keep code inside the module project, except entit
 Run the following command from the solution root:
 
 ```pwsh
-perigon pack <ModuleName> <ServiceName>
+perigon module pack <ModuleName> <ServiceName>
 ```
 
-The generated module package is placed under the `package-modules` directory.
+The generated module package is placed under the `package_modules` directory. To package a frontend module, use `--front-path` to specify that module directory; see the [command-line documentation](../Code-Generation/Command-Line.md) for the complete rules.
 
 ### Installing a Module
 
 Run the following command from the solution root:
 
 ```pwsh
-perigon install <ModulePackagePath> <ServiceName>
+perigon module install <ModulePackagePath> <ServiceName>
 ```
 
 After installation, reload the solution and check whether the module references and generated code are correct.

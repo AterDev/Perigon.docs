@@ -34,8 +34,8 @@ The main commands shown by `perigon -h` are listed below:
 | `studio` | Start Perigon Studio |
 | `generate` | Run code generation |
 | `mcp` | Provide Model Context Protocol tools |
-| `pack <ModuleName> <ServiceName>` | Package a module as a zip file |
-| `install <PackagePath> <ServiceName>` | Install a module package into a project |
+| `module pack <ModuleName> <ServiceName>` | Package a module as a zip file |
+| `module install <PackagePath> <ServiceName>` | Install a module package into a project |
 
 ## new
 
@@ -74,7 +74,7 @@ After you run the command, the CLI guides you through solution initialization, f
 
 1. Select a database type, such as `SqlServer` or `PostgreSQL`
 2. Select a cache type
-3. Select official modules such as `Perigon.SystemMod` or `Perigon.CMSMod`
+3. Select official modules such as `Perigon.SystemMod`, `Perigon.CMSMod`, or `Perigon.ResourceMod`
 4. Select a frontend integration option
 5. Specify the output directory, which defaults to the current directory
 6. Confirm the configuration and start generation
@@ -381,18 +381,18 @@ OPTIONS:
     -h, --help    Prints help information
 ```
 
-## pack
+## module pack
 
-The `pack` command packages a module as a zip file.
+The `module pack` command packages a module as a zip file.
 
 ```pwsh
-perigon pack <ModuleName> <ServiceName>
+perigon module pack <ModuleName> <ServiceName> [--front-path <FRONT_PATH>]
 ```
 
 Example:
 
 ```pwsh
-perigon pack FileManagerMod AdminService
+perigon module pack FileManagerMod AdminService
 ```
 
 Help output:
@@ -402,42 +402,58 @@ DESCRIPTION:
 Package module as zip file
 
 USAGE:
-    perigon pack <ModuleName> <ServiceName> [OPTIONS]
+    perigon module pack <ModuleName> <ServiceName> [OPTIONS]
 
 EXAMPLES:
-    perigon pack FileManagerMod AdminService
+    perigon module pack FileManagerMod AdminService --front-path src/ClientApp/WebApp/src/app/modules/file-manager
 
 ARGUMENTS:
     <ModuleName>     Module name (with Mod suffix)
     <ServiceName>    Service name in Services directory
 
 OPTIONS:
-    -h, --help    Prints help information
+    -h, --help                       Prints help information
+        --front-path <FRONT_PATH>    Frontend directory to include in the package
 ```
 
 Parameter notes:
 
 - `ModuleName`: Module name, usually ending with `Mod`
 - `ServiceName`: Service name, corresponding to an API service directory under `Services`
+- `--front-path`: Optional. The individual frontend module directory to package, for example `src/ClientApp/WebApp/src/app/modules/file-manager`.
 
-## install
+### Frontend packaging and limitations
 
-The `install` command installs a module package into a project. It also supports installing a module directly by official package name.
+When `--front-path` is supplied, the CLI packages that directory and its sibling `share` directory into the zip:
+
+```text
+Frontend/file-manager/...
+Frontend/share/...
+```
+
+- `file-manager` is the last directory name in `--front-path`; `share` must be a sibling of that module directory.
+- When `--front-path` is omitted, no frontend content is included and backend packaging still succeeds. If the specified module directory does not exist, packaging fails. If the sibling `share` directory does not exist, only the module directory is packaged.
+- Only files under the specified module directory and its sibling `share` directory are included. The frontend app shell, global routes, root `package.json`, lockfiles, and other module directories are excluded.
+- The package does not install npm/pnpm dependencies. The target project must provide a compatible frontend application and dependencies.
+
+## module install
+
+The `module install` command installs a module package into a project. It also supports installing a module directly by official package name.
 
 ```pwsh
-perigon install <PackagePath> <ServiceName>
+perigon module install [PackagePath] [ServiceName] [--front-path <FRONT_PATH>]
 ```
 
 Example:
 
 ```pwsh
-perigon install ./package_modules/FileManagerMod.zip AdminService
+perigon module install ./package_modules/FileManagerMod.zip AdminService
 ```
 
 Or install an official module directly:
 
 ```pwsh
-perigon install Perigon.SystemMod AdminService
+perigon module install Perigon.SystemMod AdminService
 ```
 
 Help output:
@@ -447,23 +463,39 @@ DESCRIPTION:
 Install module package to project
 
 USAGE:
-    perigon install <PackagePath> <ServiceName> [OPTIONS]
+    perigon module install [PackagePath] [ServiceName] [OPTIONS]
 
 EXAMPLES:
-    perigon install ./package_modules/FileManagerMod.zip AdminService
+    perigon module install ./package_modules/FileManagerMod.zip AdminService --front-path src/ClientApp/WebApp/src/app/modules
 
 ARGUMENTS:
     <PackagePath>    Path to the module package zip file, or official package name like Perigon.SystemMod
     <ServiceName>    Service name in Services directory
 
 OPTIONS:
-    -h, --help    Prints help information
+    -h, --help                       Prints help information
+        --front-path <FRONT_PATH>    Directory where bundled frontend code will be restored
 ```
 
 Parameter notes:
 
 - `PackagePath`: Path to the module zip package, or an official module package name such as `Perigon.SystemMod`
 - `ServiceName`: Target service name, corresponding to an API service directory under `Services`
+- `--front-path`: Optional. The frontend module root directory, such as `src/ClientApp/WebApp/src/app/modules`; it is not an individual module directory.
+
+### Frontend restore rules
+
+When the package contains `Frontend` content and `--front-path` is supplied, installation restores:
+
+```text
+<FRONT_PATH>/file-manager/...
+<FRONT_PATH>/share/...
+```
+
+- Same-named files in the module directory are overwritten as part of module installation.
+- Same-named files already in `share` are preserved; only missing files are added.
+- Without `--front-path`, backend installation still runs but frontend files are not restored and the CLI displays a warning.
+- Module packages no longer contain or process `UseSelfServices`; installation does not modify the target service's `Program.cs` or its default middleware configuration.
 
 ## Notes
 
