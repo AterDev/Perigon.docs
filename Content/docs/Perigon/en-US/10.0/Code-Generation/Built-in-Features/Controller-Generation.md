@@ -4,6 +4,9 @@ Provides generation support for API Controllers that conform to the framework de
 
 **Support Methods: `Studio` and `MCP`**
 
+> [!WARNING]
+> Built-in entity code generation for Controllers supports Standard projects only. AOT projects, identified by `isAOT = true` in `.config/perigon.config.toml` at the solution root, do not support this feature.
+
 ## Prerequisites
 
 - Generated based on a specific entity

@@ -4,6 +4,9 @@ Manager is the main implementation component of the business logic layer. Built-
 
 **Support Methods: `Studio` and `MCP`**
 
+> [!WARNING]
+> Built-in entity code generation for Managers supports Standard projects only. AOT projects, identified by `isAOT = true` in `.config/perigon.config.toml` at the solution root, do not support this feature.
+
 ## Prerequisites
 
 - Generated based on a specific entity

@@ -19,6 +19,9 @@ Pay particular attention to the User Foreign Key Name. The template includes `Us
 
 ## Generate DTOs, Managers, and Controllers
 
+> [!WARNING]
+> Built-in entity code generation for DTOs, Managers, and Controllers supports Standard projects only. The tool reads `.config/perigon.config.toml` from the solution root; when it contains `isAOT = true`, it reports that AOT code generation is unsupported.
+
 Select a solution to open the workspace. You’ll see an entity list with three generation actions:
 
 - Generate DTOs: parse entities to produce DTO model definitions.

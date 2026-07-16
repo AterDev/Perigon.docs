@@ -4,6 +4,9 @@
 
 **支持方式：`Studio`和`MCP`**
 
+> [!WARNING]
+> 内置 Controller 实体代码生成仅支持 Standard 类型项目。AOT 项目（解决方案根目录 `.config/perigon.config.toml` 中配置 `isAOT = true`）不支持此功能。
+
 ## 前提
 
 - 根据特定实体进行生成

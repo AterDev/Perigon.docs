@@ -14,6 +14,9 @@ DTOs will be generated in the corresponding module directory.
 
 **Support Methods: `Studio` and `MCP`**
 
+> [!WARNING]
+> Built-in entity code generation for DTOs supports Standard projects only. AOT projects, identified by `isAOT = true` in `.config/perigon.config.toml` at the solution root, do not support this feature.
+
 ## DTO Generation Rules
 
 DTOs globally ignore the following properties:
