@@ -8,11 +8,51 @@ It is recommended to use the `Code First` approach to define data models, and th
 
 ## Database Context
 
-The template uses `DefaultDbContext` as the data access context by default, which inherits from `ContextBase.cs`.
+The template uses `DefaultDbContext` as the default data access context. It inherits from `ContextBase`. Database contexts are centralized in `Definition/EntityFramework/AppDbContext`; define additional contexts in this directory and inherit from the appropriate base type.
 
-You can define your own `DbContext` and inherit from `ContextBase`. Database contexts are centralized in the `Definition/EntityFramework/AppDbContext` directory.
+### Default, read-only, and analysis contexts
 
-To be compatible with multi-tenant scenarios, `TenantDbFactory` will be used by default to create database context instances. If your application does not need multi-tenant support, you can directly inject `DefaultDbContext`.
+| Type | Responsibility | Use it for |
+| --- | --- | --- |
+| `DefaultDbContext` | The read/write context for the application's primary business database. Entity sets and migrations are normally maintained around this context. | Normal business queries, creates, updates, deletes, and operations that participate in a primary-database transaction. |
+| `ReadonlyDbContext` | The abstract base class for read-only contexts. It disables automatic change detection and throws when `SaveChanges` or `SaveChangesAsync` is called. | A dedicated context for a read-only database, replica, or reporting database. It cannot be instantiated directly. |
+| `AnalysisDbContext` | An analysis-query context derived from `ReadonlyDbContext`. | Reports, statistics, exports, and other data access that must not write. |
+
+`AnalysisDbContext` uses `ConnectionStrings:Analysis` when it is configured; otherwise it falls back to `ConnectionStrings:Default`. Using it therefore does not, by itself, grant database-level read-only protection. In production, configure the analysis connection with a read-only account or point it to a read replica.
+
+`ReadonlyDbContext` limits EF Core save operations only; it is not a substitute for database permissions. Do not issue write SQL through it. If an analysis database needs model types beyond those already exposed by the base context, derive a dedicated context from `ReadonlyDbContext` and declare the required `DbSet` properties and model configuration.
+
+### `AppDbFactory` and `UniversalDbFactory`
+
+The template registers two factories with different responsibilities. Choose one by the connection target and tenant boundary; they are not interchangeable.
+
+| Factory | Creates | Connection selection | Use it for |
+| --- | --- | --- | --- |
+| `AppDbFactory` | `DefaultDbContext` or `AnalysisDbContext` | Selects the primary or analysis connection for the current tenant. It uses the default connection when multi-tenancy is disabled, no tenant is supplied, or no tenant configuration is found. | Most application business logic. `ManagerBase` uses it to obtain the primary context for the current tenant. |
+| `UniversalDbFactory` | Any context derived from `DbContext` | Looks up a connection string from the context type name with the `DbContext` suffix removed; for example, `OrdersDbContext` uses `ConnectionStrings:Orders`. The caller also chooses the database provider. | Explicit access to another independent database, or creating contexts for multiple databases by context type. |
+
+In older generated templates, `AppDbFactory` may still be named `TenantDbFactory`. It has the same tenant-aware connection-selection role described here; use the actual type under `EntityFramework/AppDbFactory` in the generated project.
+
+For ordinary business Managers, do not create the primary context yourself: inherit from `ManagerBase<DefaultDbContext, TEntity>`. Only create an analysis context explicitly when making analysis queries:
+
+```csharp
+public class TenantReportManager(
+    AppDbFactory dbFactory,
+    IUserContext userContext,
+    ILogger<TenantReportManager> logger) : ManagerBase(logger)
+{
+    public async Task<List<TenantReportItem>> GetAsync()
+    {
+        await using var db = dbFactory.CreateAnalysisDbContext(userContext.TenantId);
+        return await db.Tenants
+            .AsNoTracking()
+            .Select(x => new TenantReportItem(x.Id, x.Name))
+            .ToListAsync();
+    }
+}
+```
+
+Contexts created by these factories are not tracked by the dependency injection container. Dispose a context created with `CreateDbContext` or `CreateAnalysisDbContext` promptly with `using` or `await using`.
 
 
 ## Data Operations
@@ -21,7 +61,7 @@ Data queries are an important part of business logic. Business code is usually i
 
 ```csharp
 public class AIAgentManager(
-    TenantDbFactory dbContextFactory, 
+    AppDbFactory dbContextFactory,
     ILogger<AIAgentManager> logger,
     IUserContext userContext
 ) : ManagerBase<DefaultDbContext, AIAgent>(dbContextFactory, userContext, logger)
@@ -59,10 +99,10 @@ public class TestManager(MyDbContext context, MyService service, ILogger<TestMan
 
 ## Tenant Mode
 
-The template uses `TenantDbFactory` by default to create database context instances for multi-tenant scenarios. The current tenant id comes from `IUserContext.TenantId`; the Manager base class passes it to `TenantDbFactory`, and the factory selects the default connection string or the tenant-specific connection string.
+The template uses `AppDbFactory` by default to create database context instances for multi-tenant scenarios. The current tenant id comes from `IUserContext.TenantId`; the Manager base class passes it to `AppDbFactory`, and the factory selects the default connection string or the tenant-specific connection string.
 
 > [!TIP]
-> You can modify the logic of creating database context in `TenantDbFactory` according to actual needs.
+> You can modify the database-context creation logic in `AppDbFactory` according to actual needs. In older templates, the equivalent factory may be named `TenantDbFactory`.
 
 ## Multi-Database Operations (Preview)
 
@@ -88,7 +128,7 @@ public class TestManager(
 }
 ```
 
-`UniversalDbFactory` will obtain the corresponding connection string according to your database context name by default, and create the corresponding `DbContext` instance. You can view the code logic in `UniversalDbFactory`, such as:
+`UniversalDbFactory` obtains the corresponding connection string from the database context name and creates the matching `DbContext`. For example, `OrdersDbContext` reads `ConnectionStrings:Orders`. It does not read the current tenant or select tenant-specific connections; use `AppDbFactory` for tenant-isolated primary or analysis access. You can view the code logic in `UniversalDbFactory`, such as:
 
 ```csharp
  var contextName = typeof(TContext).Name;
