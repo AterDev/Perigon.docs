@@ -20,6 +20,7 @@ For example:
 
 ```pwsh
 perigon add -h
+perigon generate -h
 perigon generate request -h
 ```
 
@@ -249,7 +250,7 @@ The `generate` command runs code generation tasks.
 perigon generate [OPTIONS] <COMMAND>
 ```
 
-It currently supports generating client request services and model files.
+It supports printing entity-generation rules, generating DTOs/Managers/Controllers, and generating client request services and model files.
 
 Help output:
 
@@ -267,8 +268,53 @@ OPTIONS:
     -h, --help    Prints help information
 
 COMMANDS:
-    request <path|url> <outputPath>    Generate client request service and models
+    entity                              Print entity model generation rules
+    dto <EntityPath>                    Generate DTOs from an entity
+    manager <EntityPath>                Generate a Manager from an entity
+    controller <EntityPath> <ServicePath|ServiceName>
+                                       Generate a Controller from an entity
+    request <path|url> <outputPath>      Generate client request service and models
 ```
+
+### generate entity
+
+Print entity-model creation rules for LLMs or other code-generation workflows. This command does not create an entity file by itself.
+
+```pwsh
+perigon generate entity
+```
+
+The rules place entities in the `src/Definition/Entity` project. When a module is specified, use a directory named after the module with a `Mod` suffix under the entity project, creating it when necessary. If the module does not exist yet, create the module first. The rules also cover `EntityBase`, nullable reference types, string lengths, enum descriptions, indexes, relationships, and `DbSet` declarations.
+
+### generate dto
+
+Generate DTOs from an entity file:
+
+```pwsh
+perigon generate dto <EntityPath> [-f|--force]
+```
+
+Use `--force` to overwrite generated files.
+
+### generate manager
+
+Generate a Manager from an entity file:
+
+```pwsh
+perigon generate manager <EntityPath> [-f|--force]
+```
+
+Use `--force` to overwrite generated files.
+
+### generate controller
+
+Generate a Controller from an entity file:
+
+```pwsh
+perigon generate controller <EntityPath> <ServicePath|ServiceName> [-f|--force]
+```
+
+`ServicePath|ServiceName` can be a service directory, a `.csproj` path, or a service name. `controller` also has the `api` alias. Use `--force` to overwrite generated files.
 
 ### generate request
 

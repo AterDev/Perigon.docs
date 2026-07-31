@@ -33,6 +33,7 @@ Recommended (not enforced) conventions:
   ```
 
 - Every enum value uses `[Description]`.
+- `DbSet` properties in `DbContext` use the standard `{ get; set; }` form. Unless explicitly required, do not add extra configuration such as `ToTable`.
 - Use `DateTimeOffset` rather than `DateTime`.
 - Use `DateOnly` for date-only and `TimeOnly` for time-only fields.
 
@@ -107,3 +108,13 @@ Keep related entities in the same module and use FK constraints there. For widel
 
 > [!TIP]
 > Prefer FKs when possible for integrity. Removing them later is easier than adding them later.
+
+## Print Entity Generation Rules from the CLI
+
+Use the following command to print entity-model rules for an LLM:
+
+```pwsh
+perigon generate entity
+```
+
+The command prints rules only; it does not create an entity file. Entities belong in the `src/Definition/Entity` project. When a module is specified, create a module directory under the entity project using the module name with a `Mod` suffix (for example, `UserMod`). If the module does not exist yet, create the module before creating the entity model.
