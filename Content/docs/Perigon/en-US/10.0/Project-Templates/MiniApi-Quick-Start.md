@@ -5,7 +5,7 @@
 ## Create a project
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.11
+dotnet new install Perigon.templates --version 1.3.12
 dotnet new perigon-miniapi -n MyMiniApi --frontType None
 cd MyMiniApi
 ```
