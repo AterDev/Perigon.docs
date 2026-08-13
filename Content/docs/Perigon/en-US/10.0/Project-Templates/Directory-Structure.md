@@ -2,6 +2,8 @@
 
 This article introduces the directory structure of the solution template.
 
+The structure below primarily describes `ApiStandard`. `MiniApi` does not include `AdminService`, `MigrationService`, or default `Modules`; its default business code lives in `src/Services/ApiService` under `Endpoints/Managers/Models/Services`.
+
 ## docs
 
 Used to store project-related documentation materials by category, such as requirement background, architecture design, module design, technical implementation plans, etc.
@@ -39,7 +41,7 @@ The definition layer defines business models, determines the data model and beha
 
 Module is the carrier of the implementation layer, mainly implementing business logic, implemented by breaking it down into different Modules.
 
-In actual needs, business requirements often involve multiple domains or multiple business modules. We can split them according to business modules. The framework provides the `CommonMod` shared module by default, which is referenced by other modules.
+Business requirements often involve multiple domains or modules. Install modules through `Perigon.CLI` or module packages when needed; the blank template does not include business modules by default.
 
 Typical structure is as follows:
 
@@ -68,9 +70,14 @@ At this level, the template provides the following services by default:
 
 - AdminService: Provides API services for the admin backend.
 - ApiService: Provides API services for frontend applications.
-- MigrationService: Provides database migration services using EF Core.
+- MigrationService: `ApiStandard` provides EF Core migration services; `MiniApi` does not include this service.
 
 ---
+
+## tests
+
+- `UnitTest`: does not reference AppHost or start Aspire; use it for fast unit tests.
+- `ApiTest`: Aspire integration tests; its global hook starts AppHost and tests are marked with `Category=Integration`.
 
 ## templates
 

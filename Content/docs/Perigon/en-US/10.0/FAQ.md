@@ -39,7 +39,7 @@ Suggested actions:
 1. Open an issue upstream and track for fixes.
 
 > [!IMPORTANT]
-> The template uses `Swashbuckle.AspNetCore` for OpenAPI and includes extensions to improve document quality and better support code generators.
+> `ApiStandard` uses `Swashbuckle.AspNetCore` and exposes `/swagger/v1/swagger.json`; `MiniApi` uses ASP.NET Core OpenAPI and exposes `/openapi/v1.json`. Neither template enables Swagger UI by default.
 
 ## Without Aspire
 
@@ -47,6 +47,6 @@ If you only have a couple of services and already have infrastructure, you can s
 
 - Remove the AppHost project.
 - Remove the ServiceDefaults project.
-- Remove `MigrationService` and manage EF migrations traditionally.
+- For `ApiStandard`, remove `MigrationService` and manage EF migrations traditionally; `MiniApi` does not include that project.
 - Remove ServiceDefaults dependencies from services.
 - Configure connection strings and other settings per standard ASP.NET Core guidance.

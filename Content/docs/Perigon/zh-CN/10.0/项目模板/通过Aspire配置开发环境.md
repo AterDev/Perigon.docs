@@ -17,22 +17,21 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
   },
   "Components": {
     // memory/redis/hybrid
-    "Cache": "Hybrid",
+    "Cache": "Memory",
     // SqlServer/PostgreSQL
     "Database": "PostgreSQL",
     // enable multi-tenant features
-    "IsMultiTenant": false,
-    // message queue
-    "Nats": false,
-    "Qdrant": false
+    "IsMultiTenant": false
   }
 }
 ```
 
 这里主要关注`Components`节点，它定义了应用所使用的组件类型，
-- `Cache` 选项包括：`memory`（内存缓存）、`redis`（Redis缓存）或`hybrid`（混合缓存）；
+- `Cache` 选项包括：`Memory`（内存缓存）、`Redis`（Redis缓存）或 `Hybrid`（混合缓存）；只有选择 `Redis` 或 `Hybrid` 时 AppHost 才会创建 Redis；
 - `Database`选项包括：`SqlServer`或`PostgreSQL`
 - `IsMultiTenant`用于启用多租户功能
+
+AppHost 会把该选择以 `Components__Cache` 环境变量传给服务，因此不需要在每个服务中重复修改缓存类型。Aspire 通过 `OTEL_EXPORTER_OTLP_ENDPOINT` 注入 OTLP 导出地址；配置文件中的旧 `Otel`/`OpenTelemetry` 节点不再使用。
 
 ### 多租户配置
 
@@ -47,13 +46,14 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
 
 Aspire支持将其他各种项目集成到AppHost中，例如前端项目、Python项目等。如以下添加一个前端项目：
 ```csharp
-var webApp = builder.AddNpmApp("frontend", "../ClientApp/WebApp")
+var webApp = builder.AddJavaScriptApp("frontend", "../ClientApp/WebApp", "start")
+    .WithPnpm()
     .WithUrl("http://localhost:4200")
     .WaitFor(adminService)
     .WithParentRelationship(serviceGroup);
 ```
 
-> 注意：AddNpmApp会执行 `npm run start`命令来启动前端项目，在此之前，你可能需要手动运行`pnpm install`来安装依赖包。
+> 注意：模板默认不启动前端。只有在选择 Angular、运行 `pnpm install` 并在 AppHost 中启用该资源后，`AddJavaScriptApp(...).WithPnpm()` 才会执行前端的 `start` 脚本。
 
 ### 基础设施配置
 

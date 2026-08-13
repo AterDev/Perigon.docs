@@ -27,7 +27,7 @@ Backend services are usually located under `src/Services`, for example:
 - `AdminService`
 - `MigrationService`
 
-The public API services are usually `ApiService` and `AdminService`. `MigrationService` is used for database migrations and is not intended to be a long-running API service image.
+The public API services are usually `ApiService` and `AdminService`. `MigrationService` is used for database migrations and is not intended to be a long-running API service image. `AdminService` and `MigrationService` apply only to `ApiStandard`; `MiniApi` has only `ApiService`, uses PostgreSQL, and has no migration service.
 
 ## Publish a Single Service Image
 
@@ -70,7 +70,7 @@ The script will:
 
 ## Fonts and Globalization
 
-Service images use `mcr.microsoft.com/dotnet/aspnet:10.0-alpine-extra` by default. This keeps the image small while preserving globalization support for non-invariant scenarios.
+`ApiStandard` service images use `mcr.microsoft.com/dotnet/aspnet:10.0-alpine-extra`; the NativeAOT `MiniApi` image uses `mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine-extra`. Both preserve globalization support for non-invariant scenarios while keeping the image small.
 
 Fonts are not installed by default. This is best for pure API services.
 
@@ -98,29 +98,18 @@ For broader CJK coverage, use `font-noto-cjk`:
 
 ## Trim and AOT
 
-The template does not enable `PublishTrimmed` or `PublishAot` by default.
+The templates have different publishing strategies; one statement must not be applied to both:
 
-Template projects commonly include:
+- `ApiStandard` targets controllers, EF Core, authentication, and optional third-party capabilities. Keep it framework-dependent and do not enable Trim or AOT without a dedicated compatibility pass.
+- `MiniApi` enables `PublishAot` and the Request Delegate Generator in `ApiService.csproj`; its Docker publishing script also explicitly sets `PublishTrimmed=true` and `PublishAot=true`.
 
-- ASP.NET Core controllers and OpenAPI
-- System.Text.Json serialization
-- EF Core runtime models
-- Mapster object mapping and query projection
-- Resource files and localization
-- Authentication and third-party login
-- Optional toolkit capabilities such as SkiaSharp, MiniExcel, MailKit, and S3
+MiniApi publishing example:
 
-Several of these features depend on runtime metadata, expression trees, reflection, or native assets. Enabling Trim or AOT without additional work can remove required members or break runtime behavior.
+```powershell
+dotnet publish src/Services/ApiService/ApiService.csproj -c Release
+```
 
-The recommended publishing strategy is:
-
-- Use framework-dependent publishing.
-- Use Alpine runtime images to reduce size.
-- Do not generate an apphost executable.
-- Do not include debug symbols in Release publish output.
-- Limit Docker build context to publish output.
-
-For further size reduction, prefer splitting optional dependencies into separate modules or packages before enabling Trim or AOT.
+When using the MiniApi Docker publishing script, confirm the `linux-musl-x64` runtime and validate reflection, serialization, and native dependencies for AOT. See each template's quick-start guide for its limitations.
 
 ## Use AppHost for Orchestration
 
@@ -135,16 +124,8 @@ The single-service publish script does not handle dependencies such as:
 
 Use `AppHost` to describe these resources. The template `AppHost` starts infrastructure resources based on configuration and passes database/cache references to services.
 
-Run `AppHost` locally:
-
 ```pwsh
-dotnet run --project .\src\AppHost\AppHost.csproj
-```
-
-Or use Aspire CLI:
-
-```pwsh
-aspire run
+aspire start --non-interactive
 ```
 
 Aspire can describe container images, Dockerfiles, build arguments, and publish workflows in the application model. Use it when you need to publish or deploy multiple resources together.

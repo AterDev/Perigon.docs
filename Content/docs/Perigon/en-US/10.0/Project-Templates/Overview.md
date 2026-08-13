@@ -2,6 +2,8 @@
 
 **Perigon.template** is a framework template based on the `Aspire`, `ASP.NET Core`, and `EntityFramework Core` technology stack. Combined with best practices, good development standards, and the development assistance tool `Perigon.CLI`, it provides rapid development capabilities, helping developers quickly build clearly structured and easily maintainable modern Web application services.
 
+The repository provides two templates with different boundaries: `ApiStandard` (EF Core, MigrationService, Admin/API, and multiple databases) and `MiniApi` (Minimal API, PostgreSQL, NativeAOT, and no MigrationService). Start with the [quick-start selector](../Quick-Start.md); do not apply Standard's structure and run steps directly to MiniApi.
+
 `Result-oriented and practical` is the core philosophy behind our template design. In terms of architecture design, we mainly follow three principles: **Universal, Simple, and Flexible**, dedicated to providing developers with an efficient and easy-to-use development experience. The specific meanings of the three principles:
 
 - **Universal**: Refers to using mainstream, official, widely adopted or recognized technology stacks and implementation methods as much as possible to reduce mental burden and learning costs.
@@ -18,7 +20,7 @@ Software development and delivery is essentially a process of digital asset prod
 In software development, we can simplify it to: **Definition -> Implementation -> Service**. Based on this, we designed the following project structure:
 
 - **Definition**: Determines what to do, what is needed, and what is provided. In the template, it is implemented by the `Definition` layer.
-- **Implementation**: Implements business logic based on the definition. In the template, it is implemented through `Modules` (multiple modules).
+- **Implementation**: Implements business logic based on the definition. `ApiStandard` uses optional `Modules`, while `MiniApi` keeps the default business structure in `ApiService` under `Endpoints/Managers/Models/Services`.
 - **Service**: Provides business logic implementation to the outside through interfaces. In the template, it is implemented through the `Services` layer.
 
 Refer to the [Directory Structure](./Directory-Structure.md) document to learn detailed descriptions of each directory and project.

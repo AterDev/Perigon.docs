@@ -30,6 +30,10 @@ jobs:
         with:
           dotnet-version: 10.x
 
+      - name: Validate documentation links and snippets
+        shell: pwsh
+        run: ./scripts/validate-docs.ps1
+
       - run: dotnet tool install --global Ater.EasyDocs
       - run: git fetch --unshallow
       - run: ezdoc build ./webinfo.json

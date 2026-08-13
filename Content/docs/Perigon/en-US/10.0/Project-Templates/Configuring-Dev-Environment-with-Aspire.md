@@ -17,22 +17,21 @@ Let's first look at an example of `appsettings.Development.json`:
   },
   "Components": {
     // memory/redis/hybrid
-    "Cache": "Hybrid",
+    "Cache": "Memory",
     // SqlServer/PostgreSQL
     "Database": "PostgreSQL",
     // enable multi-tenant features
-    "IsMultiTenant": false,
-    // message queue
-    "Nats": false,
-    "Qdrant": false
+    "IsMultiTenant": false
   }
 }
 ```
 
 Here we mainly focus on the `Components` node, which defines the component types used by the application:
-- `Cache` options include: `memory` (memory cache), `redis` (Redis cache), or `hybrid` (hybrid cache);
+- `Cache` options include: `Memory`, `Redis`, and `Hybrid`; AppHost creates Redis only for `Redis` or `Hybrid`;
 - `Database` options include: `SqlServer` or `PostgreSQL`
 - `IsMultiTenant` is used to enable multi-tenant functionality
+
+AppHost passes the selected cache type to services through the `Components__Cache` environment variable, so each service does not need a duplicate cache setting. Aspire injects the OTLP exporter endpoint through `OTEL_EXPORTER_OTLP_ENDPOINT`; the old `Otel`/`OpenTelemetry` nodes are no longer used.
 
 ### Multi-tenant Configuration
 
@@ -47,13 +46,14 @@ If you are sure that you do not need multi-tenant functionality now and in the f
 
 Aspire supports integrating various other projects into AppHost, such as frontend projects, Python projects, etc. For example, adding a frontend project:
 ```csharp
-var webApp = builder.AddNpmApp("frontend", "../ClientApp/WebApp")
+var webApp = builder.AddJavaScriptApp("frontend", "../ClientApp/WebApp", "start")
+    .WithPnpm()
     .WithUrl("http://localhost:4200")
     .WaitFor(adminService)
     .WithParentRelationship(serviceGroup);
 ```
 
-> Note: AddNpmApp will execute the `npm run start` command to start the frontend project. Before this, you may need to manually run `pnpm install` to install dependency packages.
+> Note: The template does not start the frontend by default. Select Angular, run `pnpm install`, and enable this resource in AppHost before `AddJavaScriptApp(...).WithPnpm()` runs the frontend `start` script.
 
 ### Infrastructure Configuration
 

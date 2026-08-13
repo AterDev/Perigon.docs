@@ -12,7 +12,7 @@ Creating a generation task involves two steps:
 
 A task can contain multiple steps, each with corresponding templates and generation paths.
 
-Assuming you already have an example template, refer to [Code Templates](../Data-Management/Code-Templates.md) if needed.
+Assuming you already have an example template, refer to [Code Templates](./Data-Management/Code-Templates.md) if needed.
 
 ### Creating Steps
 
