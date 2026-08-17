@@ -116,9 +116,11 @@ $stalePatterns = @(
     '自定义工具\.md'
 )
 foreach ($pattern in $stalePatterns) {
-    $matches = rg --line-number --glob '*.md' -- "$pattern" $contentRoot 2>$null
-    foreach ($match in $matches) {
-        Add-ValidationError ("stale documentation token: $match")
+    foreach ($file in $markdownFiles) {
+        $matches = Select-String -Path $file.FullName -Pattern $pattern -AllMatches -ErrorAction SilentlyContinue
+        foreach ($match in $matches) {
+            Add-ValidationError ("stale documentation token in {0}:{1}: {2}" -f $file.FullName, $match.LineNumber, $match.Line.Trim())
+        }
     }
 }
 
