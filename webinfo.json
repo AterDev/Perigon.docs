@@ -3,7 +3,7 @@
   "Description": "\uD83D\uDDFDTo be a 👨",
   "AuthorName": "NilTor",
   "BaseHref": "/",
-  "ContentPath": "./Content",
+  "ContetPath": "./Content",
   "OutputPath": "./WebSite",
   "Icon": "favicon.png",
   "Domain": "https://dusi.dev",
@@ -21,6 +21,30 @@
       "Versions": [
         "10.0"
       ]
+    },
+    {
+      "Name": "EasyDocs",
+      "Logo": "logo.png",
+      "Description": "EasyDocs static documentation generator usage guide",
+      "Languages": [
+        "zh-CN",
+        "en-US"
+      ],
+      "Versions": [
+        "2.0"
+      ]
+    }
+  ],
+  "ProductInfos": [
+    {
+      "Name": "easysnipping",
+      "Logo": "logo.png",
+      "Description": "EasySnipping is a lightweight Windows screenshot and annotation tool with smart selection, OCR, local-first processing, and always-on-top pins.",
+      "Languages": [
+        "zh-CN",
+        "en-US"
+      ],
+      "DefaultLanguage": "zh-CN"
     }
   ]
 }
