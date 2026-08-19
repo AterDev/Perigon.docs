@@ -1,6 +1,6 @@
 # ApiStandard 快速入门
 
-`ApiStandard` 面向传统 ASP.NET Core Web API 和模块化业务系统，包含 EF Core、MigrationService、AdminService 和 ApiService。
+`ApiStandard` 面向传统 ASP.NET Core Web API 和模块化业务系统，包含 EF Core、Aspire 迁移资源、AdminService 和 ApiService。
 
 ## 创建项目
 
@@ -27,6 +27,8 @@ cd MyWebApi
 
 `Database` 支持 `PostgreSQL` 和 `SqlServer`。`Cache` 支持 `Memory`、`Redis` 和 `Hybrid`；只有选择 `Redis` 或 `Hybrid` 时 AppHost 才创建 Redis，并通过 `Components__Cache` 将选择传给服务。
 
+完整的 `Components`、认证、缓存、登录策略、SMTP、SMS、S3 和环境变量说明请参阅[模板配置参考](./配置参考.md)。
+
 ## 创建迁移并运行
 
 Standard 使用 EF Core 迁移。首次创建项目或修改实体后，在项目根目录执行：
@@ -36,7 +38,9 @@ Standard 使用 EF Core 迁移。首次创建项目或修改实体后，在项�
 aspire start --non-interactive
 ```
 
-AppHost 会先运行 `MigrationService`，完成后再启动 AdminService 和 ApiService。默认模板不包含 `SystemMod`，因此不会自动创建可登录的管理员账号；安装该模块后请按模块文档初始化账号，不要把示例凭据带入生产环境。
+AppHost 会创建 `ApiService-Migrations` 迁移资源。本地运行时，它通过 `RunDatabaseUpdateOnStart()` 应用迁移，完成后再启动 AdminService 和 ApiService。发布到 Kubernetes 时，它会生成一次性的迁移 Job。迁移脚本会同步 `Components__Database` 和 `Components__IsMultiTenant`，以保持数据库提供程序和租户索引处理一致。
+
+EF Core 迁移、`UseSeeding`/`UseAsyncSeeding` 和 Kubernetes 发布请参阅[数据库迁移与初始化](../最佳实践/数据库.md)和[发布应用](../教程/发布应用.md)。默认模板不包含 `SystemMod`，因此不会自动创建可登录的管理员账号；安装该模块后请按模块文档初始化账号，不要把示例凭据带入生产环境。
 
 ## OpenAPI 和测试
 

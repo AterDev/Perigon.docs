@@ -31,7 +31,9 @@ Here we mainly focus on the `Components` node, which defines the component types
 - `Database` options include: `SqlServer` or `PostgreSQL`
 - `IsMultiTenant` is used to enable multi-tenant functionality
 
-AppHost passes the selected cache type to services through the `Components__Cache` environment variable, so each service does not need a duplicate cache setting. Aspire injects the OTLP exporter endpoint through `OTEL_EXPORTER_OTLP_ENDPOINT`; the old `Otel`/`OpenTelemetry` nodes are no longer used.
+AppHost passes `Cache`, `Database`, and `IsMultiTenant` to services through `Components__Cache`, `Components__Database`, and `Components__IsMultiTenant`, so each service does not need duplicate infrastructure settings. Aspire injects the OTLP exporter endpoint through `OTEL_EXPORTER_OTLP_ENDPOINT`; the old `Otel`/`OpenTelemetry` nodes are no longer used.
+
+Service-specific authentication, login policy, cache expiration, SMTP, SMS, S3, and CORS settings remain in the service configuration. See the [Template Configuration Reference](./Configuration-Reference.md) for fields, defaults, and environment-variable syntax.
 
 ### Multi-tenant Configuration
 
@@ -86,6 +88,12 @@ This method is suitable for using public resources without starting database con
 
 > [!TIP]
 > You can obtain and manage these configurations through `AppSettingsHelper.cs`.
+
+## EF Core migrations and seed data
+
+Current `ApiStandard` uses `AddEFMigrations` in `AppHost` and no longer creates a separate `MigrationService` project. Local runs use `RunDatabaseUpdateOnStart()`; Kubernetes publishing generates a one-shot migration Job. The default tenant is initialized idempotently through EF Core `UseSeeding` and `UseAsyncSeeding`.
+
+See [EF Core migrations and seeding](../Best-Practices/Database.md) and [Deploying Applications](../Tutorials/Deploying-Applications.md) for the complete workflow.
 
 ## Defining Infrastructure
 

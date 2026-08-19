@@ -18,22 +18,32 @@ Use this runbook for release checks, incident diagnosis, and rollback for ApiSta
 
 ### ApiStandard
 
-`MigrationService` is a one-shot resource. Inspect its logs and state first:
+`ApiService-Migrations` is a one-shot migration resource. Inspect its logs and state first:
 
 ```powershell
-aspire otel logs MigrationService
-aspire describe MigrationService
+aspire otel logs ApiService-Migrations
+aspire describe ApiService-Migrations
 ```
 
 1. Stop the release flow and do not send traffic to a partially migrated application.
 2. Verify database connectivity, permissions, and the migration history table.
 3. Fix the migration or seed data and rerun it against a test database.
 4. In production, restore a verified backup before retrying a migration; do not delete the migration history table as a first response.
-5. Start API and background services only after `MigrationService` completes successfully.
+5. Start API and background services only after `ApiService-Migrations` completes successfully.
+
+For a Kubernetes release, verify the Job:
+
+```powershell
+kubectl get jobs -n perigon -l app.kubernetes.io/component=ApiService-Migrations
+kubectl describe job <migration-job-name> -n perigon
+kubectl logs job/<migration-job-name> -n perigon
+```
+
+After success, the Job must not be treated as a long-running service. If it fails, stop traffic, fix the migration or seed data, and rerun the release flow. Do not delete the production EF history table as a first response.
 
 ### MiniApi
 
-MiniApi has no `MigrationService` and no EF migration script. A deployment pipeline or a dedicated database-change tool owns schema changes; the pipeline must validate the schema before starting the API.
+MiniApi has no `ApiService-Migrations` and no built-in EF migration script. A deployment pipeline or a dedicated database-change tool owns schema changes; the pipeline must validate the schema before starting the API.
 
 ## Container health
 

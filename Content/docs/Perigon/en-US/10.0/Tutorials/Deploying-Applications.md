@@ -6,7 +6,7 @@ Template projects use `Aspire` for local development and service orchestration. 
 - Orchestrate multiple services, databases, caches, and dependencies: use `AppHost` and Aspire publishing/deployment features.
 
 > [!NOTE]
-> The Docker publish script is only for packaging a single service image. Use `AppHost` when you need database, cache, migration service, startup ordering, or environment composition.
+> The Docker publish script is only for packaging a single service image. Use `AppHost` when you need database, cache, an EF Core migration Job, startup ordering, or environment composition.
 
 ## Prerequisites
 
@@ -25,9 +25,9 @@ Backend services are usually located under `src/Services`, for example:
 
 - `ApiService`
 - `AdminService`
-- `MigrationService`
+- `ApiService-Migrations` (created by AppHost through `AddEFMigrations`)
 
-The public API services are usually `ApiService` and `AdminService`. `MigrationService` is used for database migrations and is not intended to be a long-running API service image. `AdminService` and `MigrationService` apply only to `ApiStandard`; `MiniApi` has only `ApiService`, uses PostgreSQL, and has no migration service.
+The public API services are usually `ApiService` and `AdminService`. `ApiService-Migrations` is a one-shot migration resource and is not intended to be a long-running API service image. `AdminService` and `ApiService-Migrations` apply only to `ApiStandard`; `MiniApi` has only `ApiService`, uses PostgreSQL, and has no built-in EF Core migration resource.
 
 ## Publish a Single Service Image
 
@@ -117,7 +117,7 @@ The single-service publish script does not handle dependencies such as:
 
 - Database
 - Cache
-- Migration service
+- EF Core migration Job
 - Service startup ordering
 - Connection strings
 - Development environment parameters
@@ -127,6 +127,35 @@ Use `AppHost` to describe these resources. The template `AppHost` starts infrast
 ```pwsh
 aspire start --non-interactive
 ```
+
+### Generate Aspire deployment artifacts
+
+List the publish steps, then generate artifacts for the selected target:
+
+```pwsh
+aspire publish --project .\src\AppHost\AppHost.csproj --list-steps --non-interactive
+aspire publish --project .\src\AppHost\AppHost.csproj --output-path .\artifacts\aspire --non-interactive
+```
+
+The current template contains a Kubernetes environment, so the output is a Helm chart containing `Chart.yaml`, `values.yaml`, `templates/`, and the migration bundle. The migration file may still be named `deployment.yaml`; inspect its contents and verify `apiVersion: batch/v1` and `kind: Job`.
+
+The Kubernetes Job uses `restartPolicy: OnFailure` and exits after a successful migration. The release process should verify the Job before sending traffic to the API and admin services. Images must be available from a registry reachable by the cluster. Before applying the chart, inspect image values, parameters, Secrets, and connection-string mappings in `values.yaml`.
+
+To hand the generated chart to an existing cluster, use Helm:
+
+```pwsh
+helm upgrade --install perigon .\artifacts\aspire --namespace perigon --create-namespace
+kubectl get jobs -n perigon
+kubectl logs job/<migration-job-name> -n perigon
+```
+
+If Aspire should deploy directly, verify the current `kubectl` context, image registry, and namespace first:
+
+```pwsh
+aspire deploy --project .\src\AppHost\AppHost.csproj --non-interactive
+```
+
+See the official Aspire documentation: [EF Core migrations](https://aspire.dev/integrations/databases/efcore/migrations/), [Kubernetes deployment](https://aspire.dev/deployment/kubernetes/kubernetes/), and [Seed data](https://aspire.dev/integrations/databases/efcore/seed-database/).
 
 Aspire can describe container images, Dockerfiles, build arguments, and publish workflows in the application model. Use it when you need to publish or deploy multiple resources together.
 

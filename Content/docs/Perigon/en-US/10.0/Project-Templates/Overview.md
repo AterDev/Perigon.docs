@@ -2,7 +2,7 @@
 
 **Perigon.template** is a framework template based on the `Aspire`, `ASP.NET Core`, and `EntityFramework Core` technology stack. Combined with best practices, good development standards, and the development assistance tool `Perigon.CLI`, it provides rapid development capabilities, helping developers quickly build clearly structured and easily maintainable modern Web application services.
 
-The repository provides two templates with different boundaries: `ApiStandard` (EF Core, MigrationService, Admin/API, and multiple databases) and `MiniApi` (Minimal API, PostgreSQL, NativeAOT, and no MigrationService). Start with the [quick-start selector](../Quick-Start.md); do not apply Standard's structure and run steps directly to MiniApi.
+The repository provides two templates with different boundaries: `ApiStandard` (EF Core, an Aspire migration resource, Admin/API, and multiple databases) and `MiniApi` (Minimal API, PostgreSQL, NativeAOT, and no built-in EF migration resource). Start with the [quick-start selector](../Quick-Start.md); do not apply Standard's structure and run steps directly to MiniApi.
 
 `Result-oriented and practical` is the core philosophy behind our template design. In terms of architecture design, we mainly follow three principles: **Universal, Simple, and Flexible**, dedicated to providing developers with an efficient and easy-to-use development experience. The specific meanings of the three principles:
 

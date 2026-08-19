@@ -47,6 +47,6 @@ If you only have a couple of services and already have infrastructure, you can s
 
 - Remove the AppHost project.
 - Remove the ServiceDefaults project.
-- For `ApiStandard`, remove `MigrationService` and manage EF migrations traditionally; `MiniApi` does not include that project.
+- For `ApiStandard`, remove AppHost/ServiceDefaults and manage EF migrations in the deployment pipeline; `MiniApi` has no built-in migration resource.
 - Remove ServiceDefaults dependencies from services.
 - Configure connection strings and other settings per standard ASP.NET Core guidance.

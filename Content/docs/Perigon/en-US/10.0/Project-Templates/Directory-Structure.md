@@ -2,7 +2,7 @@
 
 This article introduces the directory structure of the solution template.
 
-The structure below primarily describes `ApiStandard`. `MiniApi` does not include `AdminService`, `MigrationService`, or default `Modules`; its default business code lives in `src/Services/ApiService` under `Endpoints/Managers/Models/Services`.
+The structure below primarily describes `ApiStandard`. `MiniApi` does not include `AdminService` or default `Modules`; its default business code lives in `src/Services/ApiService` under `Endpoints/Managers/Models/Services`.
 
 ## docs
 
@@ -70,7 +70,7 @@ At this level, the template provides the following services by default:
 
 - AdminService: Provides API services for the admin backend.
 - ApiService: Provides API services for frontend applications.
-- MigrationService: `ApiStandard` provides EF Core migration services; `MiniApi` does not include this service.
+- AppHost: `ApiStandard` declares its EF Core migration resource through Aspire `AddEFMigrations`; `MiniApi` has no built-in migration resource.
 
 ---
 

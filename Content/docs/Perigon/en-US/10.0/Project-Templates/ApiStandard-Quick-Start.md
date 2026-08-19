@@ -1,6 +1,6 @@
 # ApiStandard Quick Start
 
-`ApiStandard` targets conventional ASP.NET Core Web APIs and modular business systems. It includes EF Core, MigrationService, AdminService, and ApiService.
+`ApiStandard` targets conventional ASP.NET Core Web APIs and modular business systems. It includes EF Core, an Aspire migration resource, AdminService, and ApiService.
 
 ## Create a project
 
@@ -27,6 +27,8 @@ Configure the `Components` node in `src/AppHost/appsettings.Development.json`:
 
 `Database` supports `PostgreSQL` and `SqlServer`. `Cache` supports `Memory`, `Redis`, and `Hybrid`. AppHost creates Redis only for `Redis` or `Hybrid` and passes the selected value to services through `Components__Cache`.
 
+See [Template Configuration Reference](./Configuration-Reference.md) for `Components`, authentication, cache, login policy, SMTP, SMS, S3, and environment-variable settings.
+
 ## Create migrations and run
 
 Standard uses EF Core migrations. After creating a project or changing entities:
@@ -36,7 +38,9 @@ Standard uses EF Core migrations. After creating a project or changing entities:
 aspire start --non-interactive
 ```
 
-AppHost runs `MigrationService` first, then starts AdminService and ApiService. The default template does not include `SystemMod`, so it does not create a login-ready administrator account. If the module is installed, follow its initialization guide and never reuse example credentials in production.
+AppHost creates the `ApiService-Migrations` migration resource. During local runs, `RunDatabaseUpdateOnStart()` applies the migrations before AdminService and ApiService start. For Kubernetes publishing, it generates a one-shot migration Job. The migration script keeps `Components__Database` and `Components__IsMultiTenant` aligned so provider selection and tenant-index handling are consistent.
+
+See [EF Core migrations and seeding](../Best-Practices/Database.md) and [Deploying Applications](../Tutorials/Deploying-Applications.md) for migrations, `UseSeeding`/`UseAsyncSeeding`, and Kubernetes publishing. The default template does not include `SystemMod`, so it does not create a login-ready administrator account. If the module is installed, follow its initialization guide and never reuse example credentials in production.
 
 ## OpenAPI and tests
 

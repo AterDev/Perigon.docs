@@ -1,6 +1,6 @@
 # MiniApi 快速入门
 
-`MiniApi` 面向轻量接口和微服务，使用 Minimal API、PostgreSQL、Request Delegate Generator 和 NativeAOT。它不包含 `MigrationService`、AdminService 或默认 Angular 前端。
+`MiniApi` 面向轻量接口和微服务，使用 Minimal API、PostgreSQL、Request Delegate Generator 和 NativeAOT。它不包含内置 EF Core 迁移资源、AdminService 或默认 Angular 前端。
 
 ## 创建项目
 

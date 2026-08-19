@@ -57,9 +57,52 @@ To minimize time spent on design choices, here are recommended field types:
 
 As you iterate development, database structure changes. Use `Code First` to centrally manage the database schema and avoid manual operation inconsistencies.
 
-The `MigrationService` project handles database structure updates. When you start the application through `AppHost`, it automatically applies the latest migrations before other services start.
+### ApiStandard migration architecture
 
-The `scripts` directory provides `EFMigrations.ps1` for generating migrations. Use it directly or modify it as needed. Migration files are generated in `EntityFramework/Migrations` by default.
+Current `ApiStandard` no longer uses a separate `MigrationService` project. AppHost uses Aspire's first-class `AddEFMigrations` API:
+
+```csharp
+var apiMigrations = apiService
+    .AddEFMigrations(
+        "ApiService-Migrations",
+        "EntityFramework.AppDbContext.DefaultDbContext"
+    )
+    .WithMigrationsProject("..\\Definition\\EntityFramework\\EntityFramework.csproj")
+    .WithReference(database)
+    .WaitFor(database)
+    .RunDatabaseUpdateOnStart()
+    .PublishAsMigrationBundle(publishContainer: true);
+
+apiService.WaitForCompletion(apiMigrations);
+adminService.WaitForCompletion(apiMigrations);
+```
+
+- During local `aspire start`, `RunDatabaseUpdateOnStart()` applies the database update and API/admin resources wait for the migration resource.
+- `RunDatabaseUpdateOnStart()` affects local run mode only; it does not replace the migration step in a production release.
+- `PublishAsMigrationBundle(publishContainer: true)` creates a migration container for targets such as Docker Compose and Kubernetes.
+- For Kubernetes, the template's `PublishAsKubernetesService` customization converts the migration workload to a `batch/v1 Job` and sets `restartPolicy: OnFailure`. The Job exits after success and must not be treated as a long-running API service.
+
+Migration bundles are idempotent, but a production release should still verify that the migration Job succeeds before sending traffic to the new API version.
+
+See the official Aspire guide: [Apply EF Core migrations in Aspire](https://aspire.dev/integrations/databases/efcore/migrations/).
+
+### Create migrations
+
+The `scripts` directory provides `EFMigrations.ps1` for generating migrations. It reads `Components:Database` and `Components:IsMultiTenant` from `src/AppHost/appsettings.Development.json`, exports them as `Components__Database` and `Components__IsMultiTenant`, and runs EF tooling with `ApiService` as the startup project and `EntityFramework` as the migrations project:
+
+```powershell
+.\scripts\EFMigrations.ps1 Init
+```
+
+Migration files are generated in `EntityFramework/Migrations` by default. Generate a migration after changing the model, then validate the local update flow through AppHost. Do not edit a migration that has already been applied to production.
+
+### Seed data
+
+The default database uses EF Core `UseSeeding` and `UseAsyncSeeding` to create the default tenant. Both paths use the same idempotent check, so rerunning migrations does not insert duplicate default tenants.
+
+The default tenant is the global tenant catalog root, so it does not receive a `TenantId`; normal tenant entities continue to follow the template's tenant-isolation rules.
+
+See [Seed data in a database using Aspire](https://aspire.dev/integrations/databases/efcore/seed-database/) and [EF Core Data Seeding](https://learn.microsoft.com/ef/core/modeling/data-seeding).
 
 ## Multi-Database Support
 

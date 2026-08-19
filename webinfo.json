@@ -13,7 +13,7 @@
       "Logo": "perigon.png",
       "Description": "Fast Web Development Toolkit, based on Aspire, Asp.Net Core and Entity Framework Core. QQ群: 1078258655",
       "TemplatePackageVersion": "1.3.12",
-      "AspireVersion": "13.4.6",
+      "AspireVersion": "13.5.0",
       "Languages": [
         "zh-CN",
         "en-US"

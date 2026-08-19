@@ -1,6 +1,6 @@
 # MiniApi Quick Start
 
-`MiniApi` targets lightweight APIs and microservices. It uses Minimal API, PostgreSQL, the Request Delegate Generator, and NativeAOT. It does not include `MigrationService`, AdminService, or a default Angular frontend.
+`MiniApi` targets lightweight APIs and microservices. It uses Minimal API, PostgreSQL, the Request Delegate Generator, and NativeAOT. It does not include a built-in EF Core migration resource, AdminService, or a default Angular frontend.
 
 ## Create a project
 

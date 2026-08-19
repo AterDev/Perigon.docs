@@ -4,13 +4,13 @@ Perigon provides two templates with different boundaries. Choose a template firs
 
 | Template | Best for | Technical boundary | Quick start |
 | --- | --- | --- | --- |
-| `ApiStandard` | Conventional Web APIs, admin services, and modular business systems | EF Core, MigrationService, AdminService/ApiService, PostgreSQL or SQL Server | [ApiStandard quick start](./Project-Templates/ApiStandard-Quick-Start.md) |
-| `MiniApi` | Lightweight APIs, microservices, and resource-sensitive workloads | Minimal API, PostgreSQL, NativeAOT, no MigrationService | [MiniApi quick start](./Project-Templates/MiniApi-Quick-Start.md) |
+| `ApiStandard` | Conventional Web APIs, admin services, and modular business systems | EF Core, an Aspire migration resource, AdminService/ApiService, PostgreSQL or SQL Server | [ApiStandard quick start](./Project-Templates/ApiStandard-Quick-Start.md) |
+| `MiniApi` | Lightweight APIs, microservices, and resource-sensitive workloads | Minimal API, PostgreSQL, NativeAOT, no built-in EF migration resource | [MiniApi quick start](./Project-Templates/MiniApi-Quick-Start.md) |
 
 ## Common prerequisites
 
 1. Install the `.NET 10.0.103` SDK or a compatible .NET 10 SDK.
-2. Install Aspire CLI 13.4.6 and prepare Docker or Podman.
+2. Install an Aspire CLI matching the template SDK (the current development version is 13.5.0) and prepare Docker or Podman.
 3. Install `Perigon.CLI` and create a project with `dotnet new`, or use Studio to create a solution.
 
 When using the templates directly, install the package version covered by this documentation:

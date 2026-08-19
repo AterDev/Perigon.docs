@@ -65,7 +65,7 @@ Since there is no token before login, identify the tenant from login information
 
 You don’t need to add `TenantId` indexes manually. The framework applies them automatically (including filtered indexes to ignore soft-deleted rows) so single-tenant and multi-tenant modes remain correct.
 
-During EF migrations, `MigrationsModelDifferProxy` in `MigrationService` handles `TenantId` index generation.
+During EF migration generation, `MigrationsModelDifferProxy` under `ApiService/DesignTime` handles `TenantId` index generation. The migration is executed by the AppHost `AddEFMigrations` resource; both the migration script and resource receive `Components__IsMultiTenant`.
 
 ## Without Multi-tenancy
 

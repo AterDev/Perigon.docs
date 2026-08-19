@@ -18,11 +18,11 @@
 
 ### ApiStandard
 
-`MigrationService` 是一次性服务。先查看迁移服务日志，确认失败发生在连接、迁移脚本还是初始化数据：
+`ApiService-Migrations` 是一次性迁移资源。先查看迁移资源日志，确认失败发生在连接、迁移脚本还是初始化数据：
 
 ```powershell
-aspire otel logs MigrationService
-aspire describe MigrationService
+aspire otel logs ApiService-Migrations
+aspire describe ApiService-Migrations
 ```
 
 处理顺序：
@@ -31,11 +31,21 @@ aspire describe MigrationService
 2. 校验目标数据库连接、权限和迁移历史表。
 3. 修复迁移或初始化数据后，在测试数据库重新执行。
 4. 生产环境优先恢复备份，再执行经过验证的迁移；不要直接删除迁移历史表。
-5. 确认 `MigrationService` 成功退出后，再启动 API 和后台服务。
+5. 确认 `ApiService-Migrations` 成功退出后，再启动 API 和后台服务。
+
+Kubernetes 发布时，检查 Job 是否成功：
+
+```powershell
+kubectl get jobs -n perigon -l app.kubernetes.io/component=ApiService-Migrations
+kubectl describe job <migration-job-name> -n perigon
+kubectl logs job/<migration-job-name> -n perigon
+```
+
+Job 成功后不应被重新部署为长期服务。若迁移失败，先停止放流量，修复迁移或初始化数据，再按发布流程重新执行；不要直接删除生产数据库的 EF 历史表。
 
 ### MiniApi
 
-MiniApi 不包含 `MigrationService`，也不提供 EF migration 脚本。数据库 schema 由部署管线或独立数据库变更工具负责；发布管线必须在 API 启动前完成 schema 校验。
+MiniApi 不包含 `ApiService-Migrations`，也不提供内置 EF migration 脚本。数据库 schema 由部署管线或独立数据库变更工具负责；发布管线必须在 API 启动前完成 schema 校验。
 
 ## 容器健康
 

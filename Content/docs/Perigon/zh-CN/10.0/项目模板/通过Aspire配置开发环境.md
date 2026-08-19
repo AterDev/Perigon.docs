@@ -31,7 +31,9 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
 - `Database`选项包括：`SqlServer`或`PostgreSQL`
 - `IsMultiTenant`用于启用多租户功能
 
-AppHost 会把该选择以 `Components__Cache` 环境变量传给服务，因此不需要在每个服务中重复修改缓存类型。Aspire 通过 `OTEL_EXPORTER_OTLP_ENDPOINT` 注入 OTLP 导出地址；配置文件中的旧 `Otel`/`OpenTelemetry` 节点不再使用。
+AppHost 会把 `Cache`、`Database` 和 `IsMultiTenant` 统一以 `Components__Cache`、`Components__Database` 和 `Components__IsMultiTenant` 环境变量传给服务，因此不需要在每个服务中重复修改基础设施选择。Aspire 通过 `OTEL_EXPORTER_OTLP_ENDPOINT` 注入 OTLP 导出地址；配置文件中的旧 `Otel`/`OpenTelemetry` 节点不再使用。
+
+服务自身的认证、登录安全策略、缓存过期时间、SMTP、SMS、S3 和 CORS 配置仍应放在服务配置中。完整字段、默认值和环境变量写法请参考[模板配置参考](./配置参考.md)。
 
 ### 多租户配置
 
@@ -86,6 +88,12 @@ var cache = builder.AddConnectionString("Cache");
 
 > [!TIP]
 > 你可以通过`AppSettingsHelper.cs`来获取和管理这些配置。
+
+## EF Core 迁移与初始化数据
+
+当前 `ApiStandard` 在 `AppHost` 中使用 `AddEFMigrations`，不再创建独立的 `MigrationService` 项目。本地运行通过 `RunDatabaseUpdateOnStart()` 更新数据库；发布到 Kubernetes 时生成一次性的迁移 Job。默认租户通过 EF Core `UseSeeding` 和 `UseAsyncSeeding` 幂等初始化。
+
+详细流程请参阅[数据库迁移与初始化](../最佳实践/数据库.md)和[发布应用](../教程/发布应用.md)。
 
 ## 定义基础设施
 
