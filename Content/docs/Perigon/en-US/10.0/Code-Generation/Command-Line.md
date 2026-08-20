@@ -360,7 +360,7 @@ Parameter notes:
 - `-t, --type`: Target output type. Supported values are `csharp`, `angular`, and `axios`
 - `-m, --only-model`: Generate model files only
 
-When the target type is `csharp`, file fields in OpenAPI `multipart/form-data` requests generate upload methods. The generated method accepts the file as a `Stream` and also accepts a file name; the field name from the OpenAPI schema is passed as the multipart field name. Other form fields and query parameters are generated according to the OpenAPI definition.
+When the target type is `csharp`, OpenAPI `multipart/form-data` requests generate multipart upload methods. A single file field uses `MultipartFile` (wrapping a `Stream`, file name, and optional MIME type), while multiple file fields use `IEnumerable<MultipartFile>`. String, numeric, boolean, and array fields are also submitted as form fields. Angular and Axios clients use `File`/`File[]` and append fields to `FormData` using the schema field names.
 
 ## mcp
 
