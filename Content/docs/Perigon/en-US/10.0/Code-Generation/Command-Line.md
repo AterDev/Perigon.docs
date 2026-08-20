@@ -360,6 +360,8 @@ Parameter notes:
 - `-t, --type`: Target output type. Supported values are `csharp`, `angular`, and `axios`
 - `-m, --only-model`: Generate model files only
 
+When the target type is `csharp`, file fields in OpenAPI `multipart/form-data` requests generate upload methods. The generated method accepts the file as a `Stream` and also accepts a file name; the field name from the OpenAPI schema is passed as the multipart field name. Other form fields and query parameters are generated according to the OpenAPI definition.
+
 ## mcp
 
 The `mcp` command provides Perigon Model Context Protocol tools.

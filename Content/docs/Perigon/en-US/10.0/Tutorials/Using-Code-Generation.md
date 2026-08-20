@@ -49,6 +49,8 @@ Now generate client request services by clicking the </> button on the right of 
 - Output directory: where generated code is placed.
 - OnlyModels: unchecked by default. When checked, generate models only (skip service code).
 
+When C# is selected, file fields in OpenAPI `multipart/form-data` requests generate upload methods based on `Stream`, with the file name and the multipart field name defined by the OpenAPI schema.
+
 
 > [!NOTE]
 > If the generated client doesn’t meet your needs, customize templates to suit your style. See [Custom Generation Tasks](../Code-Generation/Custom-Generation-Tasks.md).
