@@ -346,8 +346,8 @@ ARGUMENTS:
     <path|url>      Local path or url, support json format
     <outputPath>    The output path
 
-OPTIONS:
-                        DEFAULT
+    OPTIONS:
+                             DEFAULT
     -h, --help                     Prints help information
     -t, --type          angular    Support types: csharp/angular/axios, default: angular
     -m, --only-model    false      Only generate model files
