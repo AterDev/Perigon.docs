@@ -10,7 +10,7 @@ Manager是专门处理业务逻辑的地方，它通常被服务层在Controller
 
 ```csharp
 public class CustomerInfoManager(
-    TenantDbFactory dbContextFactory, 
+    AppDbFactory dbContextFactory,
     ILogger<CustomerInfoManager> logger,
     IUserContext userContext
 )

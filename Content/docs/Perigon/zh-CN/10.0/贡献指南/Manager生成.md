@@ -8,7 +8,7 @@ Manager是通过实体进行生成的，通过解析实体，获取相关信息�
 
 所有Manager都需要继承`ManagerBase`类，不继承的不会通过源代码生成器注入服务。模板提供了以下几种ManagerBase:
 
-- `ManagerBase<TDbContext, TEntity>(TenantDbFactory dbContextFactory,IUserContext userContext, ILogger logger)`: 用于指定数据库上下文和实体，代码生成器默认使用该类作为基类。
+- `ManagerBase<TDbContext, TEntity>(AppDbFactory dbContextFactory,IUserContext userContext, ILogger logger)`: 用于指定数据库上下文和实体，代码生成器默认使用该类作为基类。
 
 - `ManagerBase<TDbContext>(TDbContext dbContext, ILogger logger)`：指定数据库上下文。
 
