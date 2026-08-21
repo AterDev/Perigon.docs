@@ -48,8 +48,9 @@ Now generate client request services by clicking the </> button on the right of 
 - Client type: Angular, C#, or Axios.
 - Output directory: where generated code is placed.
 - OnlyModels: unchecked by default. When checked, generate models only (skip service code).
+- `base.service.ts`: Angular/Axios clients preserve customized content in an existing file by default. The CLI can overwrite it with `-c/--cover-base-service`; Studio preserves it by default and has no overwrite toggle.
 
-When C# is selected, OpenAPI `multipart/form-data` requests generate multipart upload methods. A single file field uses `MultipartFile`, while multiple file fields use `IEnumerable<MultipartFile>`; ordinary fields are submitted as part of the form as well. Angular and Axios clients use `File`/`File[]` to construct `FormData`.
+When C# is selected, OpenAPI `multipart/form-data` requests generate multipart upload methods. A single file field uses `MultipartFile`, while multiple file fields use `IEnumerable<MultipartFile>`; ordinary fields are submitted as part of the form as well. Angular and Axios clients use `File`/`File[]` to construct `FormData`. C# clients preserve multi-level paths in `HttpClient.BaseAddress`.
 
 
 > [!NOTE]

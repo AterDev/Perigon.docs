@@ -351,6 +351,7 @@ OPTIONS:
     -h, --help                     Prints help information
     -t, --type          angular    Support types: csharp/angular/axios, default: angular
     -m, --only-model    false      Only generate model files
+    -c, --cover-base-service    false      Overwrite generated base.service.ts
 ```
 
 Parameter notes:
@@ -359,8 +360,9 @@ Parameter notes:
 - `<outputPath>`: Output directory for generated code
 - `-t, --type`: Target output type. Supported values are `csharp`, `angular`, and `axios`
 - `-m, --only-model`: Generate model files only
+- `-c, --cover-base-service`: Overwrite an existing `base.service.ts`; customized content is preserved by default. This mainly applies to Angular/Axios frontend request clients, and Studio also preserves the file by default. With `-m/--only-model`, no base service is generated or overwritten. C# clients generate `BaseService.cs` instead.
 
-When the target type is `csharp`, OpenAPI `multipart/form-data` requests generate multipart upload methods. A single file field uses `MultipartFile` (wrapping a `Stream`, file name, and optional MIME type), while multiple file fields use `IEnumerable<MultipartFile>`. String, numeric, boolean, and array fields are also submitted as form fields. Angular and Axios clients use `File`/`File[]` and append fields to `FormData` using the schema field names.
+When the target type is `csharp`, OpenAPI `multipart/form-data` requests generate multipart upload methods. A single file field uses `MultipartFile` (wrapping a `Stream`, file name, and optional MIME type), while multiple file fields use `IEnumerable<MultipartFile>`. String, numeric, boolean, and array fields are also submitted as form fields. Angular and Axios clients use `File`/`File[]` and append fields to `FormData` using the schema field names. C# clients join generated upload, multipart, download, and JSON paths with `HttpClient.BaseAddress` so multi-level base paths are preserved.
 
 ## mcp
 
