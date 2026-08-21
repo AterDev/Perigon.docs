@@ -22,7 +22,7 @@ Recommended options: `SqlServer` or `PostgreSql`.
 The template uses Entity Framework Core as the ORM. You can use any database with a supported EF Core provider, with a few changes:
 
 - Update `ServiceDefaults/FrameworkExtensions.cs` → `AddDbContext` to use your provider.
-- Update `Definition/EntityFramework` → `ContextBase` or `TenantDbFactory` to support your provider.
+- Update `Definition/EntityFramework` → `ContextBase` or `AppDbFactory` to support your provider.
 
 ## Connection Strings
 

@@ -29,20 +29,20 @@ Let's first look at an example of `appsettings.Development.json`:
 Here we mainly focus on the `Components` node, which defines the component types used by the application:
 - `Cache` options include: `Memory`, `Redis`, and `Hybrid`; AppHost creates Redis only for `Redis` or `Hybrid`;
 - `Database` options include: `SqlServer` or `PostgreSQL`
-- `IsMultiTenant` is used to enable multi-tenant functionality
+- `IsMultiTenant` is the tenant configuration value. `ApiStandard` keeps the tenant-aware model in both single-tenant and multi-tenant deployments.
 
-AppHost passes `Cache`, `Database`, and `IsMultiTenant` to services through `Components__Cache`, `Components__Database`, and `Components__IsMultiTenant`, so each service does not need duplicate infrastructure settings. Aspire injects the OTLP exporter endpoint through `OTEL_EXPORTER_OTLP_ENDPOINT`; the old `Otel`/`OpenTelemetry` nodes are no longer used.
+AppHost passes `Cache`, `Database`, and `IsMultiTenant` to services through `Components__Cache`, `Components__Database`, and `Components__IsMultiTenant`, so each service does not need duplicate infrastructure settings. Aspire injects the OTLP exporter endpoint through `OTEL_EXPORTER_OTLP_ENDPOINT`.
 
 Service-specific authentication, login policy, cache expiration, SMTP, SMS, S3, and CORS settings remain in the service configuration. See the [Template Configuration Reference](./Configuration-Reference.md) for fields, defaults, and environment-variable syntax.
 
 ### Multi-tenant Configuration
 
-The framework is compatible with multi-tenant mode by default. You only need to set `IsMultiTenant` to `true` in the configuration file to enable multi-tenant functionality.
+The framework uses a tenant-aware data model by default. `Tenant` is initialized in single-tenant deployments as well, and business entities use `TenantId` and global tenant filters.
 
 If you are sure that you do not need multi-tenant functionality now and in the future, you can modify the interface inherited by `EntityBase` from `ITenantEntityBase` to `IEntityBase`, so that the `TenantId` field will not be included.
 
 > [!IMPORTANT]
-> When multi-tenancy is enabled, be sure to inherit the `ITenantEntityBase` interface to ensure that entity classes contain the `TenantId` field, thereby supporting multi-tenant data isolation.
+> Business entities that participate in the template's default data access should inherit `EntityBase` or implement `ITenantEntityBase`, so they contain `TenantId` and participate in the unified tenant isolation rules.
 
 ### Frontend Integration
 
@@ -91,7 +91,7 @@ This method is suitable for using public resources without starting database con
 
 ## EF Core migrations and seed data
 
-Current `ApiStandard` uses `AddEFMigrations` in `AppHost` and no longer creates a separate `MigrationService` project. Local runs use `RunDatabaseUpdateOnStart()`; Kubernetes publishing generates a one-shot migration Job. The default tenant is initialized idempotently through EF Core `UseSeeding` and `UseAsyncSeeding`.
+`ApiStandard` uses `AddEFMigrations` in `AppHost` to create the migration resource. Local runs use `RunDatabaseUpdateOnStart()`; Kubernetes publishing generates a one-shot migration Job. The default tenant is initialized idempotently through EF Core `UseSeeding` and `UseAsyncSeeding`.
 
 See [EF Core migrations and seeding](../Best-Practices/Database.md) and [Deploying Applications](../Tutorials/Deploying-Applications.md) for the complete workflow.
 

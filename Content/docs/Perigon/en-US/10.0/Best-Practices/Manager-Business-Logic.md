@@ -10,7 +10,7 @@ A typical Manager provides two generic parameters, and it provides some common C
 
 ```csharp
 public class CustomerInfoManager(
-    TenantDbFactory dbContextFactory, 
+    AppDbFactory dbContextFactory,
     ILogger<CustomerInfoManager> logger,
     IUserContext userContext
 )

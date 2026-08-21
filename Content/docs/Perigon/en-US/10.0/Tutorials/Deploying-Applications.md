@@ -25,9 +25,9 @@ Backend services are usually located under `src/Services`, for example:
 
 - `ApiService`
 - `AdminService`
-- `ApiService-Migrations` (created by AppHost through `AddEFMigrations`)
+- `AdminService-Migrations` (created by AppHost through `AddEFMigrations`)
 
-The public API services are usually `ApiService` and `AdminService`. `ApiService-Migrations` is a one-shot migration resource and is not intended to be a long-running API service image. `AdminService` and `ApiService-Migrations` apply only to `ApiStandard`; `MiniApi` has only `ApiService`, uses PostgreSQL, and has no built-in EF Core migration resource.
+The public API services are usually `ApiService` and `AdminService`. `AdminService-Migrations` is a one-shot migration resource and is not intended to be a long-running API service image. `AdminService` and `AdminService-Migrations` apply only to `ApiStandard`; `MiniApi` has only `ApiService`, uses PostgreSQL, and has no built-in EF Core migration resource.
 
 ## Publish a Single Service Image
 
@@ -155,7 +155,7 @@ If Aspire should deploy directly, verify the current `kubectl` context, image re
 aspire deploy --project .\src\AppHost\AppHost.csproj --non-interactive
 ```
 
-See the official Aspire documentation: [EF Core migrations](https://aspire.dev/integrations/databases/efcore/migrations/), [Kubernetes deployment](https://aspire.dev/deployment/kubernetes/kubernetes/), and [Seed data](https://aspire.dev/integrations/databases/efcore/seed-database/).
+See the official Aspire documentation: [automated EF Core migrations with AddEFMigrations](https://aspire.dev/integrations/databases/efcore/migrations/#automated-ef-migrations-with-addefmigrations), [preventing container restarts per environment](https://aspire.dev/integrations/databases/efcore/migrations/#preventing-container-restarts-per-environment), [Kubernetes deployment](https://aspire.dev/deployment/kubernetes/kubernetes/), and [seed data](https://aspire.dev/integrations/databases/efcore/seed-database/).
 
 Aspire can describe container images, Dockerfiles, build arguments, and publish workflows in the application model. Use it when you need to publish or deploy multiple resources together.
 

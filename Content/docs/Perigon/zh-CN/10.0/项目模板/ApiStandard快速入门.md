@@ -38,7 +38,7 @@ Standard 使用 EF Core 迁移。首次创建项目或修改实体后，在项�
 aspire start --non-interactive
 ```
 
-AppHost 会创建 `AdminService-Migrations` 迁移资源。本地运行时，它通过 `RunDatabaseUpdateOnStart()` 应用迁移，完成后再启动 AdminService 和 ApiService。发布到 Kubernetes 时，它会生成一次性的迁移 Job。迁移脚本会使用 `AdminService` 作为启动项目；`Components__Database` 决定数据库提供程序，租户索引由模型约定统一处理，`Components__IsMultiTenant`仅为兼容现有配置继续传递。
+AppHost 会创建 `AdminService-Migrations` 迁移资源。本地运行时，它通过 `RunDatabaseUpdateOnStart()` 应用迁移，完成后再启动 AdminService 和 ApiService。发布到 Kubernetes 时，它会生成一次性的迁移 Job。迁移脚本会使用 `AdminService` 作为启动项目；`Components__Database` 决定数据库提供程序，租户索引由模型约定统一处理，`Components__IsMultiTenant`会传递给迁移进程。
 
 EF Core 迁移、`UseSeeding`/`UseAsyncSeeding` 和 Kubernetes 发布请参阅[数据库迁移与初始化](../最佳实践/数据库.md)和[发布应用](../教程/发布应用.md)。默认模板不包含 `SystemMod`，因此不会自动创建可登录的管理员账号；安装该模块后请按模块文档初始化账号，不要把示例凭据带入生产环境。
 

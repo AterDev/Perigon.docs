@@ -38,7 +38,7 @@ Standard uses EF Core migrations. After creating a project or changing entities:
 aspire start --non-interactive
 ```
 
-AppHost creates the `ApiService-Migrations` migration resource. During local runs, `RunDatabaseUpdateOnStart()` applies the migrations before AdminService and ApiService start. For Kubernetes publishing, it generates a one-shot migration Job. The migration script keeps `Components__Database` and `Components__IsMultiTenant` aligned so provider selection and tenant-index handling are consistent.
+AppHost creates the `AdminService-Migrations` migration resource. During local runs, `RunDatabaseUpdateOnStart()` applies the migrations before AdminService and ApiService start. For Kubernetes publishing, it generates a one-shot migration Job. The migration script uses `AdminService` as the startup project, `Components__Database` selects the provider, and `TenantIndexConvention` handles tenant indexes.
 
 See [EF Core migrations and seeding](../Best-Practices/Database.md) and [Deploying Applications](../Tutorials/Deploying-Applications.md) for migrations, `UseSeeding`/`UseAsyncSeeding`, and Kubernetes publishing. The default template does not include `SystemMod`, so it does not create a login-ready administrator account. If the module is installed, follow its initialization guide and never reuse example credentials in production.
 

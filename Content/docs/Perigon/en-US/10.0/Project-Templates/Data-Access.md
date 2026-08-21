@@ -16,11 +16,11 @@ The template uses `DefaultDbContext` as the default data access context. It inhe
 | --- | --- | --- |
 | `DefaultDbContext` | The read/write context for the application's primary business database. Entity sets and migrations are normally maintained around this context. | Normal business queries, creates, updates, deletes, and operations that participate in a primary-database transaction. |
 | `ReadonlyDbContext` | The abstract base class for read-only contexts. It disables automatic change detection and throws when `SaveChanges` or `SaveChangesAsync` is called. | A dedicated context for a read-only database, replica, or reporting database. It cannot be instantiated directly. |
-| `AnalysisDbContext` | An analysis-query context derived from `ReadonlyDbContext`. | Reports, statistics, exports, and other data access that must not write. |
+| `AnalysisDbContext` | A tenant-aware read/write context derived from `ContextBase`. | Reports, statistics, exports, and analysis workflows that also persist results. |
 
-`AnalysisDbContext` uses `ConnectionStrings:Analysis` when it is configured; otherwise it falls back to `ConnectionStrings:Default`. Using it therefore does not, by itself, grant database-level read-only protection. In production, configure the analysis connection with a read-only account or point it to a read replica.
+`AnalysisDbContext` supports both queries and saves. It uses `ConnectionStrings:Analysis` when configured; otherwise it falls back to `ConnectionStrings:Default`. Database permissions are still controlled by the deployment environment. When a context must be read-only, derive it from `ReadonlyDbContext` and use a read-only database account or replica.
 
-`ReadonlyDbContext` limits EF Core save operations only; it is not a substitute for database permissions. Do not issue write SQL through it. If an analysis database needs model types beyond those already exposed by the base context, derive a dedicated context from `ReadonlyDbContext` and declare the required `DbSet` properties and model configuration.
+`ReadonlyDbContext` limits EF Core save operations only; it is not a substitute for database permissions. Do not issue write SQL through it. If a read-only context needs model types beyond those already exposed by the base context, derive a dedicated context from `ReadonlyDbContext` and declare the required `DbSet` properties and model configuration.
 
 ### `AppDbFactory` and `UniversalDbFactory`
 
@@ -30,8 +30,6 @@ The template registers two factories with different responsibilities. Choose one
 | --- | --- | --- | --- |
 | `AppDbFactory` | `DefaultDbContext` or `AnalysisDbContext` | Selects the primary or analysis connection for the current tenant. It uses the default connection when multi-tenancy is disabled, no tenant is supplied, or no tenant configuration is found. | Most application business logic. `ManagerBase` uses it to obtain the primary context for the current tenant. |
 | `UniversalDbFactory` | Any context derived from `DbContext` | Looks up a connection string from the context type name with the `DbContext` suffix removed; for example, `OrdersDbContext` uses `ConnectionStrings:Orders`. The caller also chooses the database provider. | Explicit access to another independent database, or creating contexts for multiple databases by context type. |
-
-In older generated templates, `AppDbFactory` may still be named `TenantDbFactory`. It has the same tenant-aware connection-selection role described here; use the actual type under `EntityFramework/AppDbFactory` in the generated project.
 
 For ordinary business Managers, do not create the primary context yourself: inherit from `ManagerBase<DefaultDbContext, TEntity>`. Only create an analysis context explicitly when making analysis queries:
 
@@ -53,6 +51,43 @@ public class TenantReportManager(
 ```
 
 Contexts created by these factories are not tracked by the dependency injection container. Dispose a context created with `CreateDbContext` or `CreateAnalysisDbContext` promptly with `using` or `await using`.
+
+## Tenant context and background jobs
+
+`ContextBase` applies tenant filtering and save validation to business entities that inherit from `EntityBase`. `Tenant` is the global tenant catalog root: its inherited `TenantId` is ignored, so an unbound context can read and write the tenant catalog.
+
+Tenant-scoped Managers require a tenant id. In an HTTP request, authentication claims, `UserContext`, and tenant middleware provide that value. A background job has no HTTP request and should not reuse a request-scoped `DbContext` or assume that `IUserContext` already contains a tenant id.
+
+Create a short-lived context for each tenant. First query the global `Tenant` catalog with an unbound context, then create a tenant-bound context for business operations:
+
+```csharp
+public sealed class TenantJob(AppDbFactory dbFactory, CacheService cache)
+{
+    public async Task RunAsync(CancellationToken cancellationToken)
+    {
+        await using var catalogDb = dbFactory.CreateDbContext(null);
+        var tenants = await catalogDb.Tenants
+            .AsNoTracking()
+            .Where(tenant => !tenant.Disabled && !tenant.IsDeleted)
+            .ToListAsync(cancellationToken);
+
+        foreach (var tenant in tenants)
+        {
+            cache.SetMemory($"{WebConst.TenantId}__{tenant.Id}", tenant);
+            await using var tenantDb = dbFactory.CreateDbContext(tenant.Id);
+            await tenantDb.Set<Order>()
+                .Where(order => !order.IsDeleted)
+                .ExecuteUpdateAsync(
+                    update => update.SetProperty(
+                        order => order.UpdatedTime,
+                        DateTimeOffset.UtcNow),
+                    cancellationToken);
+        }
+    }
+}
+```
+
+Use a dedicated `DbContext` that does not inherit from `ContextBase` only for controlled catalog or cross-tenant maintenance operations. Such a context bypasses tenant filters and ownership validation, so its model and authorization boundary must be deliberately restricted.
 
 
 ## Data Operations
@@ -102,7 +137,7 @@ public class TestManager(MyDbContext context, MyService service, ILogger<TestMan
 The template uses `AppDbFactory` by default to create database context instances for multi-tenant scenarios. The current tenant id comes from `IUserContext.TenantId`; the Manager base class passes it to `AppDbFactory`, and the factory selects the default connection string or the tenant-specific connection string.
 
 > [!TIP]
-> You can modify the database-context creation logic in `AppDbFactory` according to actual needs. In older templates, the equivalent factory may be named `TenantDbFactory`.
+> You can modify the database-context creation logic in `AppDbFactory` according to actual needs.
 
 ## Multi-Database Operations (Preview)
 

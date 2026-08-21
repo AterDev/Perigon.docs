@@ -7,7 +7,7 @@ Consider two groups:
 - 1000+ standard tenants: small datasets, minimal isolation, cost-sensitive.
 - 10+ large tenants: very large datasets, require isolation, prioritize stability over cost.
 
-## Enable Multi-tenancy
+## Tenant Configuration
 
 In `AppHost/appsettings.Development.json`, set:
 
@@ -19,15 +19,16 @@ In `AppHost/appsettings.Development.json`, set:
   }
 ```
 
-`IsMultiTenant` toggles multi-tenant features.
+`ApiStandard` always uses a tenant-aware data model. Even when `IsMultiTenant` is `false`, the database contains the `Tenant` catalog, business entities contain `TenantId`, and tenant query filters and save validation remain active. AppHost passes the value to services as `Components__IsMultiTenant`; it does not turn off those model rules. A single-tenant deployment initializes a default tenant.
 
 ## Implementation
 
-The framework is multi-tenant compatible by default. In most business code, keep writing code as usual. The important runtime pieces are `IUserContext`, `TenantResolutionMiddleware`, and `TenantDbFactory`.
+The framework uses tenant-aware data access by default. In most business code, keep writing code as usual. The important runtime pieces are `IUserContext`, `TenantResolutionMiddleware`, and `AppDbFactory`.
 
 - `UserContext` reads `tenant_id` and `tenant_type` from the current token claims and fills `IUserContext.TenantId` and `IUserContext.TenantType`.
-- When multi-tenancy is enabled, `TenantResolutionMiddleware` runs after authentication, queries the `Tenant` by `IUserContext.TenantId`, and caches it in memory.
-- `TenantDbFactory` receives the tenant id when creating a DbContext. It reads tenant-specific connection strings from the cached `Tenant`; if multi-tenancy is disabled, the tenant id is empty, or no tenant is cached, it falls back to the default connection string.
+- `TenantResolutionMiddleware` runs after authentication, queries the `Tenant` by `IUserContext.TenantId`, and caches it in memory. Requests without a valid tenant are rejected.
+- `AppDbFactory` receives the tenant id when creating a DbContext. It reads tenant-specific connection strings from the cached `Tenant`; an empty tenant id or a missing cached tenant falls back to the default connection string.
+- `Tenant` is the global tenant catalog root. Its inherited `TenantId` is ignored, while other tenant entities use the current tenant filter and save validation.
 
 `Tenant.cs` defines core tenant data; extend it as needed.
 
@@ -63,13 +64,13 @@ Since there is no token before login, identify the tenant from login information
 
 ### TenantId Indexes
 
-You don’t need to add `TenantId` indexes manually. The framework applies them automatically (including filtered indexes to ignore soft-deleted rows) so single-tenant and multi-tenant modes remain correct.
+You don’t need to add `TenantId` indexes manually. The framework applies them automatically (including filtered indexes to ignore soft-deleted rows) so the data model remains consistent in both single-tenant and multi-tenant deployments.
 
-During EF migration generation, `MigrationsModelDifferProxy` under `ApiService/DesignTime` handles `TenantId` index generation. The migration is executed by the AppHost `AddEFMigrations` resource; both the migration script and resource receive `Components__IsMultiTenant`.
+During EF migration generation, `TenantIndexConvention` adds `TenantId` to indexes for entities implementing `ITenantEntityBase`. The migration is executed by the AppHost `AddEFMigrations` resource, and the migration script uses `AdminService` as the startup project.
 
-## Without Multi-tenancy
+## Single-tenant Deployment
 
-The template is multi-tenant–compatible by default. Even with multi-tenancy disabled, it creates a `Tenant` table and `TenantId` on entities to allow a smooth future enablement.
+Single-tenant deployment keeps the `Tenant` table and the `TenantId` column on business entities. This keeps the data structure, query filters, save validation, and authorization model consistent, and ensures that authenticated users receive a tenant id.
 
 If you will never use multi-tenancy and want to remove it:
 

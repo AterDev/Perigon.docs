@@ -29,9 +29,9 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
 这里主要关注`Components`节点，它定义了应用所使用的组件类型，
 - `Cache` 选项包括：`Memory`（内存缓存）、`Redis`（Redis缓存）或 `Hybrid`（混合缓存）；只有选择 `Redis` 或 `Hybrid` 时 AppHost 才会创建 Redis；
 - `Database`选项包括：`SqlServer`或`PostgreSQL`
-- `IsMultiTenant`是兼容旧配置的选项；当前`ApiStandard`单租户和多租户都使用Tenant目录、TenantId字段和全局租户过滤。不同租户是否使用独立数据库连接由Tenant记录和`AppDbFactory`决定。
+- `IsMultiTenant`是租户配置项；当前`ApiStandard`单租户和多租户都使用Tenant目录、TenantId字段和全局租户过滤。不同租户是否使用独立数据库连接由Tenant记录和`AppDbFactory`决定。
 
-AppHost 会把 `Cache`、`Database` 和 `IsMultiTenant` 统一以 `Components__Cache`、`Components__Database` 和 `Components__IsMultiTenant` 环境变量传给服务，因此不需要在每个服务中重复修改基础设施选择。Aspire 通过 `OTEL_EXPORTER_OTLP_ENDPOINT` 注入 OTLP 导出地址；配置文件中的旧 `Otel`/`OpenTelemetry` 节点不再使用。
+AppHost 会把 `Cache`、`Database` 和 `IsMultiTenant` 统一以 `Components__Cache`、`Components__Database` 和 `Components__IsMultiTenant` 环境变量传给服务，因此不需要在每个服务中重复修改基础设施选择。Aspire 通过 `OTEL_EXPORTER_OTLP_ENDPOINT` 注入 OTLP 导出地址。
 
 服务自身的认证、登录安全策略、缓存过期时间、SMTP、SMS、S3 和 CORS 配置仍应放在服务配置中。完整字段、默认值和环境变量写法请参考[模板配置参考](./配置参考.md)。
 
@@ -91,7 +91,7 @@ var cache = builder.AddConnectionString("Cache");
 
 ## EF Core 迁移与初始化数据
 
-当前 `ApiStandard` 在 `AppHost` 中使用 `AddEFMigrations`，不再创建独立的 `MigrationService` 项目。本地运行通过 `RunDatabaseUpdateOnStart()` 更新数据库；发布到 Kubernetes 时生成一次性的迁移 Job。默认租户通过 EF Core `UseSeeding` 和 `UseAsyncSeeding` 幂等初始化。
+`ApiStandard` 在 `AppHost` 中使用 `AddEFMigrations` 创建迁移资源。本地运行通过 `RunDatabaseUpdateOnStart()` 更新数据库；发布到 Kubernetes 时生成一次性的迁移 Job。默认租户通过 EF Core `UseSeeding` 和 `UseAsyncSeeding` 幂等初始化。
 
 详细流程请参阅[数据库迁移与初始化](../最佳实践/数据库.md)和[发布应用](../教程/发布应用.md)。
 

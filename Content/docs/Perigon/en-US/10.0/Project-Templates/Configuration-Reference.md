@@ -46,7 +46,7 @@ When a service is run directly, AppHost does not inject these values. Provide th
 | `UseSmtp` | Boolean | Registers `Smtp` options and services when `true`. |
 | `UseAWSS3` | Boolean | Registers `AWSS3` options and services when `true`. |
 
-Some older configuration examples contain `Components:UseOpenAPI`, but the current `ComponentOption` has no such property and the template does not read it. Do not use it to control OpenAPI. `ApiStandard` uses its current Swagger defaults; `MiniApi` uses ASP.NET Core OpenAPI.
+The current `ComponentOption` has no `Components:UseOpenAPI` property and the template does not read it. Do not use it to control OpenAPI. `ApiStandard` uses its current Swagger defaults; `MiniApi` uses ASP.NET Core OpenAPI.
 
 ## Cache
 
@@ -119,13 +119,13 @@ These settings are read directly by the template but are not part of the custom 
 - `Cors:AllowedSubdomains`: allow wildcard subdomains.
 - `Authentication:Microsoft` and `Authentication:Google`: third-party login is registered when `ClientId`, `ClientSecret`, and `CallbackUrl` are all valid.
 - `ConnectionStrings:Default` and `ConnectionStrings:Cache`: use `AddConnectionString` in AppHost when an existing database or cache should be shared.
-- `OTEL_EXPORTER_OTLP_ENDPOINT`: the standard OpenTelemetry exporter endpoint injected by Aspire; do not add the removed `Otel` or `OpenTelemetry` nodes.
+- `OTEL_EXPORTER_OTLP_ENDPOINT`: the standard OpenTelemetry exporter endpoint injected by Aspire.
 
 ## Migration environment variables
 
 The migration script and AppHost use these variables to keep the model consistent:
 
 - `Components__Database`: selects the database provider used by migration generation.
-- `Components__IsMultiTenant`: controls tenant-specific index handling during migration generation.
+- `Components__IsMultiTenant`: is passed from AppHost and the migration script to the services; it does not control tenant-index generation. `TenantIndexConvention` handles entities implementing `ITenantEntityBase`.
 
 See [EF Core migrations and seeding](../Best-Practices/Database.md) and [Deploying applications](../Tutorials/Deploying-Applications.md) for the migration and release workflows.

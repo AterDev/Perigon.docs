@@ -59,12 +59,12 @@ As you iterate development, database structure changes. Use `Code First` to cent
 
 ### ApiStandard migration architecture
 
-Current `ApiStandard` no longer uses a separate `MigrationService` project. AppHost uses Aspire's first-class `AddEFMigrations` API:
+`ApiStandard` uses Aspire's `AddEFMigrations` API in `AppHost`. The migration resource is attached to the default `AdminService` project:
 
 ```csharp
-var apiMigrations = apiService
+var adminMigrations = adminService
     .AddEFMigrations(
-        "ApiService-Migrations",
+        "AdminService-Migrations",
         "EntityFramework.AppDbContext.DefaultDbContext"
     )
     .WithMigrationsProject("..\\Definition\\EntityFramework\\EntityFramework.csproj")
@@ -73,8 +73,8 @@ var apiMigrations = apiService
     .RunDatabaseUpdateOnStart()
     .PublishAsMigrationBundle(publishContainer: true);
 
-apiService.WaitForCompletion(apiMigrations);
-adminService.WaitForCompletion(apiMigrations);
+apiService.WaitForCompletion(adminMigrations);
+adminService.WaitForCompletion(adminMigrations);
 ```
 
 - During local `aspire start`, `RunDatabaseUpdateOnStart()` applies the database update and API/admin resources wait for the migration resource.
@@ -84,11 +84,11 @@ adminService.WaitForCompletion(apiMigrations);
 
 Migration bundles are idempotent, but a production release should still verify that the migration Job succeeds before sending traffic to the new API version.
 
-See the official Aspire guide: [Apply EF Core migrations in Aspire](https://aspire.dev/integrations/databases/efcore/migrations/).
+See the official Aspire guides: [automated EF Core migrations with AddEFMigrations](https://aspire.dev/integrations/databases/efcore/migrations/#automated-ef-migrations-with-addefmigrations), [preventing container restarts per environment](https://aspire.dev/integrations/databases/efcore/migrations/#preventing-container-restarts-per-environment), and [seed data in a database](https://aspire.dev/integrations/databases/efcore/seed-database/).
 
 ### Create migrations
 
-The `scripts` directory provides `EFMigrations.ps1` for generating migrations. It reads `Components:Database` and `Components:IsMultiTenant` from `src/AppHost/appsettings.Development.json`, exports them as `Components__Database` and `Components__IsMultiTenant`, and runs EF tooling with `ApiService` as the startup project and `EntityFramework` as the migrations project:
+The `scripts` directory provides `EFMigrations.ps1` for generating migrations. It reads `Components:Database` and `Components:IsMultiTenant` from `src/AppHost/appsettings.Development.json`, exports them as `Components__Database` and `Components__IsMultiTenant`, and runs EF tooling with `AdminService` as the startup project and `EntityFramework` as the migrations project:
 
 ```powershell
 .\scripts\EFMigrations.ps1 Init
@@ -100,7 +100,7 @@ Migration files are generated in `EntityFramework/Migrations` by default. Genera
 
 The default database uses EF Core `UseSeeding` and `UseAsyncSeeding` to create the default tenant. Both paths use the same idempotent check, so rerunning migrations does not insert duplicate default tenants.
 
-The default tenant is the global tenant catalog root, so it does not receive a `TenantId`; normal tenant entities continue to follow the template's tenant-isolation rules.
+The default tenant is the global tenant catalog root, so it does not receive a `TenantId`; normal tenant entities continue to follow the template's tenant-isolation rules regardless of the `IsMultiTenant` setting.
 
 See [Seed data in a database using Aspire](https://aspire.dev/integrations/databases/efcore/seed-database/) and [EF Core Data Seeding](https://learn.microsoft.com/ef/core/modeling/data-seeding).
 
