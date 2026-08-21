@@ -364,6 +364,8 @@ Parameter notes:
 
 When the target type is `csharp`, OpenAPI `multipart/form-data` requests generate multipart upload methods. A single file field uses `MultipartFile` (wrapping a `Stream`, file name, and optional MIME type), while multiple file fields use `IEnumerable<MultipartFile>`. String, numeric, boolean, and array fields are also submitted as form fields. Angular and Axios clients use `File`/`File[]` and append fields to `FormData` using the schema field names. C# clients join generated upload, multipart, download, and JSON paths with `HttpClient.BaseAddress` so multi-level base paths are preserved.
 
+When an OpenAPI tag contains spaces or other characters that cannot be used directly in a code identifier, the generator converts it to a PascalCase service name. For example, `User Management` generates `UserManagementService` or `UserManagementRestService`, while service filenames use hyphenated names.
+
 ## mcp
 
 The `mcp` command provides Perigon Model Context Protocol tools.
