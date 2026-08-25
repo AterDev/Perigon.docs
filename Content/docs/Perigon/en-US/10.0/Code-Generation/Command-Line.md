@@ -1,6 +1,6 @@
 # Command Line
 
-Perigon provides the `perigon` command-line tool for creating solutions, adding resources, generating code, packaging modules, installing modules, and launching Studio or MCP services.
+Perigon provides the `perigon` command-line tool for creating solutions, adding resources, generating code, packaging modules, installing modules, and launching Studio or Agent MCP services.
 
 ## Quick Start
 
@@ -34,7 +34,7 @@ The main commands shown by `perigon -h` are listed below:
 | `add` | Add resources to the current solution |
 | `studio` | Start Perigon Studio |
 | `generate` | Run code generation |
-| `mcp` | Provide Model Context Protocol tools |
+| `agent` | Initialize Agent configuration or start the Agent MCP service |
 | `module pack <ModuleName> <ServiceName>` | Package a module as a zip file |
 | `module install <PackagePath> <ServiceName>` | Install a module package into a project |
 
@@ -368,72 +368,27 @@ When an OpenAPI response is 204, 205, or 304, or the request method is `HEAD`, c
 
 When an OpenAPI tag contains spaces or other characters that cannot be used directly in a code identifier, the generator converts it to a PascalCase service name. For example, `User Management` generates `UserManagementService` or `UserManagementRestService`, while service filenames use hyphenated names.
 
-## mcp
+## agent
 
-The `mcp` command provides Perigon Model Context Protocol tools.
-
-```pwsh
-perigon mcp [OPTIONS] <COMMAND>
-```
-
-Help output:
-
-```sh
-DESCRIPTION:
-Model Context Protocol tools
-
-USAGE:
-    perigon mcp [OPTIONS] <COMMAND>
-
-OPTIONS:
-    -h, --help    Prints help information
-
-COMMANDS:
-    config    Print MCP stdio config JSON
-    start     Start MCP server with stdio transport
-```
-
-### mcp config
-
-Print the MCP stdio configuration JSON:
+The `agent` command initializes Perigon Agent integration or starts the MCP service used by IDEs and coding agents.
 
 ```pwsh
-perigon mcp config
+perigon agent [OPTIONS] <COMMAND>
 ```
 
-Help output:
+The main subcommands are:
 
-```sh
-DESCRIPTION:
-Print MCP stdio config JSON
-
-USAGE:
-    perigon mcp config [OPTIONS]
-
-OPTIONS:
-    -h, --help    Prints help information
-```
-
-### mcp start
-
-Start the MCP service over stdio transport:
+| Subcommand | Purpose |
+| --- | --- |
+| `init` | Interactively choose MCP or Skills integration; the MCP option writes `.vscode/mcp.json`. |
+| `mcp` | Start the Perigon Agent MCP server over stdio transport. |
 
 ```pwsh
-perigon mcp start
+perigon agent init
+perigon agent mcp
 ```
 
-Help output:
-
-```sh
-DESCRIPTION:
-Start MCP server with stdio transport
-
-USAGE:
-    perigon mcp start [OPTIONS]
-
-OPTIONS:
-    -h, --help    Prints help information
-```
+`perigon agent mcp` loads Perigon code-generation tools and uses the MCP client's `roots/list` request to discover the project root. See [Perigon Agent MCP](../AI-Support/MCP.md) for tool capabilities and IDE configuration. The legacy `perigon mcp config` and `perigon mcp start` commands are not the current recommended form.
 
 ## module pack
 
