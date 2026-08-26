@@ -39,7 +39,7 @@ Suggested actions:
 1. Open an issue upstream and track for fixes.
 
 > [!IMPORTANT]
-> `ApiStandard` uses `Swashbuckle.AspNetCore` and exposes `/swagger/v1/swagger.json`; `MiniApi` uses ASP.NET Core OpenAPI and exposes `/openapi/v1.json`. Neither template enables Swagger UI by default.
+> `ApiStandard` uses `Swashbuckle.AspNetCore` and exposes `/swagger/v1/swagger.json`, with a `/swagger` UI in non-production environments; `MiniApi` uses ASP.NET Core OpenAPI and exposes `/openapi/v1.json`.
 
 ## Without Aspire
 

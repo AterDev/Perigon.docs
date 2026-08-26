@@ -5,7 +5,7 @@
 ## Create a project
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.12
+dotnet new install Perigon.templates --version 1.3.13
 dotnet new perigon-webapi -n MyWebApi --frontType None
 cd MyWebApi
 ```
@@ -50,7 +50,13 @@ Standard uses Swashbuckle and exposes the OpenAPI JSON document at:
 /swagger/v1/swagger.json
 ```
 
-Swagger UI is not enabled by default. Unit tests do not start Aspire:
+Non-production environments also expose Swagger UI at:
+
+```text
+/swagger
+```
+
+Unit tests do not start Aspire:
 
 ```powershell
 dotnet test --project tests/UnitTest/UnitTest.csproj

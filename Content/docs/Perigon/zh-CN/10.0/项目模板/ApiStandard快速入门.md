@@ -5,7 +5,7 @@
 ## 创建项目
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.12
+dotnet new install Perigon.templates --version 1.3.13
 dotnet new perigon-webapi -n MyWebApi --frontType None
 cd MyWebApi
 ```
@@ -44,13 +44,19 @@ EF Core 迁移、`UseSeeding`/`UseAsyncSeeding` 和 Kubernetes 发布请参阅[�
 
 ## OpenAPI 和测试
 
-Standard 使用 Swashbuckle，只默认暴露 OpenAPI JSON：
+Standard 使用 Swashbuckle，默认暴露 OpenAPI JSON：
 
 ```text
 /swagger/v1/swagger.json
 ```
 
-模板不默认提供 Swagger UI。单元测试不会启动 Aspire：
+非生产环境还提供 Swagger UI：
+
+```text
+/swagger
+```
+
+单元测试不会启动 Aspire：
 
 ```powershell
 dotnet test --project tests/UnitTest/UnitTest.csproj
