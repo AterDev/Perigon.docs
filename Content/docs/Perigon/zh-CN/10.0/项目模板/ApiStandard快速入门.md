@@ -5,7 +5,7 @@
 ## 创建项目
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.13
+dotnet new install Perigon.templates --version 1.3.14
 dotnet new perigon-webapi -n MyWebApi --frontType None
 cd MyWebApi
 ```
@@ -20,12 +20,15 @@ cd MyWebApi
 {
   "Components": {
     "Cache": "Memory",
-    "Database": "PostgreSQL"
+    "Database": "PostgreSQL",
+    "IsMultiTenant": true
   }
 }
 ```
 
 `Database` 支持 `PostgreSQL` 和 `SqlServer`。`Cache` 支持 `Memory`、`Redis` 和 `Hybrid`；只有选择 `Redis` 或 `Hybrid` 时 AppHost 才创建 Redis，并通过 `Components__Cache` 将选择传给服务。
+
+`ApiStandard` 默认启用多租户。认证请求必须携带有效的 `TenantId`；初始化数据库时会创建 `default.com`，并写入默认业务数据库和分析数据库连接串。缺失、无效或不存在的租户不会自动回退到默认租户或默认连接。
 
 完整的 `Components`、认证、缓存、登录策略、SMTP、SMS、S3 和环境变量说明请参阅[模板配置参考](./配置参考.md)。
 

@@ -5,7 +5,7 @@
 ## Create a project
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.13
+dotnet new install Perigon.templates --version 1.3.14
 dotnet new perigon-webapi -n MyWebApi --frontType None
 cd MyWebApi
 ```
@@ -20,12 +20,15 @@ Configure the `Components` node in `src/AppHost/appsettings.Development.json`:
 {
   "Components": {
     "Cache": "Memory",
-    "Database": "PostgreSQL"
+    "Database": "PostgreSQL",
+    "IsMultiTenant": true
   }
 }
 ```
 
 `Database` supports `PostgreSQL` and `SqlServer`. `Cache` supports `Memory`, `Redis`, and `Hybrid`. AppHost creates Redis only for `Redis` or `Hybrid` and passes the selected value to services through `Components__Cache`.
+
+`ApiStandard` enables multi-tenancy by default. Authenticated requests must carry a valid `TenantId`; database initialization creates `default.com` and stores the default business and analysis database connection strings. Missing, invalid, or unknown tenants do not silently fall back to the default tenant or connection.
 
 See [Template Configuration Reference](./Configuration-Reference.md) for `Components`, authentication, cache, login policy, SMTP, SMS, S3, and environment-variable settings.
 
