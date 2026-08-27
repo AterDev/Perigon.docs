@@ -31,6 +31,7 @@ The main commands shown by `perigon -h` are listed below:
 | Command | Description |
 | --- | --- |
 | `new <name>` | Create a new .NET solution |
+| `update` | Compare and update the current project from the latest Perigon template |
 | `add` | Add resources to the current solution |
 | `studio` | Start Perigon Studio |
 | `generate` | Run code generation |
@@ -85,6 +86,32 @@ Notes:
 - The official module list comes from `Perigon.Modules/modules.json`.
 - Selected official modules are installed automatically after the solution is generated.
 - If loading the official module list fails, the command shows a warning but still lets you continue creating the solution.
+
+## update
+
+The `update` command compares an existing project with the latest Perigon solution template and applies the differences after confirmation. Run it from the solution root or one of its subdirectories:
+
+```pwsh
+perigon update
+```
+
+Before starting, the CLI warns that template updates may overwrite local changes and recommends creating and switching to a new Git branch. It then:
+
+1. Updates the installed `Perigon.templates` package, or installs it if it is not available.
+2. Generates a temporary comparison project using the current project's template type and frontend mode.
+3. Displays added or changed template files together with their concrete differences.
+4. Asks with a `y/n` prompt whether to apply the differences to the current project; the default is `n`.
+
+The current project is modified only after confirmation. Selecting `n` or pressing Enter leaves it unchanged, but the template update or installation has already completed before the prompt. The command processes only files that exist in the template; it does not delete project-only files and ignores files outside these scopes:
+
+- `.cs` files under `src/Perigon`;
+- `.cs` files under `src/Definition/ServiceDefault` or `src/Definition/ServiceDefaults`;
+- `.cs` files under `src/Definition/Share`;
+- `.cs` files under `src/Definition/EntityFramework`, excluding `DefaultDbContext.cs`, `AnalysisDbContext.cs`, and `ReadonlyDbContext.cs`;
+- `.ps1` files under `scripts`;
+- all files under `.agents`.
+
+If a project file changes after comparison, the update is rejected to avoid applying stale differences over the current project. Review the displayed differences first and make sure the worktree is committed or otherwise recoverable.
 
 ## add
 
