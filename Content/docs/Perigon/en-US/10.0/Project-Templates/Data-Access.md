@@ -28,7 +28,7 @@ The template registers two factories with different responsibilities. Choose one
 
 | Factory | Creates | Connection selection | Use it for |
 | --- | --- | --- | --- |
-| `AppDbFactory` | `DefaultDbContext` or `AnalysisDbContext` | Selects the primary or analysis connection for the current tenant. It uses the default connection when multi-tenancy is disabled, no tenant is supplied, or no tenant configuration is found. | Most application business logic. `ManagerBase` uses it to obtain the primary context for the current tenant. |
+| `AppDbFactory` | `DefaultDbContext` or `AnalysisDbContext` | `null` is reserved for the system tenant-catalog context and uses the configured default connections. Normal tenant access requires a non-empty TenantId that resolves from the catalog; an empty GUID or unknown tenant fails. A resolved tenant uses its primary or analysis connection, falling back to the corresponding default only when that tenant field is empty. | Most application business logic. `ManagerBase` uses it to obtain the primary context for the current tenant. |
 | `UniversalDbFactory` | Any context derived from `DbContext` | Looks up a connection string from the context type name with the `DbContext` suffix removed; for example, `OrdersDbContext` uses `ConnectionStrings:Orders`. The caller also chooses the database provider. | Explicit access to another independent database, or creating contexts for multiple databases by context type. |
 
 For ordinary business Managers, do not create the primary context yourself: inherit from `ManagerBase<DefaultDbContext, TEntity>`. Only create an analysis context explicitly when making analysis queries:
@@ -61,7 +61,7 @@ Tenant-scoped Managers require a tenant id. In an HTTP request, authentication c
 Create a short-lived context for each tenant. First query the global `Tenant` catalog with an unbound context, then create a tenant-bound context for business operations:
 
 ```csharp
-public sealed class TenantJob(AppDbFactory dbFactory, CacheService cache)
+public sealed class TenantJob(AppDbFactory dbFactory)
 {
     public async Task RunAsync(CancellationToken cancellationToken)
     {
@@ -73,7 +73,6 @@ public sealed class TenantJob(AppDbFactory dbFactory, CacheService cache)
 
         foreach (var tenant in tenants)
         {
-            cache.SetMemory($"{WebConst.TenantId}__{tenant.Id}", tenant);
             await using var tenantDb = dbFactory.CreateDbContext(tenant.Id);
             await tenantDb.Set<Order>()
                 .Where(order => !order.IsDeleted)
@@ -86,6 +85,8 @@ public sealed class TenantJob(AppDbFactory dbFactory, CacheService cache)
     }
 }
 ```
+
+`AppDbFactory` asks the tenant resolver for each non-null TenantId. The resolver checks the shared cache first, then loads the tenant from the global catalog and caches it, so a background job does not need to populate `CacheService` manually. `null` is only for the catalog context; an empty GUID or unknown TenantId fails. Use a separate, short-lived context for each tenant.
 
 Use a dedicated `DbContext` that does not inherit from `ContextBase` only for controlled catalog or cross-tenant maintenance operations. Such a context bypasses tenant filters and ownership validation, so its model and authorization boundary must be deliberately restricted.
 
@@ -134,7 +135,7 @@ public class TestManager(MyDbContext context, MyService service, ILogger<TestMan
 
 ## Tenant Mode
 
-The template uses `AppDbFactory` by default to create database context instances for multi-tenant scenarios. The current tenant id comes from `IUserContext.TenantId`; the Manager base class passes it to `AppDbFactory`, and the factory selects the default connection string or the tenant-specific connection string.
+The template uses tenant-aware behavior by default. The current tenant id comes from `IUserContext.TenantId`; the Manager base class passes it to `AppDbFactory`. `null` is reserved for the catalog context, normal tenant requests require a valid non-empty TenantId, and a resolved tenant falls back to the corresponding default connection only when its connection field is empty.
 
 > [!TIP]
 > You can modify the database-context creation logic in `AppDbFactory` according to actual needs.

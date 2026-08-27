@@ -20,8 +20,8 @@ Let's first look at an example of `appsettings.Development.json`:
     "Cache": "Memory",
     // SqlServer/PostgreSQL
     "Database": "PostgreSQL",
-    // enable multi-tenant features
-    "IsMultiTenant": false
+    // tenant-aware behavior is enabled by default
+    "IsMultiTenant": true
   }
 }
 ```
@@ -29,7 +29,7 @@ Let's first look at an example of `appsettings.Development.json`:
 Here we mainly focus on the `Components` node, which defines the component types used by the application:
 - `Cache` options include: `Memory`, `Redis`, and `Hybrid`; AppHost creates Redis only for `Redis` or `Hybrid`;
 - `Database` options include: `SqlServer` or `PostgreSQL`
-- `IsMultiTenant` is the tenant configuration value. `ApiStandard` keeps the tenant-aware model in both single-tenant and multi-tenant deployments.
+- `IsMultiTenant` is the tenant configuration value and defaults to `true`. `ApiStandard` keeps the tenant-aware model in both single-tenant and multi-tenant deployments; this setting does not turn those tenant rules off.
 
 AppHost passes `Cache`, `Database`, and `IsMultiTenant` to services through `Components__Cache`, `Components__Database`, and `Components__IsMultiTenant`, so each service does not need duplicate infrastructure settings. Aspire injects the OTLP exporter endpoint through `OTEL_EXPORTER_OTLP_ENDPOINT`.
 
@@ -37,7 +37,7 @@ Service-specific authentication, login policy, cache expiration, SMTP, SMS, S3, 
 
 ### Multi-tenant Configuration
 
-The framework uses a tenant-aware data model by default. `Tenant` is initialized in single-tenant deployments as well, and business entities use `TenantId` and global tenant filters.
+The framework uses a tenant-aware data model by default. Initialization creates `default.com` and stores the default business and analysis database connection strings. Authenticated requests must carry a valid TenantId; missing, empty, or unknown tenants do not silently fall back to the default tenant or connection.
 
 If you are sure that you do not need multi-tenant functionality now and in the future, you can modify the interface inherited by `EntityBase` from `ITenantEntityBase` to `IEntityBase`, so that the `TenantId` field will not be included.
 

@@ -98,7 +98,7 @@ Migration files are generated in `EntityFramework/Migrations` by default. Genera
 
 ### Seed data
 
-The default database uses EF Core `UseSeeding` and `UseAsyncSeeding` to create the default tenant. Both paths use the same idempotent check, so rerunning migrations does not insert duplicate default tenants.
+The default database uses EF Core `UseSeeding` and `UseAsyncSeeding` to create the `default.com` tenant. Seeding stores the default business connection in `DbConnectionString` and the analysis connection in `AnalysisConnectionString`; when no separate analysis connection is configured, the analysis connection uses the business default. Both paths use the same idempotent check, so rerunning migrations does not insert duplicate default tenants.
 
 The default tenant is the global tenant catalog root, so it does not receive a `TenantId`; normal tenant entities continue to follow the template's tenant-isolation rules regardless of the `IsMultiTenant` setting.
 

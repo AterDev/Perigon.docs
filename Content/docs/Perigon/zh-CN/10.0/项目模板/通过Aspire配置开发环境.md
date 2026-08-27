@@ -20,8 +20,8 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
     "Cache": "Memory",
     // SqlServer/PostgreSQL
     "Database": "PostgreSQL",
-    // enable multi-tenant features
-    "IsMultiTenant": false
+    // tenant-aware behavior is enabled by default
+    "IsMultiTenant": true
   }
 }
 ```
@@ -29,7 +29,7 @@ AppHost是一个标准的`.NET`应用程序，因此它支持通过`appsettings.
 这里主要关注`Components`节点，它定义了应用所使用的组件类型，
 - `Cache` 选项包括：`Memory`（内存缓存）、`Redis`（Redis缓存）或 `Hybrid`（混合缓存）；只有选择 `Redis` 或 `Hybrid` 时 AppHost 才会创建 Redis；
 - `Database`选项包括：`SqlServer`或`PostgreSQL`
-- `IsMultiTenant`是租户配置项；当前`ApiStandard`单租户和多租户都使用Tenant目录、TenantId字段和全局租户过滤。不同租户是否使用独立数据库连接由Tenant记录和`AppDbFactory`决定。
+- `IsMultiTenant`是租户配置项，默认值为`true`；当前`ApiStandard`单租户和多租户都使用Tenant目录、TenantId字段和全局租户过滤。不同租户是否使用独立数据库连接由Tenant记录和`AppDbFactory`决定，该配置不会关闭这些租户规则。
 
 AppHost 会把 `Cache`、`Database` 和 `IsMultiTenant` 统一以 `Components__Cache`、`Components__Database` 和 `Components__IsMultiTenant` 环境变量传给服务，因此不需要在每个服务中重复修改基础设施选择。Aspire 通过 `OTEL_EXPORTER_OTLP_ENDPOINT` 注入 OTLP 导出地址。
 
@@ -37,7 +37,7 @@ AppHost 会把 `Cache`、`Database` 和 `IsMultiTenant` 统一以 `Components__C
 
 ### 多租户配置
 
-框架默认始终使用租户感知的数据模型。单租户环境也会初始化默认Tenant，并在认证后的`UserContext`中提供TenantId；多租户环境可以进一步为不同Tenant配置独立数据库连接。`IsMultiTenant`不会关闭TenantId字段、全局过滤器或保存校验。
+框架默认始终使用租户感知的数据模型。初始化会创建`default.com`并写入默认业务和分析数据库连接串；认证请求必须携带有效TenantId，缺失、空GUID或未知租户不会静默回退到默认租户或默认连接。`IsMultiTenant`不会关闭TenantId字段、全局过滤器或保存校验。
 
 如果你确定现在和未来都不需要多租户功能，可以修改`EntityBase`继承的接口，从`ITenantEntityBase`改为`IEntityBase`，这样不会包含`TenantId`字段。
 

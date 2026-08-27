@@ -27,7 +27,7 @@ The framework uses tenant-aware data access by default. In most business code, k
 
 - `UserContext` reads `tenant_id` and `tenant_type` from the current token claims and fills `IUserContext.TenantId` and `IUserContext.TenantType`.
 - `TenantResolutionMiddleware` runs after authentication, queries the `Tenant` by `IUserContext.TenantId`, and caches it in memory. Requests without a valid tenant are rejected.
-- `AppDbFactory` receives the tenant id when creating a DbContext. It reads tenant-specific connection strings from the cached `Tenant`; an empty tenant id or a missing cached tenant falls back to the default connection string.
+- `AppDbFactory` receives the tenant id when creating a DbContext. `null` is reserved for the system tenant-catalog context and uses the configured default connections; normal tenant access requires a non-empty TenantId, and an empty GUID or unknown tenant fails instead of silently falling back. Once a tenant is resolved, a missing `DbConnectionString` or `AnalysisConnectionString` falls back to its corresponding default (the analysis default uses the business default when it is not configured).
 - `Tenant` is the global tenant catalog root. Its inherited `TenantId` is ignored, while other tenant entities use the current tenant filter and save validation.
 
 `Tenant.cs` defines core tenant data; extend it as needed.

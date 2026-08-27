@@ -8,7 +8,7 @@ This page describes the configuration implemented by the current `ApiStandard` t
 
 The template has two configuration scopes:
 
-- `src/AppHost/appsettings*.json`: read by AppHost to choose the database, cache, and multi-tenancy mode, then injected into services when Aspire starts them.
+- `src/AppHost/appsettings*.json`: read by AppHost to choose the database and cache and to pass the tenant setting, then injected into services when Aspire starts them.
 - `src/Services/ApiService` and `src/Services/AdminService` `appsettings*.json`: service-specific settings such as authentication, CORS, cache policy, and optional toolkit services.
 
 When running through Aspire, AppHost shares the infrastructure choices with the services:
@@ -17,7 +17,7 @@ When running through Aspire, AppHost shares the infrastructure choices with the 
 | --- | --- | --- |
 | `Components:Cache` | `Components__Cache` | Selects `Memory`, `Redis`, or `Hybrid`. |
 | `Components:Database` | `Components__Database` | Selects `PostgreSQL` or `SqlServer`. |
-| `Components:IsMultiTenant` | `Components__IsMultiTenant` | Enables multi-tenancy. |
+| `Components:IsMultiTenant` | `Components__IsMultiTenant` | Defaults to `true` and is passed to services; `ApiStandard` always keeps the tenant catalog, `TenantId`, query filters, and save validation, so this value does not disable those rules. |
 | Aspire database resource | `ConnectionStrings__Default` | Primary database connection. |
 | Aspire Redis resource | `ConnectionStrings__Cache` | Cache connection. |
 
@@ -41,7 +41,7 @@ When a service is run directly, AppHost does not inject these values. Provide th
 | `AuthType` | `Jwt`, `Cookie`, `OAuth` | Selects the authentication mode; default is `Jwt`. |
 | `MQType` | `None`, `Nats`, `RabbitMQ`, `KafKa` | Selects the message-queue type. The current template enum uses the spelling `KafKa`; actual queue registration is supplied by modules or application code. |
 | `UseCors` | Boolean | Retained CORS setting. Current `WebExtensions` always registers and uses CORS; the policy comes from `Cors` and the hosting environment, so this value is not currently a skip-CORS switch. |
-| `IsMultiTenant` | Boolean | Enables tenant resolution and tenant data isolation. |
+| `IsMultiTenant` | Boolean, default `true` | Tenant configuration passed to services. `ApiStandard` always uses the tenant-aware model; single-tenant deployments also initialize `default.com` and bind business entities to `TenantId`. Authenticated requests require a valid TenantId, and empty or unknown tenants do not fall back. Tenant-specific database connections are selected from the `Tenant` record by `AppDbFactory`. |
 | `UseSMS` | Boolean | Registers `SMS` options and services when `true`. |
 | `UseSmtp` | Boolean | Registers `Smtp` options and services when `true`. |
 | `UseAWSS3` | Boolean | Registers `AWSS3` options and services when `true`. |
@@ -118,7 +118,7 @@ These settings are read directly by the template but are not part of the custom 
 - `Cors:AllowedOrigins`: production allowed-origin list.
 - `Cors:AllowedSubdomains`: allow wildcard subdomains.
 - `Authentication:Microsoft` and `Authentication:Google`: third-party login is registered when `ClientId`, `ClientSecret`, and `CallbackUrl` are all valid.
-- `ConnectionStrings:Default` and `ConnectionStrings:Cache`: use `AddConnectionString` in AppHost when an existing database or cache should be shared.
+- `ConnectionStrings:Default`, `ConnectionStrings:Analysis`, and `ConnectionStrings:Cache`: the default business database, optional analysis database, and cache connections. When `Analysis` is not configured, it uses `Default`; use `AddConnectionString` in AppHost when an existing database or cache should be shared.
 - `OTEL_EXPORTER_OTLP_ENDPOINT`: the standard OpenTelemetry exporter endpoint injected by Aspire.
 
 ## Migration environment variables
