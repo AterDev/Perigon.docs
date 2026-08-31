@@ -16,7 +16,7 @@ Perigon provides two templates with different boundaries. Choose a template firs
 When using the templates directly, install the package version covered by this documentation:
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.14
+dotnet new install Perigon.templates --version 1.3.15
 ```
 
 See the [version compatibility matrix](./Project-Templates/Version-Features.md) for the template package, Aspire SDK, and CLI mapping.
