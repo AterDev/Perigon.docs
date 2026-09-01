@@ -1,5 +1,8 @@
 # Perigon Agent MCP
 
+> [!IMPORTANT]
+> **10.2.0 变更：** Studio MCP 配置页面及 `ExecuteGenerateTaskAsync` 已移除。以下文档保留移除前的完整工具列表和 Studio MCP 说明，相关段落仅用于历史参考；`perigon agent init`、`perigon agent mcp` 及未标记移除的 Agent MCP 工具仍适用于当前版本。
+
 Perigon CLI 提供基于 Model Context Protocol（MCP）的本地 Agent 集成。当前推荐使用 `perigon agent` 命令组：`perigon agent init` 初始化 Agent 配置，`perigon agent mcp` 以 stdio 方式启动 MCP Server。
 
 这里的 Agent MCP 与 `perigon studio` 提供的 Studio HTTP MCP 是两条不同的集成路径：前者面向 IDE/代码 Agent 的本地 stdio 连接，后者由 Studio 管理并通过 HTTP 提供服务。需要使用哪条路径，取决于客户端的连接方式。

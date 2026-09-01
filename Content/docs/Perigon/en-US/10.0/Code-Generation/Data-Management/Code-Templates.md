@@ -1,5 +1,8 @@
 # Code Templates
 
+> [!IMPORTANT]
+> **10.2.0 change:** Studio no longer includes the code-template management page. The original content below is preserved to document behavior before 10.2.0 and does not apply to the current version. Existing `templates/*.razor` files are not proactively deleted by upgrades; keep new project-specific generation rules in project skills.
+
 Code generation templates are text template files written in `razor` syntax with a `.razor` suffix. They are used to generate specific code content or provide references for MCP tools.
 
 ## Viewing Template Files

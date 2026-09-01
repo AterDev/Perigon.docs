@@ -1,5 +1,8 @@
 # 自定义MCP工具
 
+> [!IMPORTANT]
+> **10.2.0 变更：** Studio 已移除自定义 MCP 工具配置页面。以下内容完整保留，用于说明 10.2.0 之前版本的功能与操作，不适用于当前版本。当前 MCP 集成请使用 `perigon agent init` 与 `perigon agent mcp`。
+
 Perigon内置了一些MCP工具，主要用来生成Asp.Net Core的代码结构。
 
 实际开发中，我们可能需要更多的工具，所以我们通过自定义MCP工具来满足需求。

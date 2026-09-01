@@ -1,5 +1,8 @@
 # Custom Generation Tasks
 
+> [!IMPORTANT]
+> **10.2.0 change:** Studio no longer includes the custom-template, step, or generation-task pages, and Agent MCP no longer executes generation tasks by task ID. The original content below is preserved to document behavior before 10.2.0 and does not apply to the current version. For current project-specific generation, use project skills with the CLI, Agent MCP, or direct AI implementation.
+
 The tool provides custom code generation task functionality, allowing users to generate code according to specific needs. This article introduces how to create and use custom code generation tasks.
 
 Code generation related features are under the navigation `Code Generation/Generation Tasks`.

@@ -1,5 +1,8 @@
 # Perigon Agent MCP
 
+> [!IMPORTANT]
+> **10.2.0 change:** The Studio MCP configuration page and `ExecuteGenerateTaskAsync` have been removed. The document below preserves the complete pre-removal tool list and Studio MCP description for historical reference; `perigon agent init`, `perigon agent mcp`, and Agent MCP tools not identified as removed still apply to the current version.
+
 The Perigon CLI provides a local Agent integration through the Model Context Protocol (MCP). The current `perigon agent` command group is the recommended entry point: `perigon agent init` initializes Agent configuration, and `perigon agent mcp` starts the MCP server over stdio.
 
 Agent MCP and the HTTP MCP exposed by `perigon studio` are different integration paths. Agent MCP is intended for a local IDE or coding agent using stdio; Studio manages its own HTTP service. Choose the path that matches the client's connection model.

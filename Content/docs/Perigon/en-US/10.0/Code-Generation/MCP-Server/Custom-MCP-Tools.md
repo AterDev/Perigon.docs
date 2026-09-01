@@ -1,5 +1,8 @@
 # Custom MCP Tools
 
+> [!IMPORTANT]
+> **10.2.0 change:** Studio no longer includes the custom MCP-tool configuration page. The original content below is preserved to document behavior before 10.2.0 and does not apply to the current version. For current MCP integration, use `perigon agent init` and `perigon agent mcp`.
+
 Perigon includes several built-in MCP tools, primarily for generating ASP.NET Core code structures.
 
 In real-world development, you may need additional tools. Custom MCP tools allow you to extend functionality and meet specific requirements.

@@ -1,5 +1,8 @@
 # Prompts
 
+> [!IMPORTANT]
+> **10.2.0 change:** Studio no longer includes the prompt-management page. The original content below is preserved to document behavior before 10.2.0 and does not apply to the current version. Existing `.github/prompts` files are not proactively deleted by upgrades; keep new reusable AI guidance in project skills.
+
 Version 10.0 added MCP support. We aim to provide users with greater customization capabilities and better leverage LLM's ability to generate reliable code.
 
 When customizing tools, prompts are used to guide the LLM in generating code.
