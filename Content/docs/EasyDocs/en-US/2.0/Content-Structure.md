@@ -46,3 +46,35 @@ FAQ
 ```
 
 Relative Markdown links are converted from `.md` to `.html`. Absolute HTTP(S) links are left unchanged. Files under `custom` are copied last and can override packaged CSS, JavaScript, templates, or generated pages.
+
+## Images in Markdown
+
+Images do not have to be placed in a directory named `images`. EasyDocs resolves a local image path relative to the Markdown file, so the image can be beside the document or in any subdirectory:
+
+```text
+Content/docs/EasyDocs/en-US/2.0/
+├── Quick-Start.md
+├── logo.svg
+└── assets/
+    └── architecture.png
+```
+
+```markdown
+![Logo](logo.svg)
+![Architecture](assets/architecture.png)
+```
+
+For blogs and documentation, the builder currently copies local `.jpg`, `.jpeg`, `.png`, `.gif`, and `.svg` files under the corresponding content tree. Use a path relative to the Markdown file and keep the extension in lower case. Remote `http://` and `https://` image URLs are preserved and are not copied.
+
+Versioned documentation pages support any matching relative image path. The generated documentation homepage at `docs/<name>.html` is based on the first document, and the current builder rewrites homepage image references only when they start with `./_images`. If the image must also appear on the documentation homepage, use this convention:
+
+```text
+Content/docs/EasyDocs/en-US/2.0/
+├── Quick-Start.md
+└── _images/
+    └── architecture.png
+```
+
+```markdown
+![Architecture](./_images/architecture.png)
+```
