@@ -74,7 +74,7 @@ The script will:
 
 Fonts are not installed by default. This is best for pure API services.
 
-Install fonts only when the service renders text on the server, such as image generation, report export, verification codes, PDF generation, or SkiaSharp drawing:
+Install fonts only when the service renders text on the server, such as image generation, report export, PDF generation, or other server-side text rendering:
 
 ```pwsh
 .\scripts\PublishDocker.ps1 -Service AdminService -ImageName myprojectname-admin-service -InstallFonts

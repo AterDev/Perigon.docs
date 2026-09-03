@@ -97,12 +97,12 @@ perigon update
 
 Before starting, the CLI warns that template updates may overwrite local changes and recommends creating and switching to a new Git branch. It then:
 
-1. Updates the installed `Perigon.templates` package, or installs it if it is not available.
+1. Runs `dotnet new install Perigon.templates` directly to ensure the latest `Perigon.templates` package is used.
 2. Generates a temporary comparison project using the current project's template type and frontend mode.
 3. Opens a two-pane diff selector: the left pane lists only the filenames of added or changed template files with `(+added -removed)` line counts, and the right pane shows the full relative path and colorized diff.
 4. Use the arrow keys to move, press Space to select or unselect files, use `PgUp/PgDn` to scroll the current file's diff in the right pane, select multiple files as needed, press Enter to apply the selected differences, or press `Esc` to cancel. Both panes show their visible range and scroll markers, and moving through the list keeps the focused file visible.
 
-The current project is modified only after pressing Enter to apply. Pressing `Esc` leaves it unchanged, but the template update or installation has already completed before the selector. Comparison ignores line-ending differences, leading/trailing whitespace, changes in consecutive whitespace, and blank-line differences to avoid formatting noise; a strict snapshot check still runs before applying. The command processes only files that exist in the template; it does not delete project-only files and ignores files outside these scopes:
+The current project is modified only after pressing Enter to apply. Pressing `Esc` leaves it unchanged, but template installation has already completed before the selector. Comparison ignores line-ending differences, leading/trailing whitespace, changes in consecutive whitespace, and blank-line differences to avoid formatting noise; a strict snapshot check still runs before applying. The command processes only files that exist in the template; it does not delete project-only files and ignores files outside these scopes:
 
 - `.cs` files under `src/Perigon`;
 - `.cs` files under `src/Definition/ServiceDefault` or `src/Definition/ServiceDefaults`;

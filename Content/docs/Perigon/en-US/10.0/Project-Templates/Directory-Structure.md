@@ -23,7 +23,7 @@ src is the source code directory, containing all source code files of the soluti
 Provides basic class libraries needed for development, all provided in source code form, facilitating developers to modify and extend as needed. Includes the following projects:
 
 - **Perigon.AspNetCore**: Common parts related to Web development, including basic model definitions, common extension methods, and tool helper classes.
-- **Perigon.AspNetCore.Toolkit**: Integration of commonly used third-party libraries in Web development, such as sending emails, graphic verification codes, Excel export, etc.
+- **Perigon.AspNetCore.Toolkit**: Integration of commonly used third-party libraries in Web development, such as sending emails and Excel export.
 - **Perigon.AspNetCore.SourceGeneration**: Source code generator and code analyzer related functions.
 
 Since the framework layer is independent of projects and business, these can be packaged into class libraries. You can develop your own toolkit based on this and publish it to private or public NuGet sources for use in other projects.
