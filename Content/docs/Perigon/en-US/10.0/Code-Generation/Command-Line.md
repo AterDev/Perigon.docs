@@ -424,13 +424,13 @@ perigon agent mcp
 The `module pack` command packages a module as a zip file.
 
 ```pwsh
-perigon module pack <ModuleName> <ServiceName> [--front-path <FRONT_PATH>]
+perigon module pack <ModuleName> <ServiceName> [-v|--version <VERSION>] [--front-path <FRONT_PATH>]
 ```
 
 Example:
 
 ```pwsh
-perigon module pack FileManagerMod AdminService
+perigon module pack FileManagerMod AdminService --version 1.2.0
 ```
 
 Help output:
@@ -451,13 +451,15 @@ ARGUMENTS:
 
 OPTIONS:
     -h, --help                       Prints help information
-        --front-path <FRONT_PATH>    Frontend directory to include in the package
+    -v, --version <VERSION>          Package version; defaults to 1.0.0 when omitted / 包版本号；省略时默认使用 1.0.0
+        --front-path <FRONT_PATH>    Frontend module directory to include in the package
 ```
 
 Parameter notes:
 
 - `ModuleName`: Module name, usually ending with `Mod`
 - `ServiceName`: Service name, corresponding to an API service directory under `Services`
+- `-v/--version`: Optional. The version written to the module-package metadata; omitted versions use `1.0.0` and print a warning.
 - `--front-path`: Optional. The individual frontend module directory to package, for example `src/ClientApp/WebApp/src/app/modules/file-manager`.
 
 ### Frontend packaging and limitations
