@@ -38,6 +38,8 @@ Module entities are defined in `src/Definition/Entity` and are separated by modu
 
 Modules can be reused across solutions. For example, a customer module or an order module can be packaged and installed into another solution.
 
+Business modules should remain independent and must not directly reference one another. For cross-module reuse, put foundational content such as common types, constants, and utilities in the `Share` project. If the shared content is a feature implementation that does not belong in `Share`, put it in the shared `CommonMod` module and let dependent business modules reference it. Do not make one business module depend on another specific business module.
+
 ### Packing a Module
 
 Before packing a module, check `ModuleExtensions.cs`. This file is created with the module and describes the module registration entry:
@@ -68,7 +70,7 @@ public static class ModuleExtensions
 > [!NOTE]
 > In most cases, `AddXXXMod` should only contain services specific to the module.
 
-The module to be packed should keep code inside the module project, except entities and controllers. If it references unexpected project code, the packing command will report an error.
+Modules to be packed must follow the dependency rules above. The current CLI packaging check inspects module namespaces in C# `using` directives: module source and entity directories may reference the current module and `Share`; the selected service's controller directory may also reference `CommonMod`. As a result, a direct `CommonMod` reference from module source is currently rejected by `module pack`.
 
 Run the following command from the solution root:
 
@@ -76,7 +78,20 @@ Run the following command from the solution root:
 perigon module pack <ModuleName> <ServiceName>
 ```
 
-The generated module package is placed under the `package_modules` directory. To package a frontend module, use `--front-path` to specify that module directory; see the [command-line documentation](../Code-Generation/Command-Line.md) for the complete rules.
+The generated zip file is placed under `package_modules`. The package contains module metadata and the module and entity directories; controller and frontend files are included when available. A typical layout is:
+
+```text
+metadata.json
+Modules/<ModuleName>/...
+Entity/<ModuleName>/...
+Controllers/<ModuleName>/...        # optional
+Frontend/<frontend-module-name>/...  # when --front-path is specified
+Frontend/share/...                  # when the sibling share directory exists
+```
+
+- `metadata.json` records the module name, author, display name, description, version, and other package metadata. Set the version with `-v/--version`; the default is `1.0.0`.
+- In the pack command, `<ServiceName>` identifies the **source service for controllers**. The CLI checks only `src/Services/<ServiceName>/Controllers/<ModuleName>` and recursively packages its files when that directory exists. If it does not exist, no controllers are added. The command does not scan other services or select files by C# controller type. Files under `bin` and `obj` directories are skipped.
+- To include a frontend module, use `--front-path` to specify its directory. The CLI packages that directory and its sibling `share` directory as `Frontend/<module-directory-name>` and `Frontend/share`. See the [command-line documentation](../Code-Generation/Command-Line.md) for details.
 
 ### Installing a Module
 
@@ -86,4 +101,8 @@ Run the following command from the solution root:
 perigon module install <ModulePackagePath> <ServiceName>
 ```
 
-After installation, reload the solution and check whether the module references and generated code are correct.
+In the install command, `<ServiceName>` is the **target service**. The CLI copies module files to `src/Modules/<ModuleName>` and entity files to `src/Definition/Entity/<ModuleName>`. If the package contains `Controllers/<ModuleName>`, those files are copied to `src/Services/<ServiceName>/Controllers/<ModuleName>`. Existing files at matching backend paths are overwritten.
+
+After copying files, the CLI adds the module to the solution, adds a project reference from the target service to the module, and updates the service's `GlobalUsings.cs`. If it finds `DefaultDbContext.cs`, it also adds `DbSet` properties for module entities and the related Entity Framework global using. Make sure the target service directory exists.
+
+If the package contains frontend files, pass `--front-path` with the frontend project root to restore them under `src/app/modules`. Existing files in the module directory are overwritten. Existing same-name files in `share` are kept, and only missing files are added. Reload the solution after installation and check that the module builds. See the [command-line documentation](../Code-Generation/Command-Line.md) for frontend details.
