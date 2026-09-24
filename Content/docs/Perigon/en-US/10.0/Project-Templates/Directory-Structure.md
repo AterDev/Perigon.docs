@@ -20,13 +20,13 @@ src is the source code directory, containing all source code files of the soluti
 
 ### Perigon Base Libraries
 
-Provides basic class libraries needed for development, all provided in source code form, facilitating developers to modify and extend as needed. Includes the following projects:
+Provides the basic libraries and tooling needed for development. The core libraries and toolkit are included as template source; the source generator is supplied as a NuGet package. The template includes the following capabilities:
 
 - **Perigon.AspNetCore**: Common parts related to Web development, including basic model definitions, common extension methods, and tool helper classes.
 - **Perigon.AspNetCore.Toolkit**: Integration of commonly used third-party libraries in Web development, such as sending emails and Excel export.
-- **Perigon.AspNetCore.SourceGeneration**: Source code generator and code analyzer related functions.
+- **Perigon.AspNetCore.SourceGeneration**: Version `1.1.1` unified source generator and analyzer NuGet package; it is no longer copied as a project under `src/Perigon` in new solutions. It supports Manager, Module, Localizer, and Minimal API endpoint-group registration.
 
-Since the framework layer is independent of projects and business, these can be packaged into class libraries. You can develop your own toolkit based on this and publish it to private or public NuGet sources for use in other projects.
+Since the framework layer is independent of projects and business, it can be packaged into class libraries; the source generator is loaded at compile time through the package reference. You can develop your own toolkit based on this and publish it to private or public NuGet sources for use in other projects.
 
 ### Definition
 

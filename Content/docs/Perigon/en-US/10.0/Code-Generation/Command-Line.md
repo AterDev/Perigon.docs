@@ -206,6 +206,7 @@ perigon add service AdminService
 Notes:
 
 - `ServiceName` is the service name
+- The new service enables unified compile-time generation through the `Perigon.AspNetCore.SourceGeneration` 1.1.1 NuGet package instead of referencing a source generator project from the template.
 
 Help output:
 
