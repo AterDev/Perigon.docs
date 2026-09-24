@@ -5,7 +5,7 @@
 ## 创建项目
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.15
+dotnet new install Perigon.templates --version 1.3.16
 dotnet new perigon-webapi -n MyWebApi --frontType None
 cd MyWebApi
 ```

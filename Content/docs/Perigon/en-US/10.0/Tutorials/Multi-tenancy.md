@@ -26,6 +26,7 @@ In `AppHost/appsettings.Development.json`, set:
 The framework uses tenant-aware data access by default. In most business code, keep writing code as usual. The important runtime pieces are `IUserContext`, `TenantResolutionMiddleware`, and `AppDbFactory`.
 
 - `UserContext` reads `tenant_id` and `tenant_type` from the current token claims and fills `IUserContext.TenantId` and `IUserContext.TenantType`.
+- Login tokens can include one or more `role_id` GUID claims. `IUserContext.RoleIds` reads valid IDs, ignores empty or invalid values, and removes duplicates; the template does not issue these claims during login.
 - `TenantResolutionMiddleware` runs after authentication, queries the `Tenant` by `IUserContext.TenantId`, and caches it in memory. Requests without a valid tenant are rejected.
 - `AppDbFactory` receives the tenant id when creating a DbContext. `null` is reserved for the system tenant-catalog context and uses the configured default connections; normal tenant access requires a non-empty TenantId, and an empty GUID or unknown tenant fails instead of silently falling back. Once a tenant is resolved, a missing `DbConnectionString` or `AnalysisConnectionString` falls back to its corresponding default (the analysis default uses the business default when it is not configured).
 - `Tenant` is the global tenant catalog root. Its inherited `TenantId` is ignored, while other tenant entities use the current tenant filter and save validation.

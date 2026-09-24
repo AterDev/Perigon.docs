@@ -2,6 +2,11 @@
 
 This page records changes that affect existing code behavior.
 
+## v1.3.16 validation response and image captcha helper
+
+- ApiStandard MVC automatic model-validation errors now return `{ title, detail, status, traceId }`. Clients that expect ASP.NET Core's default `errors` structure must update their parsing logic.
+- ApiStandard and MiniApi remove `ImageHelper.GenerateImageCaptcha` and its ImageSharp dependency. Projects that call the helper must migrate to their own captcha implementation.
+
 ## v1.3.14 tenant resolution and default-tenant connections
 
 - Initialization ensures that `default.com` exists and stores the default business and analysis database connection strings on it.

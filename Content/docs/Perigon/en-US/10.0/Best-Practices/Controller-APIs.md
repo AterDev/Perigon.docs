@@ -37,6 +37,8 @@ In essence, controllers should do only what they're designed for. Anything else 
 
 Both `Problem` and `BusinessException` support custom error codes.
 
+In `ApiStandard`, MVC automatically returns HTTP 400 when model validation fails. The response contains `title`, `detail`, `status`, and `traceId`. Clients can display the validation message from `detail` and use `traceId` to correlate server logs.
+
 ## Common Anti-patterns
 
 - ❌ Custom wrapper return types like `ApiResponse<T>`
