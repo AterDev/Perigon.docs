@@ -13,35 +13,11 @@ Current templates do not add these modules by default. Each module is a separate
 
 | Module | Use case | Main capabilities |
 | --- | --- | --- |
-| `Perigon.SystemMod` | Administration and identity/authorization foundation | Administrator users, roles, permissions, menus, organizations, system configuration, and logs; includes initialization and asynchronous log processing. |
-| `Perigon.CMSMod` | Content management | Administrative management for articles and article categories. |
-| `Perigon.ResourceMod` | Tenant-aware general resource management | Manages resource environments, categories, groups, tags, resource definitions, and dynamic properties, with resource access permissions by role, environment, and category. |
+| [`Perigon.SystemMod`](../Modules/SystemMod.md) | Administration and identity/authorization foundation | Users, roles, menus, system configuration and logs, data scopes, and group membership management. |
+| [`Perigon.CMSMod`](../Modules/CMSMod.md) | Content management | Article categories, article editing, and article image uploads. |
+| [`Perigon.ResourceMod`](../Modules/ResourceMod.md) | Tenant-aware general resource management | Environments, categories, definitions, dynamic properties, role-based access, personal-resource review, and favorites. |
 
-### SystemMod
-
-`SystemMod` provides the foundation domain model for administration: users, roles, permissions, permission groups, menus, organizations, and system configuration. It also provides system logging and background processing. Install it first when the project needs administrative sign-in, role authorization, or another official module depends on role capabilities.
-
-```pwsh
-perigon module install Perigon.SystemMod AdminService
-```
-
-### CMSMod
-
-`CMSMod` provides basic content management with article categories and articles. It is suitable for projects that manage articles, announcements, or other structured content in the administration application.
-
-```pwsh
-perigon module install Perigon.CMSMod AdminService
-```
-
-### ResourceMod
-
-`ResourceMod` is the new general resource management module. It manages tenant-aware resources that can be categorized and configured with dynamic properties. Resource creation depends on environments, categories, and resource definitions, with optional groups and tags; a resource definition controls dynamic-property names, types, required flags, and length constraints.
-
-The module also configures resource access by “role + environment + category”: administrators maintain resources and configuration, while non-administrators can read only resources returned by the server according to their permissions. It is suited to catalogs of internal services, assets, links, environments, or other resources that need categorization and access control.
-
-```pwsh
-perigon module install Perigon.ResourceMod AdminService
-```
+Each module has a dedicated guide covering its workflows, administration pages, APIs, and boundaries. The official package catalog is maintained in `Perigon.Modules/modules.json`.
 
 ## Package contents and frontend
 

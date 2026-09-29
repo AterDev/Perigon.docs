@@ -51,9 +51,9 @@ During solution creation, you can select official modules directly. The tool rea
 
 The current metadata comes from `Perigon.Modules/modules.json`, for example:
 
-- `Perigon.SystemMod`: base capabilities for system roles, users, and permissions.
-- `Perigon.CMSMod`: content management capabilities.
-- `Perigon.ResourceMod`: general resource management by environment, category, resource definition, and role permission.
+- [`Perigon.SystemMod`](./Modules/SystemMod.md): users, roles, menus, system configuration and logs, plus data scopes, data scope groups, and group membership management.
+- [`Perigon.CMSMod`](./Modules/CMSMod.md): article categories, article editing, and article image uploads.
+- [`Perigon.ResourceMod`](./Modules/ResourceMod.md): environments, categories, resource definitions, dynamic properties, role-based access, personal-resource review, and favorites.
 
 See [Official Modules](./Project-Templates/Module-Example.md) for module boundaries and installation guidance.
 
