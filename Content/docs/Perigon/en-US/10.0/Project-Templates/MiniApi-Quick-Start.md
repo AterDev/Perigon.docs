@@ -2,10 +2,12 @@
 
 `MiniApi` targets lightweight APIs and microservices. It uses Minimal API, PostgreSQL, the Request Delegate Generator, and NativeAOT. It does not include a built-in EF Core migration resource, AdminService, or a default Angular frontend.
 
+MiniApi uses Aspire 13.5.0; install a matching Aspire CLI before running AppHost.
+
 ## Create a project
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.16
+dotnet new install Perigon.templates --version 1.3.17
 dotnet new perigon-miniapi -n MyMiniApi --frontType None
 cd MyMiniApi
 ```

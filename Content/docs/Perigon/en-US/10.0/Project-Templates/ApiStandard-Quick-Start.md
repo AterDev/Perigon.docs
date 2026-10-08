@@ -2,10 +2,12 @@
 
 `ApiStandard` targets conventional ASP.NET Core Web APIs and modular business systems. It includes EF Core, an Aspire migration resource, AdminService, and ApiService.
 
+ApiStandard uses Aspire 13.6.1; install a matching Aspire CLI before running AppHost.
+
 ## Create a project
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.16
+dotnet new install Perigon.templates --version 1.3.17
 dotnet new perigon-webapi -n MyWebApi --frontType None
 cd MyWebApi
 ```

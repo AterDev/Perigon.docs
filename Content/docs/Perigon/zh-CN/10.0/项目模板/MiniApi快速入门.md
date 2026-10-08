@@ -2,10 +2,12 @@
 
 `MiniApi` 面向轻量接口和微服务，使用 Minimal API、PostgreSQL、Request Delegate Generator 和 NativeAOT。它不包含内置 EF Core 迁移资源、AdminService 或默认 Angular 前端。
 
+MiniApi 使用 Aspire 13.5.0；运行 AppHost 前请安装匹配版本的 Aspire CLI。
+
 ## 创建项目
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.16
+dotnet new install Perigon.templates --version 1.3.17
 dotnet new perigon-miniapi -n MyMiniApi --frontType None
 cd MyMiniApi
 ```

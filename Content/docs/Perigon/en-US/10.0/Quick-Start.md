@@ -10,13 +10,13 @@ Perigon provides two templates with different boundaries. Choose a template firs
 ## Common prerequisites
 
 1. Install the `.NET 10.0.103` SDK or a compatible .NET 10 SDK.
-2. Install an Aspire CLI matching the template SDK (the current development version is 13.5.0) and prepare Docker or Podman.
+2. Install an Aspire CLI matching the selected template SDK: ApiStandard uses 13.6.1 and MiniApi uses 13.5.0. Prepare Docker or Podman.
 3. Install `Perigon.CLI` and create a project with `dotnet new`, or use Studio to create a solution.
 
 When using the templates directly, install the package version covered by this documentation:
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.16
+dotnet new install Perigon.templates --version 1.3.17
 ```
 
 See the [version compatibility matrix](./Project-Templates/Version-Features.md) for the template package, Aspire SDK, and CLI mapping.
