@@ -76,3 +76,5 @@ FilterDto generation content:
 Update model generation is the same as add model, but all properties are nullable by default.
 
 Nullable properties mean that if a field is null, the update ignores that field, implementing partial updates.
+
+ApiStandard's `ManagerBase.UpdateAsync` (backed by `PartialUpdateAsync`) also ignores DTO properties named `Id`, `TenantId`, and `CreatedTime`, even when they are non-null. Ordinary partial updates cannot change the primary key, tenant ownership, or creation time. Tenant migration requires a separate authorized operation.

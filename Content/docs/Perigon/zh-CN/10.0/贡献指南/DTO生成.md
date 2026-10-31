@@ -79,3 +79,5 @@ FilterDto生成内容如下：
 更新模型生成内容同添加模型，但是更新模型所有属性默认都为可空属性。
 
 可空属性，意味着，如果该字段为空，更新时，会忽略该字段，以此来实现部分更新。
+
+ApiStandard 的`ManagerBase.UpdateAsync`（底层`PartialUpdateAsync`）还会忽略 DTO 中的`Id`、`TenantId`、`CreatedTime`，即使这些字段非空也不会更新。普通局部更新不能改变主键、租户归属或创建时间；租户迁移应使用独立的授权操作。

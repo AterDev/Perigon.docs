@@ -56,6 +56,10 @@ Contexts created by these factories are not tracked by the dependency injection 
 
 `ContextBase` applies tenant filtering and save validation to business entities that inherit from `EntityBase`. `Tenant` is the global tenant catalog root: its inherited `TenantId` is ignored, so an unbound context can read and write the tenant catalog.
 
+Do not switch tenants by changing an entity's `TenantId` in an ordinary business update. ApiStandard partial updates through `ManagerBase.UpdateAsync` ignore DTO properties named `Id`, `TenantId`, and `CreatedTime`, preserving record identity, tenant ownership, and creation time. Tenant migration requires a separate authorized operation.
+
+Query filters do not enforce isolation for every write path. Do not pass client-provided entities directly to `Attach` or `Update`: the current template still lacks a database tenant predicate for these writes against entities that were not loaded first. Query and verify the target record in a tenant-bound context before updating it. A null value in a partial update still means to skip the field, not to clear it.
+
 Tenant-scoped Managers require a tenant id. In an HTTP request, authentication claims, `UserContext`, and tenant middleware provide that value. A background job has no HTTP request and should not reuse a request-scoped `DbContext` or assume that `IUserContext` already contains a tenant id.
 
 Create a short-lived context for each tenant. First query the global `Tenant` catalog with an unbound context, then create a tenant-bound context for business operations:
