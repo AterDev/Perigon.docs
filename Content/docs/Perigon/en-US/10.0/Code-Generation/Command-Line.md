@@ -35,6 +35,7 @@ The main commands shown by `perigon -h` are listed below:
 | `add` | Add resources to the current solution |
 | `studio` | Start Perigon Studio |
 | `generate` | Run code generation |
+| `aot jsonContext` | Generate or update the Native AOT JSON serializer context |
 | `agent` | Initialize Agent configuration or start the Agent MCP service |
 | `module pack <ModuleName> <ServiceName>` | Package a module as a zip file |
 | `module install <PackagePath> <ServiceName>` | Install a module package into a project |
@@ -271,6 +272,19 @@ USAGE:
 OPTIONS:
     -h, --help    Prints help information
 ```
+
+## aot jsonContext
+
+The `aot jsonContext` command generates or updates the explicit `System.Text.Json` source-generation context used by Native AOT services. Run it from the project root after restoring the solution:
+
+```pwsh
+perigon aot jsonContext
+perigon aot jsonContext --path <project-root>
+```
+
+The command scans C# projects below `src/Services`, discovers request and response types used by mapped endpoints and module models, and creates or updates `ApiJsonSerializerContext.cs` in each service project. It only changes the context file; add a new context to the service's JSON resolver manually, for example by inserting `ApiJsonSerializerContext.Default` into `TypeInfoResolverChain` through `ConfigureHttpJsonOptions`.
+
+Run the command again after changing endpoint signatures, module models, or service structure, then review the generated file. Types represented by `object`, non-generic `IResult`, runtime polymorphism, reflection or dynamic registration, and other request or response types that cannot be determined statically still require a manual `[JsonSerializable(typeof(...))]` entry. Nested DTOs, collection elements, and property types reachable from a registered root do not need individual entries.
 
 ## generate
 
