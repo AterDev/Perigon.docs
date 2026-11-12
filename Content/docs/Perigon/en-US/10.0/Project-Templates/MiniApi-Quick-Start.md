@@ -4,6 +4,8 @@
 
 MiniApi uses Aspire 13.5.0; install a matching Aspire CLI before running AppHost.
 
+> The unreleased repository version upgrades MiniApi to .NET 11 SDK 11.0.100 and Aspire 13.6.5. The installation command below still refers to the published 1.3.17 package.
+
 ## Create a project
 
 ```powershell
