@@ -25,6 +25,8 @@ In software development, we can simplify it to: **Definition -> Implementation -
 
 Refer to the [Directory Structure](./Directory-Structure.md) document to learn detailed descriptions of each directory and project.
 
+For the layer boundaries, source-generated AOT workflow, and CLI commands, see [MiniApi Architecture and Tooling](./MiniApi-Architecture-and-Tooling.md).
+
 ## AppHost
 
 `AppHost` is the **Aspire** host project, which is responsible for starting and managing all service instances. In the template, the `AppHost` project is the entry point for running the entire application.

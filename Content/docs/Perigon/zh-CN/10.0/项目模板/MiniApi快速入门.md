@@ -2,23 +2,23 @@
 
 `MiniApi` 面向轻量接口和微服务，使用 Minimal API、PostgreSQL、Request Delegate Generator 和 NativeAOT。它不包含内置 EF Core 迁移资源、AdminService 或默认 Angular 前端。
 
-MiniApi 使用 Aspire 13.5.0；运行 AppHost 前请安装匹配版本的 Aspire CLI。
+已发布的 `Perigon.templates` 模板包版本为 1.3.18。其 MiniApi 项目目标框架为 .NET 11，使用 Perigon.PostgreSQL 0.3.8。模板随附 Aspire 13.6.5 AppHost。运行前请安装 Aspire CLI。
 
-> 源码仓库的未发布版本已将 MiniApi 升级至 .NET 11 SDK 11.0.100 和 Aspire 13.6.5；上述安装命令仍对应已发布的 1.3.17 包。
+模板仓库为当前 MiniApi 源码固定 SDK 11.0.100，构建生成项目需要安装 .NET 11 SDK。
 
 ## 创建项目
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.17
+dotnet new install Perigon.templates --version 1.3.18
 dotnet new perigon-miniapi -n MyMiniApi --frontType None
 cd MyMiniApi
 ```
 
-需要 Angular 时使用 `--frontType Angular` 并执行 `pnpm install`；前端仍需在 AppHost 中按需启用。
+使用 `--frontType Angular` 生成前端。AppHost 检测到前端的 `package.json` 后会把它加入资源图。
 
 ## 配置和运行
 
-MiniApi 固定使用 PostgreSQL。可以在 `src/AppHost/appsettings.Development.json` 中配置缓存：
+在 `src/AppHost/appsettings.Development.json` 或用户机密中设置 `ConnectionStrings:Default`，指向运行中的 PostgreSQL。同一处也可以选择缓存模式：
 
 ```json
 {
@@ -28,7 +28,7 @@ MiniApi 固定使用 PostgreSQL。可以在 `src/AppHost/appsettings.Development
 }
 ```
 
-选择 `Redis` 或 `Hybrid` 时 AppHost 才创建 Redis，并通过 `Components__Cache` 传给 ApiService；默认使用内存缓存，不需要启动 Redis。
+AppHost 通过 `Components__Cache` 将缓存模式传给 ApiService。选择 `Redis` 或 `Hybrid` 时，将 `ConnectionStrings:Cache` 指向运行中的 Redis。生成的 AppHost 默认使用外部连接。
 
 ```powershell
 aspire start --non-interactive
@@ -63,3 +63,5 @@ dotnet test --project tests/ApiTest/ApiTest.csproj --treenode-filter '/*/*/*/*[C
 ```
 
 发布和容器健康检查请参考[生产运维 Runbook](../教程/生产运维Runbook.md)。
+
+关于分层、Native AOT 源生成和 CLI 命令，请参阅 [MiniApi 架构与工具](./MiniApi架构与工具.md)。

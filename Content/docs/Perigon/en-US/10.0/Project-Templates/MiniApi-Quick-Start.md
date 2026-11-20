@@ -2,23 +2,23 @@
 
 `MiniApi` targets lightweight APIs and microservices. It uses Minimal API, PostgreSQL, the Request Delegate Generator, and NativeAOT. It does not include a built-in EF Core migration resource, AdminService, or a default Angular frontend.
 
-MiniApi uses Aspire 13.5.0; install a matching Aspire CLI before running AppHost.
+The released `Perigon.templates` package is 1.3.18. Its MiniApi project targets .NET 11 and uses Perigon.PostgreSQL 0.3.8. The template ships an Aspire 13.6.5 AppHost. Install the Aspire CLI before running it.
 
-> The unreleased repository version upgrades MiniApi to .NET 11 SDK 11.0.100 and Aspire 13.6.5. The installation command below still refers to the published 1.3.17 package.
+The template repository pins SDK 11.0.100 for the current MiniApi source. Building a generated project therefore requires the .NET 11 SDK.
 
 ## Create a project
 
 ```powershell
-dotnet new install Perigon.templates --version 1.3.17
+dotnet new install Perigon.templates --version 1.3.18
 dotnet new perigon-miniapi -n MyMiniApi --frontType None
 cd MyMiniApi
 ```
 
-Use `--frontType Angular` when needed and run `pnpm install`; the frontend still must be enabled in AppHost explicitly.
+Use `--frontType Angular` to generate the frontend. AppHost includes it when its `package.json` is present.
 
 ## Configure and run
 
-MiniApi uses PostgreSQL only. Configure the cache in `src/AppHost/appsettings.Development.json`:
+Set `ConnectionStrings:Default` in `src/AppHost/appsettings.Development.json` or user secrets to point to a running PostgreSQL instance. Choose a cache mode in the same configuration:
 
 ```json
 {
@@ -28,7 +28,7 @@ MiniApi uses PostgreSQL only. Configure the cache in `src/AppHost/appsettings.De
 }
 ```
 
-AppHost creates Redis only for `Redis` or `Hybrid` and passes the choice to ApiService through `Components__Cache`. The default is memory cache, so Redis is not required for the first run.
+AppHost passes the cache mode to ApiService through `Components__Cache`. For `Redis` or `Hybrid`, set `ConnectionStrings:Cache` to a running Redis instance. The generated AppHost uses external connections by default.
 
 ```powershell
 aspire start --non-interactive
@@ -63,3 +63,5 @@ dotnet test --project tests/ApiTest/ApiTest.csproj --treenode-filter '/*/*/*/*[C
 ```
 
 See the [Production Operations Runbook](../Tutorials/Production-Operations-Runbook.md) for publishing and container health checks.
+
+For the layer boundaries, source-generated AOT workflow, and CLI commands, see [MiniApi Architecture and Tooling](./MiniApi-Architecture-and-Tooling.md).
